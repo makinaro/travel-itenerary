@@ -1,130 +1,230 @@
-/* Base Styles */
+/* General Styles */
 * {
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Dashboard Layout */
-  .dashboard {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Vertically centers */
-    width: 100%;
-    height: 100%;
-    padding: 50px;
-    box-sizing: border-box; /* Ensures padding doesn't affect the width/height */
-  }
-  
-  
-  .searchBar {
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Vertically centers content */
-    align-items: center; /* Horizontally centers content */
-    box-sizing: border-box; /* Ensures padding doesn't affect the width/height */
-  }
-  
-  .searchInput {
-    width: 50%;
-    padding: 12px;
-    border: 2px solid black;
-    border-radius: 10px;
-    font-size: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .header {
-    margin-bottom: 0px;
-    border-radius: 10px;
-    height: 15%;
-    border: 2px solid black;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    padding-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: end; /* Vertically centers content */
-    box-sizing: border-box; /* Ensures padding doesn't affect the width/height */
-  }
-  
-  .headerTitle {
-    font-size: 2.6rem;
-    font-weight: bold;
-    color: #4a4a4a;
-  }
-  
-  .tripsSection {
-    margin-top: 10px;
-  }
-  
-  .tripsTitle {
-    font-size: 1.9rem;
-    color: #3d3d3d;
-  }
-  
-  .tripsSubtitle {
-    font-size: 1.2rem;
-    color: #7c7c7c;
-    margin-bottom: 30px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black
-  }
-  
-  .tripsGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 50px;
-  }
-  
-  /* Card Styles */
-  .tripCard {
-    background-color: white;
-    border-radius: 10px;
-    border: 2px solid black;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .newTripCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 282.8px;
-    border-radius: 10px;
-    border: 2px dashed #000000;
-    color: #ccc;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .newTripCard:hover {
-    background-color: #f7f7f7;
-  }
-  
-  .tripImage {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .tripInfo {
-    padding: 15px;
-  }
-  
-  .tripLocation {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #4a4a4a;
-  }
-  
-  .tripDates {
-    font-size: 1rem;
-    color: #7c7c7c;
-  }
-  
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Dashboard Layout */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+  position: relative;
+}
+
+.dashboard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/Images/Background1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  transform: rotate(180deg);
+  z-index: -1;
+}
+
+/* Search Bar */
+.searchBar {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchInput {
+  width: 50%;
+  padding: 12px;
+  border: 2px solid black;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+.header {
+  margin-bottom: 0px;
+  border-radius: 10px;
+  height: 15%;
+  border: 2px solid black;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  padding-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-image: url('../assets/Images/Background2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.headerTitle {
+  font-size: 2.6rem;
+  font-weight: bold;
+  color: white;
+}
+
+/* Trips Section */
+.tripsSection {
+  margin-top: 10px;
+}
+
+.tripsTitle {
+  font-size: 1.9rem;
+  color: #3d3d3d;
+  margin-bottom: 10px;
+}
+
+.tripsSubtitle {
+  font-size: 1.2rem;
+  color: #7c7c7c;
+  padding-bottom: 10px;
+}
+
+/* Trips Grid Layout */
+.tripsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(461px, 1fr)); /* Ensures consistent width */
+  gap: 40px; /* Uniform spacing */
+}
+
+/* Card Styles */
+.tripCard {
+  background-color: white;
+  border: 2px solid black;
+  box-sizing: border-box; /* Ensure all cards follow the same box model */
+  width: 100%; /* Same as newTripCard */
+  height: 100%; /* Same as newTripCard */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.newTripCard {
+  background-color: transparent;
+  border: 2px dashed #777; /* Match border width to regular cards */
+  box-sizing: border-box; /* Ensures padding and borders are accounted for */
+  width: 100%; /* Let it scale to the grid cell */
+  height: 100%; /* Match the grid cell height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease; /* Optional hover animation */
+}
+
+.newTripCard:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Slight hover effect */
+}
+
+.newTripTitle {
+  text-align: center;
+}
+
+/* Regular Trip Card Image */
+.tripImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.tripInfo {
+  padding: 15px;
+}
+
+.tripTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4a4a4a;
+  display: flex;
+  align-items: center;
+}
+
+.tripDates {
+  font-size: 1rem;
+  color: #7c7c7c;
+}
+
+/* Trips Header Styles */
+.tripsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+  border-bottom: 2px solid black;
+  gap: 10px; /* Ensure spacing between elements */
+}
+
+.pageNavigation {
+  display: flex;
+  align-items: center; /* Center align with dropdown */
+  gap: 10px; /* Add spacing between pagination and dropdown */
+  flex-shrink: 0; /* Prevent shrinking on smaller screens */
+}
+
+/* Page Navigation Styles */
+.pageNavigation button {
+  padding: 10px;
+  font-size: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.pageNavigation button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pageNavigation button:hover:not(:disabled) {
+  color: #3696fc;
+}
+
+/* Filter Dropdown */
+.filterDropdown {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add spacing between dropdown and other elements */
+}
+
+.filterDropdown select {
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  color: #4a4a4a;
+  font-size: 16px;
+  padding: 8px 12px;
+  font-weight: bold; /* Make the text stand out */
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.filterDropdown select:focus {
+  outline: none; /* Remove focus outline */
+  border-color: #3696fc; /* Highlight border on focus */
+}
+
+/* Invisible Card Styles */
+.invisibleTripCard {
+  background-color: transparent;
+  width: 465px; /* Match visible trip card dimensions */
+  height: 294px; /* Match visible trip card dimensions */
+  border: 1px dashed transparent;
+  visibility: hidden;
+  box-sizing: border-box;
+}

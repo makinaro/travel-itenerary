@@ -13,7 +13,7 @@ export default function Layout() {
         <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/dashboard" alert />
         <SidebarItem icon={<Calendar1 size={20} />} text="Calendar" to="/calendar" />
         <SidebarItem icon={<Settings size={20} />} text="Settings" to="/settings" />
-        <SidebarItem icon={<Plus size={20} />} text="Create A New Trip" to="/createnew" />
+        <SidebarItem icon={<Plus size={20} />} text="Create A New Trip" to="/" />
       </Sidebar>
 
       {/* Main Content */}

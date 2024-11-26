@@ -33,6 +33,7 @@ export default function Sidebar({ children }) {
 
         <div className={styles.footer}>
           <img
+          // CHANGE THIS TO PFP
             src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
             alt="User"
             className="w-10 h-10 rounded-md"
