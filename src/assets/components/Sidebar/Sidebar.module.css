@@ -1,0 +1,82 @@
+/* Sidebar.module.css */
+.sidebar {
+    height: 100vh;
+  }
+  
+  .nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-right: 1px solid #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .logo {
+    padding: 1rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo img {
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .toggleButton {
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    background-color: #f3f4f6;
+    cursor: pointer;
+  }
+  
+  .sidebarItems {
+    flex: 1;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .footer {
+    display: flex;
+    padding: 1rem;
+    border-top: 1px solid #e0e0e0;
+  }
+  
+  .userInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .userInfo .userDetails {
+    width: 100%;
+  }
+  
+  .userInfo img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  }
+  
+  .username {
+    font-weight: 600;
+  }
+  
+  .email {
+    font-size: 0.875rem;
+    color: #4b5563;
+  }
+  
+  .notificationDot {
+    position: absolute;
+    right: 0.75rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: #4c51bf;
+    border-radius: 50%;
+  }
+  
