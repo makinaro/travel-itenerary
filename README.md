@@ -1,7 +1,7 @@
 ## APP DEV FINAL PROJECT -
 A simple travel itinerary web app called Grand-Line. Our goal is to make this web app as simple as possible while adding convenience to it's users.
 
-## **CURRENT PROGRESS:**
+## **CURRENT FRONT-END PROGRESS:**
 ________________________________________________________________
 ### Basic Functionalities:
 - [X] Routing
@@ -22,6 +22,23 @@ ________________________________________________________________
 
 ### Reusable and Non-Reusable Components:
 - [X] Sidebar
+- [ ] Add Collaborators pop-up (not reusable)
+- [ ] Normal Default-Confirm pop-ups
+
+## **CURRENT BACK-END PROGRESS:**
+________________________________________________________________
+
+### Pages:
+- [ ] Home
+- [ ] Login
+- [ ] Register
+- [ ] Dashboard
+- [ ] Calendar
+- [ ] Settings
+- [ ] Create Trip
+
+### Reusable and Non-Reusable Components:
+- [ ] Sidebar
 - [ ] Add Collaborators pop-up (not reusable)
 - [ ] Normal Default-Confirm pop-ups
 
