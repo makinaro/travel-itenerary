@@ -1,8 +1,52 @@
-# React + Vite
+## APP DEV FINAL PROJECT -
+A simple travel itinerary web app called Grand-Line. Our goal is to make this web app as simple as possible while adding convenience to it's users.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## **CURRENT FRONT-END PROGRESS:**
+________________________________________________________________
+### Basic Functionalities:
+- [X] Routing
+- [X] File Organization
+- [ ] Website title per page / Icon (in the actual tab)
+- [X] Layout for Sidebar (excludes home, login, and register)
+- [ ] Responsiveness to other desktop resolutions
+- [ ] Responsiveness to mobile resolutions
 
-Currently, two official plugins are available:
+### Pages:
+- [ ] Home
+- [ ] Login
+- [ ] Register
+- [X] Dashboard
+- [ ] Calendar
+- [ ] Settings
+- [ ] Create Trip
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Reusable and Non-Reusable Components:
+- [X] Sidebar
+- [ ] Add Collaborators pop-up (not reusable)
+- [ ] Normal Default-Confirm pop-ups
+
+## **CURRENT BACK-END PROGRESS:**
+________________________________________________________________
+
+### Pages:
+- [ ] Home
+- [ ] Login
+- [ ] Register
+- [ ] Dashboard
+- [ ] Calendar
+- [ ] Settings
+- [ ] Create Trip
+
+### Reusable and Non-Reusable Components:
+- [ ] Sidebar
+- [ ] Add Collaborators pop-up (not reusable)
+- [ ] Normal Default-Confirm pop-ups
+
+## **ADDITIONAL FEATURES IF ABOVE IS COMPLETE:**
+________________________________________________________________
+- [ ] Select a photo / Photo functionalities
+- [ ] Light mode / Dark Mode toggle switch
+- [ ] Show upcoming trips in sidebar
+- [ ] Notifications
+- [ ] Email verification (forget password, change password)
+- [ ] ADD MORE HERE IF YALL WANT
