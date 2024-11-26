@@ -9,15 +9,27 @@ body {
   padding: 0;
 }
 
+.dashboardContainer {
+  display: flex;
+  justify-content: center;
+  /* Center the content horizontally */
+  align-items: center;
+  /* Center the content vertically */
+  height: 100vh;
+  /* Ensure the container takes full viewport height */
+  margin-left: 77px;
+}
+
 /* Dashboard Layout */
 .dashboard {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: 100%;
-  height: 100%;
-  padding: 50px;
-  position: relative;
+  padding: 120px;
+  margin: 0 auto;
+  height: auto;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .dashboard::before {
@@ -37,7 +49,7 @@ body {
 
 /* Search Bar */
 .searchBar {
-  margin-bottom: 30px;
+  margin-bottom: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -51,6 +63,8 @@ body {
   border-radius: 10px;
   font-size: 16px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  outline: none;
+  /* Removes the outline */
 }
 
 /* Header Styles */
@@ -74,6 +88,8 @@ body {
   font-size: 2.6rem;
   font-weight: bold;
   color: white;
+  text-decoration: none;
+  /* Removes blue color for links */
 }
 
 /* Trips Section */
@@ -81,53 +97,66 @@ body {
   margin-top: 10px;
 }
 
-.tripsTitle {
-  font-size: 1.9rem;
+.tripTitle {
+  font-size: 1.25rem;
   color: #3d3d3d;
-  margin-bottom: 10px;
+  text-decoration: none;
+  /* Remove the underline */
 }
 
-.tripsSubtitle {
-  font-size: 1.2rem;
+.tripDates {
+  font-size: 1.25rem;
   color: #7c7c7c;
-  padding-bottom: 10px;
 }
 
 /* Trips Grid Layout */
 .tripsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(461px, 1fr)); /* Ensures consistent width */
-  gap: 40px; /* Uniform spacing */
+  grid-template-columns: repeat(auto-fit, minmax(461px, 1fr));
+  /* Ensures consistent width */
+  gap: 40px;
+  /* Uniform spacing */
 }
 
 /* Card Styles */
 .tripCard {
   background-color: white;
   border: 2px solid black;
-  box-sizing: border-box; /* Ensure all cards follow the same box model */
-  width: 100%; /* Same as newTripCard */
-  height: 100%; /* Same as newTripCard */
+  box-sizing: border-box;
+  /* Ensure all cards follow the same box model */
+  width: 100%;
+  /* Same as newTripCard */
+  height: 100%;
+  /* Same as newTripCard */
   border-radius: 10px;
   overflow: hidden;
 }
 
 .newTripCard {
   background-color: transparent;
-  border: 2px dashed #777; /* Match border width to regular cards */
-  box-sizing: border-box; /* Ensures padding and borders are accounted for */
-  width: 100%; /* Let it scale to the grid cell */
-  height: 100%; /* Match the grid cell height */
+  border: 2px dashed #777;
+  /* Match border width to regular cards */
+  box-sizing: border-box;
+  /* Ensures padding and borders are accounted for */
+  width: 100%;
+  /* Let it scale to the grid cell */
+  height: 100%;
+  /* Match the grid cell height */
   display: flex;
   justify-content: center;
   align-items: center;
   color: #777;
   font-size: 1.5rem;
   font-weight: bold;
-  transition: background-color 0.3s ease; /* Optional hover animation */
+  transition: background-color 0.3s ease;
+  /* Optional hover animation */
+  cursor: pointer;
+  /* Make it look clickable */
 }
 
 .newTripCard:hover {
-  background-color: rgba(0, 0, 0, 0.05); /* Slight hover effect */
+  background-color: rgba(0, 0, 0, 0.05);
+  /* Slight hover effect */
 }
 
 .newTripTitle {
@@ -143,14 +172,17 @@ body {
 
 .tripInfo {
   padding: 15px;
+  font-weight: 500;
+  font-size: 20px;
 }
 
-.tripTitle {
-  font-size: 1.5rem;
-  font-weight: bold;
+.tripsTitle {
+  font-size: 1.6rem;
+  font-weight: 500;
   color: #4a4a4a;
   display: flex;
   align-items: center;
+  margin-bottom: 0px;
 }
 
 .tripDates {
@@ -162,18 +194,22 @@ body {
 .tripsHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  /* Keeps space between items */
+  align-items: flex-end;
+  /* Aligns items to the bottom of the container */
   width: 100%;
-  border-bottom: 2px solid black;
-  gap: 10px; /* Ensure spacing between elements */
+  margin-bottom: 10px;
 }
 
 .pageNavigation {
   display: flex;
-  align-items: center; /* Center align with dropdown */
-  gap: 10px; /* Add spacing between pagination and dropdown */
-  flex-shrink: 0; /* Prevent shrinking on smaller screens */
+  align-items: center;
+  justify-content: flex-start;
+  /* Aligns items horizontally */
+  gap: 5px;
+  /* Space between pagination buttons and dropdown */
+  flex-wrap: nowrap;
+  /* Prevents items from wrapping to the next line */
 }
 
 /* Page Navigation Styles */
@@ -184,6 +220,8 @@ body {
   border: none;
   cursor: pointer;
   transition: color 0.3s ease;
+  outline: none;
+  /* Remove selection outline */
 }
 
 .pageNavigation button:disabled {
@@ -196,35 +234,90 @@ body {
 }
 
 /* Filter Dropdown */
+.divWrapper {
+  display: flex;
+  justify-content: space-between;
+  /* Aligns items with space between them */
+  align-items: flex-end;
+  /* Aligns items vertically in the center */
+  gap: 20px;
+  /* Adjust this value for the space between the dropdown and pagination */
+}
+
 .filterDropdown {
   display: flex;
   align-items: center;
-  gap: 10px; /* Add spacing between dropdown and other elements */
+  gap: 10px;
+  /* Add space between dropdown and other elements */
+  flex-shrink: 0;
+  /* Prevents the filter dropdown from shrinking */
 }
 
 .filterDropdown select {
+  min-width: 150px;
+  /* Ensure the dropdown has a minimum width */
   background-color: white;
   border: 2px solid black;
   border-radius: 5px;
   color: #4a4a4a;
   font-size: 16px;
   padding: 8px 12px;
-  font-weight: bold; /* Make the text stand out */
+  font-weight: 500;
+  /* Make the text stand out */
   cursor: pointer;
   transition: border-color 0.3s ease;
 }
 
 .filterDropdown select:focus {
-  outline: none; /* Remove focus outline */
-  border-color: #3696fc; /* Highlight border on focus */
+  outline: none;
+  /* Remove focus outline */
 }
 
 /* Invisible Card Styles */
 .invisibleTripCard {
   background-color: transparent;
-  width: 465px; /* Match visible trip card dimensions */
-  height: 294px; /* Match visible trip card dimensions */
+  width: 465px;
+  /* Match visible trip card dimensions */
+  height: 288px;
+  /* Match visible trip card dimensions */
   border: 1px dashed transparent;
   visibility: hidden;
   box-sizing: border-box;
+}
+
+/* New Trip Button Action */
+.newTripButton {
+  cursor: pointer;
+  border: none;
+  background-color: #3696fc;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Remove Focus Outline on Buttons */
+button:focus,
+select:focus {
+  outline: none;
+  /* Removes focus outline */
+}
+
+.flagIcon {
+  width: 30px;
+  /* Set the desired width */
+  height: 20px;
+  /* Set the desired height */
+  margin-right: 8px;
+  /* Space between the flag and the title */
+  vertical-align: middle;
+  border: 1px solid black;
+  /* Optional: for debugging purposes, can be removed */
+}
+
+.tripTitleWrapper {
+  display: flex;
+  align-items: center;
 }

@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import { SidebarItem } from "../Sidebar/Sidebar";
 import { LayoutDashboard, Calendar1, Settings, Plus } from "lucide-react";
 
 export default function Layout() {
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
-    <div className="flex h-screen w-full">
+    <div className={`flex h-screen w-full ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {/* Sidebar */}
-      <Sidebar>
+      <Sidebar toggleSidebar={toggleSidebar}>
         {/* Sidebar Navigation Items */}
         <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/dashboard" alert />
         <SidebarItem icon={<Calendar1 size={20} />} text="Calendar" to="/calendar" />
@@ -17,8 +23,10 @@ export default function Layout() {
       </Sidebar>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <Outlet />
+      <main className="flex-grow overflow-auto h-screen">
+        <div className="dashboard-container">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
