@@ -1,0 +1,257 @@
+/* Global Styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+.app {
+  background-image: url('../assets/Images/backgroundhome.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #002244;
+  padding: 20px 50px;
+  color: #fff;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.logo-icon {
+  height: 40px; /* Adjust size as needed */
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+/* Outlined Button (Sign Up) */
+.nav-btn.outlined {
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+}
+
+.nav-btn.outlined:hover {
+  background-color: #ffffff;
+  color: #002244;
+}
+
+/* Filled Button (Log In) */
+.nav-btn.filled {
+  background-color: #ffffff;
+  border: 2px solid #ffffff;
+  color: #002244;
+}
+
+.nav-btn.filled:hover {
+  opacity: 0.8;
+}
+
+/* Hero Section Styles */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 30px 0;
+  position: relative;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
+  overflow: hidden;
+}
+
+.hero-text {
+  text-align: left;
+  max-width: 40%;
+  margin-left: 5%;
+  position: relative;
+  z-index: 5;
+  padding-top: 80px;
+}
+
+.hero-image {
+  position: absolute; /* Ensure it's positioned relative to its parent */
+  right: 0;
+  top: 40%; /* Adjust this value to move it higher (e.g., 20%, 10%, etc.) */
+  transform: translateY(-50%); /* Center it vertically around the new position */
+}
+
+.hero-image img {
+  width: 1000px; /* Default width */
+  height: 1000px; /* Maintain the aspect ratio */
+  border-radius: 10px 0 0 10px;
+  display: block;
+  margin-right: 60px;
+}
+
+.hero-text h1 {
+  font-size: 65px;
+  margin: 0;
+  font-weight: bold;
+  color: #002244;
+}
+
+.hero-text p {
+  font-size: 38px;
+  margin: 20px 0 50px 0;
+  line-height: 1.3;
+  color: #002244;
+}
+
+.sign-up-btn {
+  margin-top: 20px;
+  background-color: transparent;
+  border: 4px solid #002244;
+  color: #002244;
+  padding: 6px 40px;
+  border-radius: 30px;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sign-up-btn:hover {
+  background-color: #002244;
+  color: #fff;
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 900px) {
+  .hero {
+    padding: 30px 20px;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .hero-image {
+    position: relative;
+    width: 100%;
+    margin-top: -180px;
+  }
+  
+  .hero-image img {
+    width: 600px; /* Resize the image for smaller screens */
+    height: 600px; /* Adjust height to maintain aspect ratio */
+    margin: 0 auto;
+    display: block;
+  }
+
+  .hero-text {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .hero-title {
+    font-size: 15rem;
+  }
+
+  .hero-text h1 {
+    font-size: 46px;
+  }
+  
+  .hero-text p {
+    font-size: 24px;
+  }
+
+  .sign-up-btn {
+    padding: 6px 40px;
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+/* Other Media Queries and Styles */
+@media (max-width: 767px) {
+  .navbar {
+    padding: 10px 20px;
+  }
+
+  .nav-buttons {
+    gap: 5px;
+  }
+
+  .nav-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .logo-icon {
+    height: 30px;
+  }
+
+  .hero {
+    padding: 0 20px;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .hero-text {
+    max-width: 100%;
+    margin-bottom: 10px;
+    margin-top: -40px;
+    text-align: center;
+  }
+  
+  .hero-text h1 {
+    font-size: 36px;
+  }
+  
+  .hero-image {
+    position: relative;
+    width: 100%;
+    margin-top: -180px;
+  }
+  
+  .hero-image img {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .sign-up-btn {
+    font-size: 20px;
+    padding: 6px 25px;
+  }
+}
+

@@ -1,0 +1,195 @@
+/* Updated CSS Code */
+
+/* Remove the navbar but keep the logo in place */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff; /* White color for "GRAND LINE" */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: absolute; /* Position it relative to the top */
+  left: 50px; /* Adjust for horizontal alignment */
+  top: 15px; /* Changed from 20px to 15px to move it up */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Drop shadow for the text */
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  opacity: 0.8;
+}
+
+/* Drop shadow for the logo icon */
+.logo-icon {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7)); /* Drop shadow for the image */
+}
+
+/* Background style */
+.login-container {
+  min-height: 100vh; /* Take full viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #6245c6, #ce8ef2); /* Updated gradient */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Login content */
+.login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.login-box {
+  background: white;
+  padding: 3rem;
+  border-radius: 15px;
+  border: 2px solid black;
+  box-shadow: 0 10px 20px rgb(0, 0, 0); /* Shadow only below */
+  width: 150%;
+  max-width: 700px;
+  text-align: center;
+}
+
+/* Welcome text with drop shadow effect */
+.welcome-text {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0rem;
+  text-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Horizontal: 0px, Vertical: 4px, Blur: 6px, Shadow color */
+}
+
+/* Form title */
+.login-title {
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+/* Form group styling */
+.form-group {
+  margin-bottom: 2.5rem;
+  text-align: left;
+}
+
+/* Form label styling */
+.form-label {
+  color: #333;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Input fields */
+.form-input {
+  width: 100%;
+  padding: 10px 15px 10px 40px;
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-with-icon {
+  position: relative;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+/* Input focus */
+.form-input:focus {
+  outline: none;
+  border-color: #6245c6; /* Highlight color */
+  box-shadow: 0 0 5px rgba(98, 69, 198, 0.5);
+}
+
+/* Submit button */
+.submit-button {
+  width: 80%; /* Reduce the width to 80% of the container */
+  max-width: 200px; /* Optional: Set a maximum width for the button */
+  padding: 10px; /* Adjust padding for a smaller button */
+  background-color: #37c18c; /* Green button color */
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background-color: #2fa375; /* Slightly darker green */
+}
+
+.submit-button:active {
+  transform: scale(0.98); /* Button press effect */
+}
+
+/* Footer links */
+.form-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  padding: 0 1rem;
+}
+
+.form-link {
+  color: #6245c6;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 0 4rem;
+}
+
+.form-link:hover {
+  text-decoration: underline;
+}
+
+/* Error states */
+.form-input.error {
+  border-color: #e74c3c;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px){
+  .form-footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; /* Smaller gap for mobile view */
+  }
+  .login-box {
+    padding: 1.5rem;
+  }
+
+
+  .login-box{
+    max-width: 300px;
+  }
+}

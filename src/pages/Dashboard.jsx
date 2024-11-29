@@ -83,7 +83,7 @@ export default function Dashboard() {
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.dashboard}>
-        <div className={styles.searchBar}>
+        <div className={styles.searchBarContainer}>
           <input
             type="text"
             placeholder="Search here..."
@@ -97,7 +97,7 @@ export default function Dashboard() {
           <h1 className={styles.headerTitle}>Username's Dashboard</h1>
         </div>
 
-        <div className={styles.tripsSection}>
+        <div className={styles.tripsSectionContainer}>
           <div className={styles.tripsHeader}>
             <h2 className={styles.tripsTitle}>Your Trips</h2>
             <div className={styles.divWrapper}>
