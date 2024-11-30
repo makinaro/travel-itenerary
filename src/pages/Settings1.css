@@ -1,44 +1,82 @@
+/* Global Background */
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-image: url('../assets/Images/Background1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  
+}
+
+/* Form Container */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Full-screen height */
+  padding: 40px; /* Extra padding for spacing around the rectangle */
+  position: relative;
+}
+
+/* Form Background */
+.form-container::before {
+  content: "";
+  position: absolute;
+  width: 95%; /* Slightly larger than the form */
+  height: 95%; /* Slightly larger than the form */
+  background-color: #ffffff; /* Light gray for the rectangle */
+  border-radius: 10px; /* Smooth corners for the rectangle */
+  z-index: 0; /* Place it behind the form */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  outline: 1px solid #000000; /* Blue outline color, adjust as needed */
+}
+
 /* Container */
 .container {
-  margin: 0 auto;
-  padding: 20px;
-  max-width: 800px;
-  font-family: 'Arial', sans-serif;
+  position: relative;
+  padding: 5px;
+  border-radius: 0px;
+  max-width: 1200px;
+  width: 100%;
+  z-index: 1;
+  margin-right: 480px !important;
 }
 
 /* Headings */
 .main-heading {
-  font-size: 24px;
+  font-size: 32px; /* Larger heading */
   font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.subheading {
-  font-size: 14px;
-  color: #666;
   margin-bottom: 20px;
 }
 
+.subheading {
+  font-size: 16px; /* Slightly larger subheading */
+  color: #666;
+  margin-bottom: 30px;
+}
+
 .section-heading {
-  font-size: 20px;
+  font-size: 22px; /* Larger section headings */
   font-weight: bold;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  margin-top: 40px;
+  margin-bottom: 20px;
 }
 
 /* Profile Section */
 .profile-section {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px; /* Increased spacing */
 }
 
 .profile-image {
-  width: 150px;
-  height: 150px;
+  width: 200px; /* Larger profile image */
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 20px;
+  margin-right: 30px; /* More spacing between image and text */
 }
 
 .upload-section {
@@ -46,40 +84,34 @@
 }
 
 .upload-section input {
-  margin-bottom: 5px;
-}
-
-.file-status {
-  margin-left: 10px;
-  font-size: 14px;
-  color: #666;
+  margin-bottom: 10px; /* Slightly more spacing */
 }
 
 .upload-text {
-  font-size: 12px;
+  font-size: 14px; /* Slightly larger text */
   color: #666;
   margin-top: 10px;
 }
 
-/* Input Groups for Horizontal Layout */
+/* Input Groups */
 .input-group {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px; /* Increased spacing between fields */
 }
 
 .input-group label {
-  flex: 0 0 200px; /* Set a fixed width for labels */
-  font-size: 14px;
+  flex: 0 0 220px; /* Slightly larger label width */
+  font-size: 16px;
   margin-right: 10px;
 }
 
 .input {
-  flex: 1; /* Input will take the remaining space */
-  padding: 10px;
-  font-size: 14px;
+  flex: 1;
+  padding: 12px; /* Larger input fields */
+  font-size: 16px; /* Larger text */
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px; /* Slightly more rounded corners */
   box-sizing: border-box;
 }
 
@@ -93,31 +125,41 @@
 .lock-icon {
   position: absolute;
   right: 10px;
-  font-size: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #666;
+  width: 18px; /* Slightly larger icon */
+  height: 18px;
 }
 
 /* Buttons */
 .button-group {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 15px; /* Increased spacing between buttons */
+  margin-top: 30px; /* Increased spacing above buttons */
 }
 
 .cancel-button {
-  padding: 10px 20px;
+  padding: 12px 24px; /* Larger buttons */
   background-color: #fff;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
 .save-button {
-  padding: 10px 20px;
+  padding: 12px 24px; /* Larger buttons */
   background-color: #000;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1800px) {
+  .container {
+    margin-right: 0 !important;
+  }
 }
