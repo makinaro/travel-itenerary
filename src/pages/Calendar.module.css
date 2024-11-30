@@ -92,12 +92,40 @@
   text-transform:uppercase;
 }
 
-/* Remove border for selected prev button */
-.calendarContainer :global(.fc-prev-button.fc-button-primary.fc-button-active) {
-  border: none; /* Removes the border */
+.calendarContainer :global(.fc .fc-next-button),
+.calendarContainer :global(.fc .fc-prev-button),
+.calendarContainer :global(.fc .fc-next-button:focus),
+.calendarContainer :global(.fc .fc-prev-button:focus),
+.calendarContainer :global(.fc .fc-next-button:hover),
+.calendarContainer :global(.fc .fc-prev-button:hover),
+.calendarContainer :global(.fc .fc-next-button:active),
+.calendarContainer :global(.fc .fc-prev-button:active),
+.calendarContainer :global(.fc .fc-next-button:after),
+.calendarContainer :global(.fc .fc-prev-button:after){
+  outline: none;          /* Remove the default outline */
+  text-decoration: none;
+  border: none;
+  box-shadow:0px 0px 0px none;
 }
 
-/* Alternatively, you can target the next button similarly */
-.calendarContainer :global(.fc-next-button.fc-button-primary.fc-button-active) {
-  border: none; /* Removes the border */
+.calendarContainer :global(.fc .fc-next-button),
+.calendarContainer :global(.fc .fc-prev-button) {
+  color: rgb(255, 255, 255);
+  background-color: #252525;
+
+}
+
+.calendarContainer :global(.fc .fc-next-button:focus),
+.calendarContainer :global(.fc .fc-prev-button:focus) {
+  
+}
+
+.calendarContainer :global(.fc .fc-next-button:hover),
+.calendarContainer :global(.fc .fc-prev-button:hover) {
+}
+
+
+.calendarContainer :global(.fc .fc-next-button:active),
+.calendarContainer :global(.fc .fc-prev-button:active) {
+  background-color: #000000;
 }
