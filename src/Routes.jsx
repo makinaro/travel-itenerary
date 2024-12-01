@@ -7,6 +7,7 @@ import Settings from './pages/Settings';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import NewEvent from './pages/NewEvent';
 
 const AppRoutes = () => {
   console.log("Rendering AppRoutes");
@@ -21,6 +22,7 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/NewEvent" element={<NewEvent />} />
       </Route>
 
       {/* Routes without Sidebar */}
