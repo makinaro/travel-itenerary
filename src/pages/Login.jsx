@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import logoImage from '../assets/Images/logo.png'; // Ensure the path is correct
-import loginBG from '../assets/images/loginBG.jpeg';
+import loginBG from '../assets/Images/loginBG.jpeg';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
