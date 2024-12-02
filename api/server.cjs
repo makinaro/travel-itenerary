@@ -1,24 +1,31 @@
 const express = require('express');
-const { sequelize, connectDB } = require('./db.cjs'); // Import db.cjs
-const apiRoutes = require('./routes/index.cjs'); // Import combined routes
+const cors = require('cors'); // cors for cross-origin requests
+const authMiddleware = require('./middleware/authMiddleware.cjs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:5173']
+}
+
+//middleware
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Use combined routes
-app.use('/api', apiRoutes);
+//routes
+const userRouter = require('./routes/userRouter.cjs');
+const authController = require('./controllers/authController.cjs');
+app.use('/users', userRouter);
+app.post('/login', authController.loginUser); // Login route
 
-sequelize.sync();
+//test
+app.get('/', (req, res) => {
+  res.json({ message: 'Welcome to Grandline' });
+});
 
-app.listen(PORT, async () => {
+const PORT = 3000;
+
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  await connectDB(); // Connect to the database
-  try {
-    await sequelize.sync(); // Sync all models
-    console.log('Database synced');
-  } catch (error) {
-    console.error('Error syncing database:', error);
-  }
 });

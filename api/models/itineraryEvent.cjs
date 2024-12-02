@@ -1,6 +1,4 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const ItineraryEvent = sequelize.define('ItineraryEvent', {
     event_id: {
       type: DataTypes.INTEGER,
@@ -15,7 +13,7 @@ module.exports = (sequelize) => {
     location: DataTypes.STRING(255),
     itinerary_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER
-  }, {});
+  }, {tableName: 'itinerary_events'});
 
   ItineraryEvent.associate = (models) => {
     ItineraryEvent.belongsTo(models.Itinerary, { foreignKey: 'itinerary_id' });

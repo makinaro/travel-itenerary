@@ -9,7 +9,7 @@ const Login = () => {
     username: '',
     password: '',
   });
-
+  const [error, setError] = useState('');
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -17,10 +17,34 @@ const Login = () => {
       [name]: value,
     }));
   };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Login attempt with:', formData);
+
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+
+      // Store token in localStorage
+      localStorage.setItem('token', data.token);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error:', error);
+      setError(error.message); // Set the error message
+    }
   };
 
   return (

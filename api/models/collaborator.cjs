@@ -1,6 +1,4 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const Collaborator = sequelize.define('Collaborator', {
     collaborator_id: {
       type: DataTypes.INTEGER,
@@ -10,7 +8,7 @@ module.exports = (sequelize) => {
     access_level: DataTypes.ENUM('view', 'edit'),
     user_id: DataTypes.INTEGER,
     itinerary_id: DataTypes.INTEGER
-  }, {});
+  }, {tableName: 'collaborators'});
 
   Collaborator.associate = (models) => {
     Collaborator.belongsTo(models.User, { foreignKey: 'user_id' });

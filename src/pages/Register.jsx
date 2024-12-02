@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Register1.css';
 import logoImage from '../assets/Images/logo.png';
-import loginBG from '../assets/Images/loginBG.jpeg';
+import loginBG from '../assets/images/loginBG.jpeg';
 import { Lock, User, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ const Register = () => {
     email: '',
     password: '',
   });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,11 +21,32 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Registration attempt with:', formData);
-  };
 
+    try {
+      const response = await fetch('http://localhost:3000/users/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+      setError(''); // Clear any previous errors
+    } catch (error) {
+      console.error('Error:', error);
+      setError(error.message); // Set the error message
+    }
+  };
   return (
     <>
       <div className="logo-container">

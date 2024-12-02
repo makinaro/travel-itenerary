@@ -1,17 +1,29 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     user_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    username: DataTypes.STRING(16),
-    email: DataTypes.STRING(255),
-    password: DataTypes.CHAR(60),
-    contact_number: DataTypes.STRING(32)
-  }, {});
+    username: {
+      type: DataTypes.STRING(16),
+      allowNull: false,
+      unique: true
+    },
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: DataTypes.CHAR(60),
+      allowNull: false
+    },
+    contact_number: {
+      type: DataTypes.STRING(32),
+      allowNull: true
+    }
+  }, {tableName: 'users'});
 
   User.associate = (models) => {
     User.hasMany(models.Todo, { foreignKey: 'user_id' });

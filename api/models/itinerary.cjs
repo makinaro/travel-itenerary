@@ -1,6 +1,4 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   const Itinerary = sequelize.define('Itinerary', {
     itinerary_id: {
       type: DataTypes.INTEGER,
@@ -13,7 +11,7 @@ module.exports = (sequelize) => {
     created_at: DataTypes.DATE,
     updated_at: DataTypes.DATE,
     user_id: DataTypes.INTEGER
-  }, {});
+  }, {tableName: "itinerary"});
 
   Itinerary.associate = (models) => {
     Itinerary.belongsTo(models.User, { foreignKey: 'user_id' });
