@@ -9,6 +9,7 @@
   position: relative;
 }
 
+/* Background Image */
 .calendarContainer::before {
   content: "";
   position: absolute;
@@ -23,12 +24,12 @@
 
 /* Root Variables */
 :root {
-  --fc-event-bg-color: #f3f4f6;
-  --fc-event-border-color: #5348cd;
-  --fc-event-text-color: #000000;
-  --fc-button-bg-color: #202020;
-  --fc-today-bg-color: rgba(255, 220, 40, 0.15);
-  --fc-border-color: rgb(190, 190, 190);
+  --fc-event-bg-color: #f3f4f6; /* Event background color */
+  --fc-event-border-color: #5348cd; /* Event border color */
+  --fc-event-text-color: #000000; /* Event text color */
+  --fc-button-bg-color: #202020; /* Button background color */
+  --fc-today-bg-color: rgba(255, 220, 40, 0.15); /* Today's date background color */
+  --fc-border-color: rgb(190, 190, 190); /* Grid border color */
 }
 
 /* Toolbar and Day Numbers */
@@ -38,7 +39,7 @@
   text-transform: uppercase;
 }
 
-.calendarContainer :global(.fc .fc-toolbar.fc-header-toolbar){
+.calendarContainer :global(.fc .fc-toolbar.fc-header-toolbar) {
   margin-bottom: 1.2em;
 }
 
@@ -75,8 +76,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, 50%);
+  cursor: pointer; /* Change cursor to pointer when hovering over events */
 }
 
+/* Day Grid and Events Area */
 .calendarContainer :global(.fc .fc-daygrid-day-frame) {
   position: relative;
 }
@@ -87,7 +90,7 @@
   height: auto;
 }
 
-/* Style the top 50% of each day */
+/* Top 50% of Each Day Styling */
 .calendarContainer .fc-daygrid-day {
   position: relative;
 }
@@ -103,15 +106,16 @@
   z-index: -1;
 }
 
-.calendarContainer :global(.fc-col-header-cell-cushion){
+/* Header Cells */
+.calendarContainer :global(.fc-col-header-cell-cushion) {
   color: black;
 }
 
-.calendarContainer :global(.fc-scrollgrid-sync-inner){
+.calendarContainer :global(.fc-scrollgrid-sync-inner) {
   border-bottom: 0px;
 }
 
-/* Handle text overflow for long event titles or descriptions */
+/* Handle text overflow for event titles and descriptions */
 .calendarContainer :global(.fc .fc-daygrid-event .fc-event-title) {
   display: flex;
   flex-direction: column;
@@ -134,4 +138,14 @@
   white-space: nowrap;
   font-size: 12px;
   max-width: 100%;
+}
+
+/* Default color when untoggled */
+.highlightedEventBlue {
+  border-left: 8px solid #5348cd !important; /* Blue color for untoggled event */
+}
+
+/* Red border when toggled */
+.highlightedEventRed {
+  border-left: 8px solid red !important; /* Red color for toggled event */
 }
