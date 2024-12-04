@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./CreateTrip.module.css";
 import { X } from 'lucide-react';
 
-// Example function to simulate fetching users from a database (you can replace it with actual API calls)
+// REPLACE THIS WITH ACTUAL API FETCH
 const fetchUsernames = (searchTerm) => {
   const allUsers = ["Xavier_Paul", "AaronsNipples", "tiuditto"];
   return allUsers.filter(username => username.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -17,9 +17,9 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [collaborators, setCollaborators] = useState([]);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [formErrors, setFormErrors] = useState({});
+  const [trips, setTrips] = useState([]); 
 
   useEffect(() => {
-    // Close suggestions when clicking outside
     const handleClickOutside = (event) => {
       if (!event.target.closest(`.${styles.searchBar}`)) {
         setSuggestedUsers([]);
@@ -38,9 +38,8 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     setSearchTerm(search);
 
     if (search === "") {
-      setSuggestedUsers([]); // Clear suggestions if the search term is empty
+      setSuggestedUsers([]); // Clears suggestions if the search term is empty
     } else {
-      // Filter users based on the search term and exclude already added collaborators
       const filteredUsers = fetchUsernames(search).filter((user) => !collaborators.includes(user));
       setSuggestedUsers(filteredUsers); // Fetch and filter suggestions based on search term
     }
@@ -58,8 +57,12 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     setCollaborators(updatedCollaborators);
   };
 
+  const addTrip = (tripData) => {
+    setTrips([...trips, tripData]);  // Add new trip to the trips list
+    console.log("New trip added:", tripData); // replace this later with actual function
+  };
+
   const handleConfirm = () => {
-    // Basic validation for the form fields
     const errors = {};
     if (!title) errors.title = "Title is required";
     if (!description) errors.description = "Description is required";
@@ -67,12 +70,12 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     if (!endDate) errors.endDate = "End Date is required";
     if (new Date(endDate) < new Date(startDate)) errors.date = "End Date cannot be before Start Date";
     if (collaborators.length === 0) errors.collaborators = "At least one collaborator is required";
-
+  
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-
+  
     const tripData = {
       title,
       description,
@@ -80,7 +83,10 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       endDate,
       collaborators,
     };
-    onConfirm(tripData);
+  
+    addTrip(tripData);  // Add the new trip when confirmed
+  
+    onConfirm(tripData); // Pass trip data back to parent (if needed)
     onClose();
   };
 

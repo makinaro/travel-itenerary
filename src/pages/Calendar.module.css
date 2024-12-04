@@ -1,131 +1,137 @@
-/* Calendar container */
+/* Calendar Container */
 .calendarContainer {
-    width: 90%;
-    margin: 0 auto;
-    margin-top: 4%;
-    background-color: white;
-    padding: 25px;
-    border-radius: 5px;
-    border: 1px solid black;
-  }
-  
-  .calendarContainer::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('../assets/Images/Background1.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    transform: rotate(180deg);
-    z-index: -1;
-  }
+  width: 85%;
+  margin: 3% auto;
+  background-color: white;
+  padding: 25px;
+  border-radius: 5px;
+  border: 1px solid black;
+  position: relative;
+}
 
-  :root {
-    --fc-small-font-size: .85em;
-    --fc-page-bg-color: #fff;
-    --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
-    --fc-neutral-text-color: #808080;
-    --fc-border-color: #ddd;
-  
-    --fc-button-text-color: #fff;
-    --fc-button-bg-color: #000000;
-    --fc-button-border-color: #2C3E50;
-    --fc-button-hover-bg-color: #1e2b37;
-    --fc-button-hover-border-color: #1a252f;
-    --fc-button-active-bg-color: indigo-100;
-    --fc-button-active-border-color: #151e27;
-    
-    --fc-daygrid-month-text-color: black;
+.calendarContainer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('../assets/Images/Background1.jpg') center/cover fixed;
+  transform: rotate(180deg);
+  z-index: -1;
+}
 
-    --fc-event-bg-color: #3788d8;
-    --fc-event-border-color: #3788d8;
-    --fc-event-text-color: #fff;
-    --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
-  
-    --fc-more-link-bg-color: #d0d0d0;
-    --fc-more-link-text-color: inherit;
-  
-    --fc-event-resizer-thickness: 8px;
-    --fc-event-resizer-dot-total-width: 8px;
-    --fc-event-resizer-dot-border-width: 1px;
-  
-    --fc-non-business-color: rgba(215, 215, 215, 0.3);
-    --fc-bg-event-color: rgb(143, 223, 130);
-    --fc-bg-event-opacity: 0.3;
-    --fc-highlight-color: rgba(188, 232, 241, 0.3);
-    --fc-today-bg-color: rgba(255, 220, 40, 0.15);
-    --fc-now-indicator-color: red;
-  }
+/* Root Variables */
+:root {
+  --fc-event-bg-color: #f3f4f6;
+  --fc-event-border-color: #5348cd;
+  --fc-event-text-color: #000000;
+  --fc-button-bg-color: #202020;
+  --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+  --fc-border-color: rgb(190, 190, 190);
+}
 
-  /* DAYGRID */
-  :root {
-    --fc-border-color: black;
-    --fc-daygrid-event-dot-width: 5px;
-  }
-
-  /* LIST */
-  :root {
-    --fc-list-event-dot-width: 10px;
-    --fc-list-event-hover-bg-color: #f5f5f5;
-  }
-
-  .calendarContainer :global( .fc .fc-col-header-cell-cushion) {
-    color: black;  
-    font-weight: 600;
-  }
-
-  .calendarContainer :global(.fc .fc-daygrid-day-number) {
-    position: absolute;
-    left: 5px;
-    right: auto;
-    text-align: left;
-    color: black;  
-  }
-  
-.calendarContainer :global(.fc .fc-toolbar-title){
-  color: black;  
+/* Toolbar and Day Numbers */
+.calendarContainer :global(.fc .fc-toolbar-title) {
+  color: black;
   font-weight: bold;
-  text-transform:uppercase;
+  text-transform: uppercase;
 }
 
-.calendarContainer :global(.fc .fc-next-button),
-.calendarContainer :global(.fc .fc-prev-button),
-.calendarContainer :global(.fc .fc-next-button:focus),
-.calendarContainer :global(.fc .fc-prev-button:focus),
-.calendarContainer :global(.fc .fc-next-button:hover),
-.calendarContainer :global(.fc .fc-prev-button:hover),
-.calendarContainer :global(.fc .fc-next-button:active),
-.calendarContainer :global(.fc .fc-prev-button:active),
-.calendarContainer :global(.fc .fc-next-button:after),
-.calendarContainer :global(.fc .fc-prev-button:after){
-  outline: none;          /* Remove the default outline */
-  text-decoration: none;
+.calendarContainer :global(.fc .fc-toolbar.fc-header-toolbar){
+  margin-bottom: 1.2em;
+}
+
+.calendarContainer :global(.fc .fc-daygrid-day-number) {
+  position: absolute;
+  left: 5px;
+  color: black;
+}
+
+/* Buttons */
+.calendarContainer :global(.fc .fc-prev-button, .fc .fc-next-button) {
+  color: white;
+  background-color: var(--fc-button-bg-color);
   border: none;
-  box-shadow:0px 0px 0px none;
 }
 
-.calendarContainer :global(.fc .fc-next-button),
-.calendarContainer :global(.fc .fc-prev-button) {
-  color: rgb(255, 255, 255);
-  background-color: #252525;
-
+.calendarContainer :global(.fc .fc-prev-button:hover, .fc .fc-next-button:hover) {
+  background-color: black;
 }
 
-.calendarContainer :global(.fc .fc-next-button:focus),
-.calendarContainer :global(.fc .fc-prev-button:focus) {
-  
+/* Events */
+.calendarContainer :global(.fc .fc-daygrid-event) {
+  display: flex;
+  align-items: center;
+  width: 95%;
+  max-width: 95%;
+  background-color: var(--fc-event-bg-color);
+  color: var(--fc-event-text-color);
+  border-radius: 4px;
+  padding: 10px;
+  border: 0px;
+  border-left: 8px solid var(--fc-event-border-color);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
 }
 
-.calendarContainer :global(.fc .fc-next-button:hover),
-.calendarContainer :global(.fc .fc-prev-button:hover) {
+.calendarContainer :global(.fc .fc-daygrid-day-frame) {
+  position: relative;
 }
 
+.calendarContainer :global(.fc .fc-daygrid-day-events) {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
 
-.calendarContainer :global(.fc .fc-next-button:active),
-.calendarContainer :global(.fc .fc-prev-button:active) {
-  background-color: #000000;
+/* Style the top 50% of each day */
+.calendarContainer .fc-daygrid-day {
+  position: relative;
+}
+
+.calendarContainer .fc-daygrid-day::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: rgba(255, 220, 40, 0.2);
+  z-index: -1;
+}
+
+.calendarContainer :global(.fc-col-header-cell-cushion){
+  color: black;
+}
+
+.calendarContainer :global(.fc-scrollgrid-sync-inner){
+  border-bottom: 0px;
+}
+
+/* Handle text overflow for long event titles or descriptions */
+.calendarContainer :global(.fc .fc-daygrid-event .fc-event-title) {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.calendarContainer :global(.fc .fc-daygrid-event .fc-event-title div) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  max-width: 100%;
+}
+
+.calendarContainer :global(.fc .fc-daygrid-event .fc-event-description) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  max-width: 100%;
 }

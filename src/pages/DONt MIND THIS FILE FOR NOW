@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -7,39 +7,39 @@ import styles from './Calendar.module.css';
 
 const Calendar = () => {
   // State to manage events
-  const [events, setEvents] = useState([
-    {
-      title: 'Event #1',
-      start: '2024-12-05',
-      end: '2024-12-08',
-      description: 'This is a detailed description for Event #1. This text should be truncated when it overflows.',
-    },
-    {
-      title: 'Event #2',
-      start: '2024-12-10',
-      end: '2024-12-11',
-      description: 'This is a description for Event #2.',
-    },
-  ]);
+  const [events, setEvents] = useState([]);
+
+  // Fetch events from the database (simulate with useEffect)
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        // Simulating an API call to fetch events from a database
+        const response = await fetch('/api/events'); // Replace with your actual API endpoint
+        const data = await response.json(); // Assuming the API returns a JSON response
+
+        // Map the data into the format FullCalendar expects
+        const formattedEvents = data.map(event => ({
+          title: event.title,
+          start: event.startDate, // Ensure the date format matches the expected format
+          end: event.endDate,
+          description: event.description,
+        }));
+
+        // Update the state with the fetched events
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []); // Empty dependency array means this runs only once when the component mounts
 
   // Utility function to handle date adjustments and formatting
   const formatEventEndDate = (date) => {
     const localDate = new Date(date);
     localDate.setDate(localDate.getDate() - 1); // Adjust only the end date by subtracting 1 day
     return localDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  };
-
-  // Function to add a new trip
-  const addTrip = (tripData) => {
-    setEvents((prevEvents) => [
-      ...prevEvents,
-      {
-        title: tripData.title,
-        start: tripData.startDate,
-        end: tripData.endDate,
-        description: tripData.description,
-      },
-    ]);
   };
 
   return (
