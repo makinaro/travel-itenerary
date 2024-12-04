@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 // Example function to simulate fetching users from a database (you can replace it with actual API calls)
 const fetchUsernames = (searchTerm) => {
-  const allUsers = ["Xavier_Paul", "AaronsNipples", "DittoTiu"];
+  const allUsers = ["Xavier_Paul", "AaronsNipples", "tiuditto"];
   return allUsers.filter(username => username.toLowerCase().includes(searchTerm.toLowerCase()));
 };
 

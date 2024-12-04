@@ -24,12 +24,13 @@ export default function Layout() {
       <Sidebar toggleSidebar={toggleSidebar}>
         <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/dashboard" alert />
         <SidebarItem icon={<Calendar1 size={20} />} text="Calendar" to="/calendar" />
-        <SidebarItem icon={<Settings size={20} />} text="Settings" to="/settings" />
         <SidebarItem
           icon={<Plus size={20} />}
           text="Create&nbsp;New&nbsp;Trip"
           onClick={handleOpenCreateTrip} // Open modal
         />
+        <hr className="my-3"/>
+        <SidebarItem icon={<Settings size={20} />} text="Settings" to="/settings" />
       </Sidebar>
 
       {/* Main Content */}

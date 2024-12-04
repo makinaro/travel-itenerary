@@ -42,8 +42,8 @@ export default function Sidebar({ children }) {
             className={`${styles.userInfo} ${expanded ? 'w-60 ml-3' : 'w-0'}`}
           >
             <div className="userDetails">
-              <h4 className="username">John Doe</h4>
-              <span className="email">johndoe@gmail.com</span>
+              <span className="name">John Doe</span>
+              <h4 className="username">@johndoe123_</h4>
             </div>
             <MoreVertical size={20} />
           </div>
