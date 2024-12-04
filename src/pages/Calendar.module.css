@@ -70,13 +70,13 @@
   color: var(--fc-event-text-color);
   border-radius: 4px;
   padding: 10px;
-  border: 0px;
+  border: none;
   border-left: 8px solid var(--fc-event-border-color);
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, 50%);
-  cursor: pointer; /* Change cursor to pointer when hovering over events */
+  cursor: pointer;
 }
 
 /* Day Grid and Events Area */
@@ -90,7 +90,7 @@
   height: auto;
 }
 
-/* Top 50% of Each Day Styling */
+/* Highlight Top Half of Each Day */
 .calendarContainer .fc-daygrid-day {
   position: relative;
 }
@@ -112,10 +112,10 @@
 }
 
 .calendarContainer :global(.fc-scrollgrid-sync-inner) {
-  border-bottom: 0px;
+  border-bottom: 0;
 }
 
-/* Handle text overflow for event titles and descriptions */
+/* Text Overflow for Event Titles and Descriptions */
 .calendarContainer :global(.fc .fc-daygrid-event .fc-event-title) {
   display: flex;
   flex-direction: column;
@@ -140,12 +140,29 @@
   max-width: 100%;
 }
 
-/* Default color when untoggled */
+/* Event Highlighting */
 .highlightedEventBlue {
-  border-left: 8px solid #5348cd !important; /* Blue color for untoggled event */
+  border-left: 8px solid #5348cd !important; /* Untoggled (blue) event */
 }
 
-/* Red border when toggled */
 .highlightedEventRed {
-  border-left: 8px solid red !important; /* Red color for toggled event */
+  border-left: 8px solid red !important; /* Toggled (red) event */
+}
+
+.highlightedEventDetails {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.highlightedEventDetails h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #333;
+}
+.highlightedEventDetails p {
+  margin: 5px 0;
+  color: #555;
 }
