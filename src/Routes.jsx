@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import NewEvent from './pages/NewEvent';
+import editPlan from './pages/editPlan';
 
 const AppRoutes = () => {
   console.log("Rendering AppRoutes");
@@ -23,6 +24,7 @@ const AppRoutes = () => {
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/NewEvent" element={<NewEvent />} />
+        <Route path="/editPlan" element={<editPlan />} />
       </Route>
 
       {/* Routes without Sidebar */}
