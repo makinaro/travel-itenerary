@@ -53,32 +53,47 @@ export default function Sidebar({ children }) {
   );
 }
 
-export function SidebarItem({ icon, text, to, alert }) {
+export function SidebarItem({ icon, text, to, alert, onClick }) {
   const { expanded } = useContext(SidebarContext);
 
+  if (to) {
+    // If `to` is provided, render as a NavLink
+    return (
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${
+            isActive
+              ? "bg-indigo-100 text-indigo-800"
+              : "hover:bg-indigo-50 text-gray-600"
+          }`
+        }
+      >
+        <div className="text-lg">{icon}</div>
+        <span
+          className={`${expanded ? "ml-3 w-auto" : "w-0"} overflow-hidden transition-all`}
+        >
+          {text}
+        </span>
+        {alert && <div className={styles.notificationDot}></div>}
+      </NavLink>
+    );
+  }
+
+  // Otherwise, render as a button for modal or other actions
   return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${
-          isActive
-            ? "bg-indigo-100 text-indigo-800"
-            : "hover:bg-indigo-50 text-gray-600"
-        }`
-      }
+    <button
+      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${
+        expanded ? "w-full" : "" // Make button full width when expanded
+      } bg-transparent hover:bg-indigo-50 text-gray-600`} 
+      onClick={onClick}
     >
       <div className="text-lg">{icon}</div>
-
       <span
-        className={`${expanded ? 'ml-3 w-auto' : 'w-0'} overflow-hidden transition-all`}
+        className={`${expanded ? "ml-3 w-auto" : "w-0"} overflow-hidden transition-all`}
       >
         {text}
       </span>
-
-      {alert && (
-        <div className={styles.notificationDot}></div>
-      )}
-    </NavLink>
+    </button>
   );
 }
-  
