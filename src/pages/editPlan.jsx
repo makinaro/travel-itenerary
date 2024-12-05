@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import styles from './Form.module.css';
 
-
 const FormContainer = ({ title, description, children }) => {
     return (
-    <div className={styles.formContainer}>
-    <h2>{title}</h2>
-    <p>{description}</p>
-    {children}
-    </div>
+        <div className={styles.formContainer}>
+            <h2>{title}</h2>
+            <p>{description}</p>
+            {children}
+        </div>
     );
-    };
-    const CreateNewEvent = () => {
+};
+
+const EditPlan = () => {
     const [eventName, setEventName] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -20,7 +20,7 @@ const FormContainer = ({ title, description, children }) => {
     const handleCancel = () => {
         // Add any necessary cancel logic here
     };
-    
+
     const handleCreate = () => {
         // Add any necessary create event logic here
     };
@@ -32,7 +32,7 @@ const FormContainer = ({ title, description, children }) => {
         >
             <form className={styles.createEventForm}>
                 <div className={styles.formGroup}>
-                    <h3 htmlFor="event-name">Add Title</h3>
+                    <h3 htmlFor="event-name">Title</h3>
                     <textarea
                         type="text"
                         id="event-name"
@@ -62,17 +62,15 @@ const FormContainer = ({ title, description, children }) => {
                     </div>
                 </div>
                 <div className={styles.formGroup}>
-                    <h3 htmlFor="event-description">Meeting Description</h3>
-                    <div className={styles.eventDescription}>
-                        <textarea
-                            id="event-description"
-                            placeholder="Add meeting description"
-                            value={eventDescription}
-                            onChange={(e) => setEventDescription(e.target.value)}
-                        ></textarea>
-                    </div>
+                    <h3 htmlFor="collaborators">Add collaborators</h3>
+                    <textarea
+                        id="collaborators"
+                        placeholder="Add people, emails..."
+                        value={eventDescription}
+                        onChange={(e) => setEventDescription(e.target.value)}
+                    ></textarea>
                 </div>
-                <div className={styles.Actions}>
+                <div className={styles.Actions} style={{ marginTop: '300px' }}>
                     <div className={styles.formActions}>
                         <button
                             type="button"
@@ -86,7 +84,7 @@ const FormContainer = ({ title, description, children }) => {
                             className={styles.createBtn}
                             onClick={handleCreate}
                         >
-                            CREATE
+                            DONE
                         </button>
                     </div>
                 </div>
@@ -95,4 +93,4 @@ const FormContainer = ({ title, description, children }) => {
     );
 };
 
-export default CreateNewEvent;
+export default EditPlan;
