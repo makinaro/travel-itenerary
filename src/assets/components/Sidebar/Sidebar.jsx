@@ -1,15 +1,24 @@
 import React, { useContext, createContext, useState } from "react";
-import { MoreVertical, ChevronLast, ChevronFirst } from "lucide-react";
+import { LogOut, ChevronLast, ChevronFirst } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import styles from './Sidebar.module.css';
+import styles from "./Sidebar.module.css";
 
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(true);
 
+  const handleLogout = () => {
+    // Clear user data (e.g., token) from localStorage
+    localStorage.removeItem("token");
+    console.log("Logged out");
+
+    // Redirect or reload the page to reset the app's state
+    window.location.href = "/login";
+  };
+
   return (
-    <aside className={`${styles.sidebar} ${expanded ? '' : styles.collapsed}`}>
+    <aside className={`${styles.sidebar} ${expanded ? "" : styles.collapsed}`}>
       <nav className={styles.nav}>
         <div className={styles.logo}>
           <img
@@ -26,26 +35,29 @@ export default function Sidebar({ children }) {
         </div>
 
         <SidebarContext.Provider value={{ expanded }}>
-          <ul className={styles.sidebarItems}>
-            {children}
-          </ul>
+          <ul className={styles.sidebarItems}>{children}</ul>
         </SidebarContext.Provider>
 
         <div className={styles.footer}>
           <img
-          // CHANGE THIS TO PFP
             src="https://ui-avatars.com/api/?background=c7d2fe&color=3730a3&bold=true"
             alt="User"
             className="w-10 h-10 rounded-md"
           />
           <div
-            className={`${styles.userInfo} ${expanded ? 'w-60 ml-3' : 'w-0'}`}
+            className={`${styles.userInfo} ${expanded ? "w-60 ml-3" : "w-0"}`}
           >
             <div className="userDetails">
               <span className="name">John Doe</span>
               <h4 className="username">@johndoe123_</h4>
             </div>
-            <MoreVertical size={20} />
+            <button
+              onClick={handleLogout}
+              className="ml-2 text-gray-600 hover:text-red-500"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <LogOut size={30} />
+            </button>
           </div>
         </div>
       </nav>
@@ -57,7 +69,6 @@ export function SidebarItem({ icon, text, to, alert, onClick }) {
   const { expanded } = useContext(SidebarContext);
 
   if (to) {
-    // If `to` is provided, render as a NavLink
     return (
       <NavLink
         to={to}
@@ -71,7 +82,9 @@ export function SidebarItem({ icon, text, to, alert, onClick }) {
       >
         <div className="text-lg">{icon}</div>
         <span
-          className={`${expanded ? "ml-3 w-auto" : "w-0"} overflow-hidden transition-all`}
+          className={`${
+            expanded ? "ml-3 w-auto" : "w-0"
+          } overflow-hidden transition-all`}
         >
           {text}
         </span>
@@ -80,17 +93,18 @@ export function SidebarItem({ icon, text, to, alert, onClick }) {
     );
   }
 
-  // Otherwise, render as a button for modal or other actions
   return (
     <button
       className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${
-        expanded ? "w-full" : "" // Make button full width when expanded
-      } bg-transparent hover:bg-indigo-50 text-gray-600`} 
+        expanded ? "w-full" : ""
+      } bg-transparent hover:bg-indigo-50 text-gray-600`}
       onClick={onClick}
     >
       <div className="text-lg">{icon}</div>
       <span
-        className={`${expanded ? "ml-3 w-auto" : "w-0"} overflow-hidden transition-all`}
+        className={`${
+          expanded ? "ml-3 w-auto" : "w-0"
+        } overflow-hidden transition-all`}
       >
         {text}
       </span>

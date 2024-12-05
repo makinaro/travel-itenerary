@@ -102,17 +102,34 @@
   transition: border-color 0.3s ease;
 }
 
+/* Ensure the input container is positioned relative for proper icon positioning */
 .input-with-icon {
   position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
   width: 100%;
+  padding: 10px 15px;
+  padding-right: 40px; /* Add space for the icon inside the input */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px; /* Position the icon to the right */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .input-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #aaa;
+  margin-right: 10px; /* Ensure there's space between the icon and input text */
 }
 
 /* Input focus */
@@ -188,8 +205,15 @@
     padding: 1.5rem;
   }
 
-
   .login-box{
     max-width: 300px;
   }
+}
+
+button.password-toggle{
+  border: none;
+}
+
+button.password-toggle:focus{
+  background: none;
 }

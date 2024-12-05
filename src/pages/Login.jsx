@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import './Login.css';
 import logoImage from '../assets/Images/logo.png'; // Ensure the path is correct
 import loginBG from '../assets/Images/loginBG.jpeg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { User, Lock, Eye, EyeOff } from 'lucide-react'; // Import Lucide icons
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,9 @@ const Login = () => {
     password: '',
   });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const navigate = useNavigate(); // Use the useNavigate hook for redirection
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -17,6 +21,7 @@ const Login = () => {
       [name]: value,
     }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Login attempt with:', formData);
@@ -25,9 +30,9 @@ const Login = () => {
       const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
@@ -41,10 +46,17 @@ const Login = () => {
       // Store token in localStorage
       localStorage.setItem('token', data.token);
       setError(''); // Clear any previous errors
+
+      // Redirect to /dashboard
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error:', error);
       setError(error.message); // Set the error message
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev); // Toggle the visibility state
   };
 
   return (
@@ -75,7 +87,7 @@ const Login = () => {
                   Username
                 </label>
                 <div className="input-with-icon">
-                  <i className="fas fa-user"></i>
+                  <User className="input-icon" /> {/* User icon from lucide-react */}
                   <input
                     id="username"
                     name="username"
@@ -87,26 +99,38 @@ const Login = () => {
                   />
                 </div>
               </div>
+
               <div className="form-group">
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
                 <div className="input-with-icon">
-                  <i className="fas fa-lock"></i>
+                  <Lock className="input-icon" />
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
                     className="form-input"
                     value={formData.password}
                     onChange={handleChange}
                   />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={togglePasswordVisibility}
+                    aria-label="Toggle password visibility"
+                  >
+                    {showPassword ? <EyeOff /> : <Eye />}
+                  </button>
                 </div>
               </div>
+
+
               <button type="submit" className="submit-button">
                 Login
               </button>
+              {error && <p className="error-message">{error}</p>}
               <div className="form-footer">
                 <Link to="/register" className="form-link">
                   Don't have an account?

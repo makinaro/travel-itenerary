@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import { SidebarItem } from "../Sidebar/Sidebar";
-import { LayoutDashboard, Calendar1, Settings, Plus } from "lucide-react";
+import { LayoutDashboard, Calendar1, Settings, PlaneTakeoff  } from "lucide-react";
 import CreateTrip from "../CreateTrip/CreateTrip"; // Import CreateTrip component
 
 export default function Layout() {
@@ -25,7 +25,7 @@ export default function Layout() {
         <SidebarItem icon={<LayoutDashboard size={20} />} text="Dashboard" to="/dashboard" alert />
         <SidebarItem icon={<Calendar1 size={20} />} text="Calendar" to="/calendar" />
         <SidebarItem
-          icon={<Plus size={20} />}
+          icon={<PlaneTakeoff size={20} />}
           text="Create&nbsp;New&nbsp;Trip"
           onClick={handleOpenCreateTrip} // Open modal
         />

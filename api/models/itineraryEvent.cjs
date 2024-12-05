@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     itinerary_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER
   }, {tableName: 'itinerary_events'});
-
+  
   ItineraryEvent.associate = (models) => {
     ItineraryEvent.belongsTo(models.Itinerary, { foreignKey: 'itinerary_id' });
     ItineraryEvent.belongsTo(models.User, { foreignKey: 'user_id' });

@@ -3,7 +3,7 @@ import './Register1.css';
 import logoImage from '../assets/Images/logo.png';
 import loginBG from '../assets/images/loginBG.jpeg';
 import { Lock, User, Mail } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,7 @@ const Register = () => {
     password: '',
   });
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,11 +43,15 @@ const Register = () => {
       const data = await response.json();
       console.log('Success:', data);
       setError(''); // Clear any previous errors
+
+      // Navigate to the login page upon successful registration
+      navigate('/login');
     } catch (error) {
       console.error('Error:', error);
       setError(error.message); // Set the error message
     }
   };
+
   return (
     <>
       <div className="logo-container">
@@ -68,7 +73,16 @@ const Register = () => {
         <div className="login-content">
           <div>
             <h2 className="welcome-text">Let's get you started</h2>
-            <p className="welcome-subtitle" style={{ color: 'white', fontSize: '1rem', textAlign: 'center', marginTop: '0.5rem', textShadow: '0 4px 6px rgba(0, 0, 0, 0.5)' }}>
+            <p
+              className="welcome-subtitle"
+              style={{
+                color: 'white',
+                fontSize: '1rem',
+                textAlign: 'center',
+                marginTop: '0.5rem',
+                textShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+              }}
+            >
               Fill in the details below to continue
             </p>
           </div>

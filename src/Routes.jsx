@@ -9,6 +9,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import NewEvent from './pages/NewEvent';
 import EditPlan from './pages/editPlan';
+import ProtectedRoute from './assets/components/Layout/ProtectedRoute'; // Corrected path
+import LoadingPage from './assets/components/Layout/LoadingPage';
 
 const AppRoutes = () => {
   console.log("Rendering AppRoutes");
@@ -18,19 +20,23 @@ const AppRoutes = () => {
       {/* Redirect '/' to '/dashboard' */}
       <Route path="/" element={<Navigate to="/dashboard" />} />
 
-      {/*Adds the ASidebar using the layout file */}
+      {/* Routes wrapped in Layout that need authentication */}
       <Route element={<Layout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/newEvent" element={<NewEvent />} />
-        <Route path="/editPlan" element={<EditPlan />} />
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
+        <Route path="/calendar" element={<ProtectedRoute element={<Calendar />} />} />
+        <Route path="/settings" element={<ProtectedRoute element={<Settings />} />} />
+        <Route path="/newEvent" element={<ProtectedRoute element={<NewEvent />} />} />
+        <Route path="/editPlan" element={<ProtectedRoute element={<EditPlan />} />} />
       </Route>
 
-      {/* Routes without Sidebar */}
+      {/* Routes without Sidebar and no authentication check */}
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
+      {/* EXTRA ROUTES */}
+      <Route path="/loading" element={<LoadingPage />} />
+      
     </Routes>
   );
 };
