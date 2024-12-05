@@ -1,7 +1,7 @@
-const tripController = require('../controllers/tripController.cjs'); // Add the trip controller
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
+const tripController = require('../controllers/tripController.cjs');
 
-// router.get('/', tripController.createTrip);
-router.post('/', tripController.createTrip);
+router.post('/', tripController.createTrip);  // Route to create a trip
 
 module.exports = router;

@@ -10,6 +10,21 @@ const fetchUsernames = (searchTerm) => {
   return allUsers.filter(username => username.toLowerCase().includes(searchTerm.toLowerCase()));
 };
 
+// Function to fetch user ID by username
+const fetchUserIdByUsername = async (username) => {
+  try {
+    const response = await fetch(`http://localhost:3000/users/search?username=${username}`);
+    if (!response.ok) {
+      throw new Error('User not found');
+    }
+    const data = await response.json();
+    return data.id; // Assuming the API returns the user with an `id` field
+  } catch (error) {
+    console.error("Error fetching user ID:", error);
+    return null;
+  }
+};
+
 const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -22,10 +37,10 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [formErrors, setFormErrors] = useState({});
   const [trips, setTrips] = useState([]);
 
-// GETS ALL COUNTRIES USING PACKAGE
+  // GETS ALL COUNTRIES USING PACKAGE
   const options = CountryList().getData();
 
-// HANDLES SEARCHING
+  // HANDLES SEARCHING
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(`.${styles.searchBar}`)) {
@@ -52,7 +67,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     }
   };
 
-// HANDLES COLLABORATOR FRONT END
+  // HANDLES COLLABORATOR FRONT END
   const handleAddCollaborator = (collab) => {
     if (!collaborators.includes(collab)) {
       setCollaborators([...collaborators, collab]);
@@ -84,18 +99,27 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       setFormErrors(errors);
       return;
     }
-  
+
+    // Assuming you're taking the first collaborator as the user
+    const collaboratorUsername = collaborators[0];
+    const userId = await fetchUserIdByUsername(collaboratorUsername); // Get the user ID from the username
+
+    if (!userId) {
+      setFormErrors({ ...errors, userId: "User not found" });
+      return;
+    }
+
     const tripData = {
       title,
       description,
       country,
       startDate,
       endDate,
-      userId,
+      userId,  // Pass the userId here
     };
-  
+
     console.log("Trip Data to send to DB:", JSON.stringify(tripData, null, 2));
-  
+
     try {
       const response = await fetch("http://localhost:3000/trips", {
         method: "POST",
@@ -104,19 +128,19 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
         },
         body: JSON.stringify(tripData),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error creating trip: ${response.statusText}`);
       }
-  
+
       const responseData = await response.json();
-      addTrip(responseData);
-      onConfirm(responseData);
-      onClose();
+      addTrip(responseData);  // Add the trip to your frontend state if necessary
+      onConfirm(responseData); // Call the callback passed to close modal or do other things
+      onClose();               // Close the modal
     } catch (error) {
       console.error("Error creating trip:", error);
     }
-  };  
+  };
 
   if (!isOpen) return null;
 
