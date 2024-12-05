@@ -2,12 +2,10 @@
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
   background-image: url('../assets/Images/Background1.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  
 }
 
 /* Form Container */
@@ -15,22 +13,19 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full-screen height */
-  padding: 40px; /* Extra padding for spacing around the rectangle */
+  height: auto; /* Adjust as needed */
+  width: 80%;
+  max-width: 1000px;
+  padding: 40px;
   position: relative;
-}
-
-/* Form Background */
-.form-container::before {
-  content: "";
-  position: absolute;
-  width: 95%; /* Slightly larger than the form */
-  height: 95%; /* Slightly larger than the form */
-  background-color: #ffffff; /* Light gray for the rectangle */
-  border-radius: 10px; /* Smooth corners for the rectangle */
-  z-index: 0; /* Place it behind the form */
+  background-color: #ffffff;
+  border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  outline: 1px solid #000000; /* Blue outline color, adjust as needed */
+  outline: 1px solid #000000;
+  margin: 0 auto; /* Center the form container */
+  margin-top: 30px;
+  margin-bottom: 30px;
+  overflow: auto; /* Allow scrolling if content exceeds the height */
 }
 
 /* Container */
@@ -38,27 +33,27 @@ body {
   position: relative;
   padding: 5px;
   border-radius: 0px;
-  max-width: 1200px;
+  max-width: 1000px;
   width: 100%;
   z-index: 1;
-  margin-right: 480px !important;
+  margin-right: 0px !important;
 }
 
 /* Headings */
 .main-heading {
-  font-size: 32px; /* Larger heading */
+  font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
 }
 
 .subheading {
-  font-size: 16px; /* Slightly larger subheading */
+  font-size: 16px;
   color: #666;
   margin-bottom: 30px;
 }
 
 .section-heading {
-  font-size: 22px; /* Larger section headings */
+  font-size: 22px;
   font-weight: bold;
   margin-top: 40px;
   margin-bottom: 20px;
@@ -68,15 +63,15 @@ body {
 .profile-section {
   display: flex;
   align-items: center;
-  margin-bottom: 30px; /* Increased spacing */
+  margin-bottom: 30px;
 }
 
 .profile-image {
-  width: 200px; /* Larger profile image */
+  width: 200px;
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 30px; /* More spacing between image and text */
+  margin-right: 30px;
 }
 
 .upload-section {
@@ -84,11 +79,11 @@ body {
 }
 
 .upload-section input {
-  margin-bottom: 10px; /* Slightly more spacing */
+  margin-bottom: 10px;
 }
 
 .upload-text {
-  font-size: 14px; /* Slightly larger text */
+  font-size: 14px;
   color: #666;
   margin-top: 10px;
 }
@@ -97,21 +92,21 @@ body {
 .input-group {
   display: flex;
   align-items: center;
-  margin-bottom: 20px; /* Increased spacing between fields */
+  margin-bottom: 20px;
 }
 
 .input-group label {
-  flex: 0 0 220px; /* Slightly larger label width */
+  flex: 0 0 220px;
   font-size: 16px;
   margin-right: 10px;
 }
 
 .input {
   flex: 1;
-  padding: 12px; /* Larger input fields */
-  font-size: 16px; /* Larger text */
+  padding: 12px;
+  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 8px; /* Slightly more rounded corners */
+  border-radius: 8px;
   box-sizing: border-box;
 }
 
@@ -128,7 +123,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   color: #666;
-  width: 18px; /* Slightly larger icon */
+  width: 18px;
   height: 18px;
 }
 
@@ -136,30 +131,107 @@ body {
 .button-group {
   display: flex;
   justify-content: flex-end;
-  gap: 15px; /* Increased spacing between buttons */
-  margin-top: 30px; /* Increased spacing above buttons */
-}
-
-.cancel-button {
-  padding: 12px 24px; /* Larger buttons */
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
+  gap: 15px;
+  margin-top: 30px;
 }
 
 .save-button {
-  padding: 12px 24px; /* Larger buttons */
+  padding: 12px 24px;
   background-color: #000;
   color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition */
 }
 
-/* Media Queries */
-@media screen and (max-width: 1800px) {
+.save-button:hover {
+  background-color: #444; /* Darker shade */
+  transform: scale(1.05); /* Slight scale effect */
+}
+
+/* Delete Button */
+.delete-button-group {
+  margin-top: 30px;
+}
+
+.delete-button {
+  padding: 12px 24px;
+  background-color: #FF0404;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Add transition */
+}
+
+.delete-button:hover {
+  background-color: #d30303; /* Darker red */
+  transform: scale(1.05); /* Slight scale effect */
+}
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 768px) {
   .container {
-    margin-right: 0 !important;
+    padding: 20px;
+  }
+
+  .main-heading {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .subheading {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
+
+  .input-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .input-group label {
+    margin-bottom: 5px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .save-button {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-heading {
+    font-size: 20px;
+  }
+
+  .subheading {
+    font-size: 12px;
+  }
+
+  .input {
+    font-size: 14px;
+  }
+
+  .save-button {
+    font-size: 14px;
   }
 }

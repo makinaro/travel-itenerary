@@ -19,12 +19,13 @@ function ProfileSettings() {
     alert("Profile settings saved!");
   };
 
-  const handleCancel = () => {
-    alert("Changes canceled.");
+  const handleDeleteAccount = () => {
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      alert("Account deleted successfully.");
+    }
   };
 
   return (
-    
     <div className="form-container">
       <div className="container">
         <h1 className="main-heading">Profile Settings</h1>
@@ -98,11 +99,19 @@ function ProfileSettings() {
         </div>
 
         <div className="button-group">
-          <button type="button" onClick={handleCancel} className="cancel-button">
-            Cancel
-          </button>
           <button type="submit" onClick={handleSave} className="save-button">
             Save
+          </button>
+        </div>
+
+        <h2 className="section-heading">Delete Account</h2>
+        <p className="delete-text">
+          Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+        </p>
+        <div style={{ marginBottom: "1rem" }}></div>
+        <div className="delete-button-group">
+          <button type="button" onClick={handleDeleteAccount} className="delete-button" style={{ backgroundColor: "#FF0404", color: "white" }}>
+            Delete Account
           </button>
         </div>
       </div>
