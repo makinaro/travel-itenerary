@@ -1,25 +1,33 @@
+// server.cjs
 const express = require('express');
-const cors = require('cors'); // cors for cross-origin requests
-const authMiddleware = require('./middleware/authMiddleware.cjs');
+const cors = require('cors');
+const authMiddleware = require('./middleware/authMiddleware.cjs'); // Ensure it's implemented correctly
 
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173']
-}
+  origin: ['http://localhost:3000', 'http://localhost:5173'] // Add more origins if necessary
+};
 
-//middleware
+// Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//routes
+// Routes
 const userRouter = require('./routes/userRouter.cjs');
+const tripRouter = require('./routes/tripRouter.cjs');
 const authController = require('./controllers/authController.cjs');
-app.use('/users', userRouter);
-app.post('/login', authController.loginUser); // Login route
+const collaboratorRouter = require('./routes/collaboratorRouter.cjs'); // New route for collaborators
+const tripEventRouter = require('./routes/tripEventRouter.cjs'); // New route for trip events
 
-//test
+app.use('/users', userRouter);
+app.post('/login', authController.loginUser);
+app.use('/trips', tripRouter);
+app.use('/collaborators', collaboratorRouter); // Add collaborator route
+app.use('/trip-events', tripEventRouter); // Add trip events route
+
+// Test route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Grandline' });
 });

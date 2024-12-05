@@ -165,3 +165,24 @@
     justify-content: center;
     font-size: 24px;
   }
+
+  /* Add the styles for the new layout */
+.dateContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.dateGroup {
+  width: 50%;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+option {
+  padding: 10px;
+}

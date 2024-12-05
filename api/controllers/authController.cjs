@@ -6,7 +6,7 @@ const loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await db.user.findOne({ where: { username } });
+    const user = await db.User.findOne({ where: { username } });
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid username or password' });

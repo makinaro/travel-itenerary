@@ -19,17 +19,29 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.CHAR(60),
       allowNull: false
     },
-    contact_number: {
-      type: DataTypes.STRING(32),
-      allowNull: true
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     }
-  }, {tableName: 'users'});
+  }, { tableName: 'users' });
 
   User.associate = (models) => {
-    User.hasMany(models.Todo, { foreignKey: 'user_id' });
-    User.hasMany(models.Itinerary, { foreignKey: 'user_id' });
+    // A user can own many trips
+    User.hasMany(models.Trip, { foreignKey: 'owner_id', as: 'OwnedTrips' });
+    // A user can be a collaborator on many trips
     User.hasMany(models.Collaborator, { foreignKey: 'user_id' });
-    User.hasMany(models.ItineraryEvent, { foreignKey: 'user_id' });
+    // Through the collaborators table, a user can be associated with multiple trips
+    User.belongsToMany(models.Trip, {
+      through: models.Collaborator,
+      foreignKey: 'user_id',
+      as: 'CollaboratingTrips'
+    });
   };
 
   return User;
