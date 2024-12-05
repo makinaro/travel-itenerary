@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
+import CountryList from "react-select-country-list";
 import styles from "./CreateTrip.module.css";
 import { X } from 'lucide-react';
 
@@ -8,17 +10,37 @@ const fetchUsernames = (searchTerm) => {
   return allUsers.filter(username => username.toLowerCase().includes(searchTerm.toLowerCase()));
 };
 
+// Function to fetch user ID by username
+const fetchUserIdByUsername = async (username) => {
+  try {
+    const response = await fetch(`http://localhost:3000/users/search?username=${username}`);
+    if (!response.ok) {
+      throw new Error('User not found');
+    }
+    const data = await response.json();
+    return data.id; // Assuming the API returns the user with an `id` field
+  } catch (error) {
+    console.error("Error fetching user ID:", error);
+    return null;
+  }
+};
+
 const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [country, setCountry] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [collaborators, setCollaborators] = useState([]);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [formErrors, setFormErrors] = useState({});
-  const [trips, setTrips] = useState([]); 
+  const [trips, setTrips] = useState([]);
 
+  // GETS ALL COUNTRIES USING PACKAGE
+  const options = CountryList().getData();
+
+  // HANDLES SEARCHING
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(`.${styles.searchBar}`)) {
@@ -38,18 +60,19 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     setSearchTerm(search);
 
     if (search === "") {
-      setSuggestedUsers([]); // Clears suggestions if the search term is empty
+      setSuggestedUsers([]);
     } else {
       const filteredUsers = fetchUsernames(search).filter((user) => !collaborators.includes(user));
-      setSuggestedUsers(filteredUsers); // Fetch and filter suggestions based on search term
+      setSuggestedUsers(filteredUsers);
     }
   };
 
+  // HANDLES COLLABORATOR FRONT END
   const handleAddCollaborator = (collab) => {
     if (!collaborators.includes(collab)) {
       setCollaborators([...collaborators, collab]);
     }
-    setSearchTerm(""); // Clear the search bar after selection
+    setSearchTerm(""); 
   };
 
   const handleRemoveCollaborator = (index) => {
@@ -58,36 +81,65 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   };
 
   const addTrip = (tripData) => {
-    setTrips([...trips, tripData]);  // Add new trip to the trips list
-    console.log("New trip added:", tripData); // replace this later with actual function
+    setTrips([...trips, tripData]);
+    console.log("New trip added:", tripData);
   };
 
-  const handleConfirm = () => {
+  // BACK-END FUNCTIONALITY
+  const handleConfirm = async () => {
     const errors = {};
     if (!title) errors.title = "Title is required";
     if (!description) errors.description = "Description is required";
+    if (!country) errors.country = "Country is required";
     if (!startDate) errors.startDate = "Start Date is required";
     if (!endDate) errors.endDate = "End Date is required";
     if (new Date(endDate) < new Date(startDate)) errors.date = "End Date cannot be before Start Date";
-    if (collaborators.length === 0) errors.collaborators = "At least one collaborator is required";
-  
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-  
+
+    // Assuming you're taking the first collaborator as the user
+    const collaboratorUsername = collaborators[0];
+    const userId = await fetchUserIdByUsername(collaboratorUsername); // Get the user ID from the username
+
+    if (!userId) {
+      setFormErrors({ ...errors, userId: "User not found" });
+      return;
+    }
+
     const tripData = {
       title,
       description,
+      country,
       startDate,
       endDate,
-      collaborators,
+      userId,  // Pass the userId here
     };
-  
-    addTrip(tripData);  // Add the new trip when confirmed
-  
-    onConfirm(tripData); // Pass trip data back to parent (if needed)
-    onClose();
+
+    console.log("Trip Data to send to DB:", JSON.stringify(tripData, null, 2));
+
+    try {
+      const response = await fetch("http://localhost:3000/trips", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tripData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error creating trip: ${response.statusText}`);
+      }
+
+      const responseData = await response.json();
+      addTrip(responseData);  // Add the trip to your frontend state if necessary
+      onConfirm(responseData); // Call the callback passed to close modal or do other things
+      onClose();               // Close the modal
+    } catch (error) {
+      console.error("Error creating trip:", error);
+    }
   };
 
   if (!isOpen) return null;
@@ -116,23 +168,37 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
           {formErrors.description && <p className={styles.errorText}>{formErrors.description}</p>}
         </div>
         <div className={styles.formGroup}>
-          <label>Start Date</label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+          <label>Country</label>
+          <Select
+            options={options}
+            value={country ? { label: country, value: country } : null}
+            onChange={(selectedOption) => setCountry(selectedOption ? selectedOption.value : '')}
+            placeholder="Select a country"
           />
-          {formErrors.startDate && <p className={styles.errorText}>{formErrors.startDate}</p>}
+          {formErrors.country && <p className={styles.errorText}>{formErrors.country}</p>}
         </div>
         <div className={styles.formGroup}>
-          <label>End Date</label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-          />
-          {formErrors.endDate && <p className={styles.errorText}>{formErrors.endDate}</p>}
-          {formErrors.date && <p className={styles.errorText}>{formErrors.date}</p>}
+          <div className={styles.dateContainer}>
+            <div className={styles.dateGroup}>
+              <label>Start Date</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              {formErrors.startDate && <p className={styles.errorText}>{formErrors.startDate}</p>}
+            </div>
+            <div className={styles.dateGroup}>
+              <label>End Date</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+              {formErrors.endDate && <p className={styles.errorText}>{formErrors.endDate}</p>}
+              {formErrors.date && <p className={styles.errorText}>{formErrors.date}</p>}
+            </div>
+          </div>
         </div>
         <div className={styles.formGroup}>
           <label>Search Collaborators</label>

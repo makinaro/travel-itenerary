@@ -1,17 +1,20 @@
 const db = require('../models/index.cjs');
 const bcrypt = require('bcryptjs');
+
+// Get all users
 const getAllUsers = async (req, res) => {
   try {
-    const users = await db.user.findAll();
+    const users = await db.User.findAll();
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
+// Get a user by ID
 const getUserById = async (req, res) => {
   try {
-    const user = await db.user.findByPk(req.params.id);
+    const user = await db.User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -21,17 +24,44 @@ const getUserById = async (req, res) => {
   }
 };
 
+// Get user ID by username
+const getUserByUsername = async (req, res) => {
+  const { username } = req.query;  
+  try {
+    const users = await db.User.findAll({
+      where: {
+        username: {
+          [db.Sequelize.Op.like]: `%${username}%`
+        }
+      }
+    });
+
+    // Convert Sequelize instances to plain objects
+    const usersPlain = users.map(user => user.toJSON());
+
+    if (usersPlain.length === 0) {
+      return res.status(404).json({ message: 'No users found' });
+    }
+
+    // Respond with user ids and usernames
+    res.json(usersPlain.map(user => ({ id: user.id, username: user.username })));  
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+};
+
+// Create a new user
 const createUser = async (req, res) => {
-  const { username, email, password, contact_number } = req.body;
+  const { username, email, password } = req.body;  // Removed contact_number
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await db.user.create({
+    const user = await db.User.create({
       username,
       email,
-      password: hashedPassword,
-      contact_number
+      password: hashedPassword
     });
 
     res.json(user);
@@ -43,9 +73,10 @@ const createUser = async (req, res) => {
   }
 };
 
+// Update user by ID
 const updateUser = async (req, res) => {
   try {
-    const user = await db.user.findByPk(req.params.id);
+    const user = await db.User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -56,9 +87,10 @@ const updateUser = async (req, res) => {
   }
 };
 
+// Delete user by ID
 const deleteUser = async (req, res) => {
   try {
-    const user = await db.user.findByPk(req.params.id);
+    const user = await db.User.findByPk(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -69,4 +101,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, createUser, updateUser, deleteUser };
+module.exports = { getAllUsers, getUserById, getUserByUsername, createUser, updateUser, deleteUser };
