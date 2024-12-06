@@ -13,12 +13,19 @@ const fetchUsernames = (searchTerm) => {
 // Function to fetch user ID by username
 const fetchUserIdByUsername = async (username) => {
   try {
-    const response = await fetch(`http://localhost:3000/users/search?username=${username}`);
+    const response = await fetch(`http://localhost:3000/users/username/${username}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) {
-      throw new Error('User not found');
+      throw new Error(`User not found: ${username}`);
     }
-    const data = await response.json();
-    return data.id; // Assuming the API returns the user with an `id` field
+
+    const userData = await response.json();
+    return userData.id;  // Return the user ID from the response
   } catch (error) {
     console.error("Error fetching user ID:", error);
     return null;
@@ -94,45 +101,42 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     if (!startDate) errors.startDate = "Start Date is required";
     if (!endDate) errors.endDate = "End Date is required";
     if (new Date(endDate) < new Date(startDate)) errors.date = "End Date cannot be before Start Date";
-
+  
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-
-    // Assuming you're taking the first collaborator as the user
-    const collaboratorUsername = collaborators[0];
-    const userId = await fetchUserIdByUsername(collaboratorUsername); // Get the user ID from the username
-
-    if (!userId) {
-      setFormErrors({ ...errors, userId: "User not found" });
-      return;
-    }
-
+  
+    const collaboratorIds = await Promise.all(
+      collaborators.map(async (collab) => {
+        const userId = await fetchUserIdByUsername(collab);
+        return userId;  // Get user IDs for each collaborator
+      })
+    );
+  
     const tripData = {
       title,
       description,
       country,
       startDate,
       endDate,
-      userId,  // Pass the userId here
+      collaborators: collaboratorIds,  // Include collaborator IDs in the request
     };
-
-    console.log("Trip Data to send to DB:", JSON.stringify(tripData, null, 2));
-
+  
     try {
       const response = await fetch("http://localhost:3000/trips", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${yourAuthToken}`,  // Use the JWT token from localStorage
         },
         body: JSON.stringify(tripData),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Error creating trip: ${response.statusText}`);
       }
-
+  
       const responseData = await response.json();
       addTrip(responseData);  // Add the trip to your frontend state if necessary
       onConfirm(responseData); // Call the callback passed to close modal or do other things
@@ -140,7 +144,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     } catch (error) {
       console.error("Error creating trip:", error);
     }
-  };
+  };  
 
   if (!isOpen) return null;
 
