@@ -166,7 +166,16 @@ const Calendar = () => {
           </div>
         ) : (
           <div className={styles.noEventsMessage}>
-            <p>You have no events planned out for this trip! Click HERE to create more</p>
+            <p>
+              You have no events planned out for this trip! Click{" "}
+              <span
+                className={styles.clickableText}
+                onClick={handleOpenCreateEvent}
+              >
+                HERE
+              </span>{" "}
+              to create more.
+            </p>
           </div>
         )
       ) : (

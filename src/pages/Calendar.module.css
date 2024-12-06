@@ -276,3 +276,12 @@
   margin-top: 25px;
   font-style: italic;
 }
+
+.clickableText {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.clickableText:hover {
+  color: #913ffd;
+}
