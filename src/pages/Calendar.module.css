@@ -201,19 +201,13 @@
 /* Individual Event Time and Description Row */
 .eventTimeDescription {
   display: grid;
-  grid-template-columns: 0.5fr 1.5fr;
-  gap: 10px;
+  grid-template-columns: 0.5fr 1.2fr 0.3fr;
   align-items: center;
   position: relative;
   border-top: 1px solid black;
 }
 
-/* Hover Effect for Each Time Block */
-.eventTimeDescription:hover {
-  background-color: #e2e2e2;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+
 
 /* Event Time (hover effect on time) */
 .eventTime {
@@ -229,6 +223,21 @@
   color: #000000;
   text-align: left;
   padding: 10px;
+  padding-left: 15px;
+  border-right: 1px solid black;
+}
+
+.eventAction{
+  color: #000000;
+  text-align: Center;
+  padding: 10px;
+  font-weight: 700;
+}
+
+.eventAction:hover{
+  background-color: #e2e2e2;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Event Highlighting */
@@ -284,4 +293,8 @@
 
 .clickableText:hover {
   color: #913ffd;
+}
+
+@media screen and (min-width: 2560px) and (min-height: 1440px) {
+
 }

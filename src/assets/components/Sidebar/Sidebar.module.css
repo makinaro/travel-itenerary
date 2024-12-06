@@ -23,6 +23,14 @@
     align-items: center;
 }
 
+.logoText{
+    gap: 10px;
+    margin-right: auto;
+    font-size: 20px;
+    font-weight: bold;
+    transition: opacity 0.3s ease; /* Optional: Smooth transition for showing/hiding */
+}
+
 .logo img {
     overflow: hidden;
     transition: all 0.3s ease;

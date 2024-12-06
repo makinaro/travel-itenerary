@@ -2,6 +2,7 @@ import React, { useContext, createContext, useState } from "react";
 import { LogOut, ChevronLast, ChevronFirst } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
+import logo from "../../Images/logo.png";
 
 const SidebarContext = createContext();
 
@@ -22,10 +23,13 @@ export default function Sidebar({ children }) {
       <nav className={styles.nav}>
         <div className={styles.logo}>
           <img
-            src="https://img.logoipsum.com/243.svg"
-            className={`${expanded ? "w-32" : "w-0"}`}
+            src={logo}
+            className={`${expanded ? "h-11" : "w-0"}`}
             alt="Logo"
           />
+          <div className={`${expanded ? "block" : "hidden"} ${styles.logoText}`}>
+            GRAND LINE
+          </div>
           <button
             onClick={() => setExpanded((curr) => !curr)}
             className={styles.toggleButton}
@@ -33,6 +37,7 @@ export default function Sidebar({ children }) {
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
         </div>
+
 
         <SidebarContext.Provider value={{ expanded }}>
           <ul className={styles.sidebarItems}>{children}</ul>
@@ -53,7 +58,7 @@ export default function Sidebar({ children }) {
             </div>
             <button
               onClick={handleLogout}
-              className="ml-2 text-gray-600 hover:text-red-500"
+              className="ml-2 text-gray-600 hover:text-red-500 padding-right:0p"
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
               <LogOut size={30} />
@@ -73,18 +78,16 @@ export function SidebarItem({ icon, text, to, alert, onClick }) {
       <NavLink
         to={to}
         className={({ isActive }) =>
-          `relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${
-            isActive
-              ? "bg-indigo-100 text-indigo-800"
-              : "hover:bg-indigo-50 text-gray-600"
+          `relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${isActive
+            ? "bg-indigo-100 text-indigo-800"
+            : "hover:bg-indigo-50 text-gray-600"
           }`
         }
       >
         <div className="text-lg">{icon}</div>
         <span
-          className={`${
-            expanded ? "ml-3 w-auto" : "w-0"
-          } overflow-hidden transition-all`}
+          className={`${expanded ? "ml-3 w-auto" : "w-0"
+            } overflow-hidden transition-all`}
         >
           {text}
         </span>
@@ -95,16 +98,14 @@ export function SidebarItem({ icon, text, to, alert, onClick }) {
 
   return (
     <button
-      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${
-        expanded ? "w-full" : ""
-      } bg-transparent hover:bg-indigo-50 text-gray-600`}
+      className={`relative flex items-center py-2 px-3 my-1 font-medium rounded-md transition-all group ${expanded ? "w-full" : ""
+        } bg-transparent hover:bg-indigo-50 text-gray-600`}
       onClick={onClick}
     >
       <div className="text-lg">{icon}</div>
       <span
-        className={`${
-          expanded ? "ml-3 w-auto" : "w-0"
-        } overflow-hidden transition-all`}
+        className={`${expanded ? "ml-3 w-auto" : "w-0"
+          } overflow-hidden transition-all`}
       >
         {text}
       </span>

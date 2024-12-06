@@ -5,9 +5,10 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import styles from "./Calendar.module.css";
 import CreateEvent from "../assets/components/CreateEvent/CreateEvent"; // Import CreateEvent component
+import EditEvent from "../assets/components/CreateEvent/EditEvent"; // Import EditEvent component
 
 const Calendar = () => {
-  const [events] = useState([
+  const [events, setEvents] = useState([
     {
       id: "1",
       title: "Japan Trip",
@@ -43,7 +44,9 @@ const Calendar = () => {
   ]);
 
   const [highlightedEvent, setHighlightedEvent] = useState(null);
-  const [isCreateEventModalOpen, setCreateEventModalOpen] = useState(false); // Track modal visibility
+  const [isCreateEventModalOpen, setCreateEventModalOpen] = useState(false);
+  const [isEditEventModalOpen, setEditEventModalOpen] = useState(false); // Track EditEvent modal visibility
+  const [currentEventForEdit, setCurrentEventForEdit] = useState(null); // Track event to edit
 
   const handleEventClick = (info) => {
     const eventId = info.event.id;
@@ -54,18 +57,36 @@ const Calendar = () => {
     (event) => event.id === highlightedEvent
   );
 
-  // Function to handle Add Event button click
   const handleOpenCreateEvent = () => {
-    setCreateEventModalOpen(true); // Open the CreateEvent modal
+    setCreateEventModalOpen(true); 
   };
 
   const handleCloseCreateEvent = () => {
-    setCreateEventModalOpen(false); // Close the CreateEvent modal
+    setCreateEventModalOpen(false); 
   };
 
   const handleConfirmCreateEvent = (eventData) => {
-    console.log("Event Created:", eventData); // Save event logic
-    setCreateEventModalOpen(false); // Close the modal after confirmation
+    console.log("Event Created:", eventData); 
+    setCreateEventModalOpen(false);
+    setEvents((prevEvents) => [...prevEvents, eventData]); // Add new event to state
+  };
+
+  // Handle opening EditEvent modal with the selected event
+  const handleOpenEditEvent = (eventDetail) => {
+    setCurrentEventForEdit(eventDetail);
+    setEditEventModalOpen(true);
+  };
+
+  // Handle updating event
+  const handleUpdateEvent = (updatedEventData) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === updatedEventData.id
+          ? { ...event, details: updatedEventData.details }
+          : event
+      )
+    );
+    setEditEventModalOpen(false); // Close the EditEvent modal
   };
 
   return (
@@ -103,13 +124,12 @@ const Calendar = () => {
         }}
         eventClassNames={(eventInfo) =>
           highlightedEvent === eventInfo.event.id
-            ? styles.highlightedEvent // Class to highlight the event
+            ? styles.highlightedEvent 
             : ""
         }
         height="750px"
       />
 
-      {/* Modal for Highlighted Event Details or Message */}
       {highlightedEvent ? (
         highlightedEventDetails && highlightedEventDetails.details.length > 0 &&
           highlightedEventDetails.details.every(detail => detail.event && detail.date) ? (
@@ -129,23 +149,20 @@ const Calendar = () => {
                   })}
                   )
                 </h3>
-                {/* Add Event Button */}
                 <button className={styles.addEventButton} onClick={handleOpenCreateEvent}>
                   + Add an Event
                 </button>
               </div>
               <div className={styles.eventDetailsContainer}>
-                {/* Group events by date */}
                 {Object.entries(
                   highlightedEventDetails.details.reduce((acc, detail) => {
-                    const date = detail.date; // Group by date
+                    const date = detail.date;
                     if (!acc[date]) acc[date] = [];
                     acc[date].push(detail);
                     return acc;
                   }, {})
                 ).map(([date, details], index) => (
                   <div key={index} className={styles.eventRow}>
-                    {/* Grouping events under a single date */}
                     <div className={styles.eventDate}>
                       {new Date(date).toLocaleDateString("en-US", {
                         weekday: "short",
@@ -157,6 +174,12 @@ const Calendar = () => {
                       <div key={idx} className={styles.eventTimeDescription}>
                         <div className={styles.eventTime}>{detail.time}</div>
                         <div className={styles.eventDescription}>{detail.event}</div>
+                        <div
+                          className={styles.eventAction}
+                          onClick={() => handleOpenEditEvent(detail)}
+                        >
+                          EDIT EVENT
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -184,12 +207,20 @@ const Calendar = () => {
         </div>
       )}
 
-      {/* Create Event Modal */}
       {isCreateEventModalOpen && (
         <CreateEvent
           isOpen={isCreateEventModalOpen}
           onClose={handleCloseCreateEvent}
           onConfirm={handleConfirmCreateEvent}
+        />
+      )}
+
+      {isEditEventModalOpen && (
+        <EditEvent
+          isOpen={isEditEventModalOpen}
+          onClose={() => setEditEventModalOpen(false)}
+          onConfirm={handleUpdateEvent}
+          eventData={currentEventForEdit}
         />
       )}
     </div>

@@ -186,3 +186,13 @@ select {
 option {
   padding: 10px;
 }
+
+/* Add to CreateEvent.module.css */
+.deleteButton {
+  background-color: rgb(247, 39, 39);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}

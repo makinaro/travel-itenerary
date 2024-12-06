@@ -22,19 +22,17 @@ const fetchUserIdByUsername = async (username) => {
   }
 };
 
-const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
-  const [title, setTitle] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [collaborators, setCollaborators] = useState([]);
-  const [suggestedUsers, setSuggestedUsers] = useState([]);
+const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
+  const [title, setTitle] = useState(eventData.title || "");
+  const [startTime, setStartTime] = useState(eventData.startTime || "");
+  const [endTime, setEndTime] = useState(eventData.endTime || "");
+  const [collaborators, setCollaborators] = useState(eventData.collaborators || []);
   const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(`.${styles.searchBar}`)) {
-        setSuggestedUsers([]);
+        setCollaborators([]);
       }
     };
 
@@ -65,7 +63,7 @@ const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
       })
     );
 
-    const eventData = {
+    const updatedEventData = {
       title,
       startTime,
       endTime,
@@ -73,31 +71,52 @@ const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/events", {
-        method: "POST",
+      const response = await fetch(`http://localhost:3000/events/${eventData.id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${yourAuthToken}`,
         },
-        body: JSON.stringify(eventData),
+        body: JSON.stringify(updatedEventData),
       });
 
       if (!response.ok) {
-        throw new Error(`Error creating event: ${response.statusText}`);
+        throw new Error(`Error updating event: ${response.statusText}`);
       }
 
       const responseData = await response.json();
       onConfirm(responseData);
       onClose();
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.error("Error updating event:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/events/${eventData.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${yourAuthToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error deleting event: ${response.statusText}`);
+      }
+
+      onDelete(eventData.id);
+      onClose();
+    } catch (error) {
+      console.error("Error deleting event:", error);
     }
   };
 
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2 className={styles.CreateYourTrip}>Create Your Event</h2>
+        <h2 className={styles.CreateYourTrip}>Edit This Event</h2>
         <div className={styles.formGroup}>
           <label>Title</label>
           <input
@@ -133,11 +152,14 @@ const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
         </div>
         <div className={styles.modalActions}>
           <button onClick={onClose}>Cancel</button>
-          <button onClick={handleConfirm}>Confirm</button>
+          <button onClick={handleConfirm}>Save</button>
+          <button onClick={handleDelete} className={styles.deleteButton}>
+            Delete
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default CreateEvent;
+export default EditEvent;
