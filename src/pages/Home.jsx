@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./Home1.css";
-import backgroundImage from "../assets/Images/global.gif";
 import logoImage from "../assets/Images/logo.png";
 import personalizedImage from "../assets/Images/personalized.gif";
 import trackImage from "../assets/Images/track.gif";

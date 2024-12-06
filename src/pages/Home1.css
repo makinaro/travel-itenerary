@@ -15,7 +15,6 @@ html, body {
   flex-direction: column;
 }
 
-
 /* Navbar Styles */
 .navbar {
   display: flex;
@@ -93,10 +92,9 @@ html, body {
   justify-content: flex-start; /* Align content to the left */
   align-items: center;
   min-height: 100vh; /* Ensures it takes up at least the whole screen */
-  background-image: url('../assets/Images/global.gif');
   /* background-size: 150%; */
   background-position: center; /* Keeps the background centered */
-  color: white;
+  color: white;  
   padding-left: 30px; /* Adjust for desired spacing */
 }
 
@@ -520,5 +518,12 @@ html, body {
 @media screen and (max-width: 480px) {
   .profile-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 2560px) {
+  .app {
+    background-size: 120%!important
+
   }
 }
