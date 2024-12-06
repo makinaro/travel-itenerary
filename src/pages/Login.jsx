@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Login.css';
 import logoImage from '../assets/Images/logo.png'; // Ensure the path is correct
-import loginBG from '../assets/Images/loginBG.jpeg';
+import loginBG from '../assets/Images/loginBG.gif';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Eye, EyeOff } from 'lucide-react'; // Import Lucide icons
 
