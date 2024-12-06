@@ -24,12 +24,12 @@
 
 /* Root Variables */
 :root {
-  --fc-event-bg-color: #f3f4f6; /* Event background color */
-  --fc-event-border-color: #5348cd; /* Event border color */
-  --fc-event-text-color: #000000; /* Event text color */
-  --fc-button-bg-color: #202020; /* Button background color */
-  --fc-today-bg-color: rgba(255, 220, 40, 0.15); /* Today's date background color */
-  --fc-border-color: rgb(190, 190, 190); /* Grid border color */
+  --fc-event-bg-color: #f3f4f6;
+  --fc-event-border-color: #5348cd;
+  --fc-event-text-color: #000000;
+  --fc-button-bg-color: #202020;
+  --fc-today-bg-color: rgba(255, 220, 40, 0.15);
+  --fc-border-color: rgb(190, 190, 190);
 }
 
 /* Toolbar and Day Numbers */
@@ -40,7 +40,7 @@
 }
 
 .calendarContainer :global(.fc .fc-toolbar.fc-header-toolbar) {
-  margin-bottom: 1.2em;
+  margin-bottom: 15px !important;
 }
 
 .calendarContainer :global(.fc .fc-daygrid-day-number) {
@@ -50,6 +50,10 @@
 }
 
 /* Buttons */
+.calendarContainer :global(.fc .fc-button) {
+  padding: 8px 15px;
+}
+
 .calendarContainer :global(.fc .fc-prev-button, .fc .fc-next-button) {
   color: white;
   background-color: var(--fc-button-bg-color);
@@ -64,8 +68,8 @@
 .calendarContainer :global(.fc .fc-daygrid-event) {
   display: flex;
   align-items: center;
-  width: 95%;
-  max-width: 95%;
+  width: calc(100% - 20px);
+  /* 100% width with 10px reduction on each side */
   background-color: var(--fc-event-bg-color);
   color: var(--fc-event-text-color);
   border-radius: 4px;
@@ -77,24 +81,18 @@
   left: 50%;
   transform: translate(-50%, 50%);
   cursor: pointer;
+  margin: 0px;
+  transition: border-left 0.2s ease-in-out;
 }
 
 /* Day Grid and Events Area */
-.calendarContainer :global(.fc .fc-daygrid-day-frame) {
-  position: relative;
-}
-
+.calendarContainer :global(.fc .fc-daygrid-day-frame),
 .calendarContainer :global(.fc .fc-daygrid-day-events) {
   position: relative;
   width: 100%;
-  height: auto;
 }
 
 /* Highlight Top Half of Each Day */
-.calendarContainer .fc-daygrid-day {
-  position: relative;
-}
-
 .calendarContainer .fc-daygrid-day::before {
   content: '';
   position: absolute;
@@ -111,26 +109,8 @@
   color: black;
 }
 
-.calendarContainer :global(.fc-scrollgrid-sync-inner) {
-  border-bottom: 0;
-}
-
 /* Text Overflow for Event Titles and Descriptions */
-.calendarContainer :global(.fc .fc-daygrid-event .fc-event-title) {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.calendarContainer :global(.fc .fc-daygrid-event .fc-event-title div) {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 12px;
-  max-width: 100%;
-}
-
+.calendarContainer :global(.fc .fc-daygrid-event .fc-event-title),
 .calendarContainer :global(.fc .fc-daygrid-event .fc-event-description) {
   display: block;
   overflow: hidden;
@@ -140,29 +120,159 @@
   max-width: 100%;
 }
 
-/* Event Highlighting */
-.highlightedEventBlue {
-  border-left: 8px solid #5348cd !important; /* Untoggled (blue) event */
+/* Modal */
+.modal {
+  margin-top: 35px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.3s ease-in-out, visibility 0s ease 0.3s;
 }
 
-.highlightedEventRed {
-  border-left: 8px solid red !important; /* Toggled (red) event */
+.modal.show {
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s ease 0s;
 }
 
-.highlightedEventDetails {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.modalContent {
+  animation: slideIn 0.3s ease-out;
 }
-.highlightedEventDetails h3 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-25px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.addEventButton {
+  background-color: #202020;
+  /* Match your event border color */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.modalContent h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* Event Details Container */
+.eventDetailsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 1000;
+}
+
+/* Individual Row for Each Day */
+.eventRow {
+  border: 1px solid black;
+  align-items: center;
+  width: 100%;
+  border-radius: 0px;
+}
+
+/* Event Date */
+.eventDate {
+  font-weight: bold;
   color: #333;
+  text-align: center;
+  background-color: #f5f5f5;
+  font-size: 1.1rem;
+  border-radius: 0px !important;
+  padding: 5px;
 }
-.highlightedEventDetails p {
-  margin: 5px 0;
+
+/* Individual Event Time and Description Row */
+.eventTimeDescription {
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+  border-top: 1px solid black;
+}
+
+/* Hover Effect for Each Time Block */
+.eventTimeDescription:hover {
+  background-color: #e2e2e2;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Event Time (hover effect on time) */
+.eventTime {
+  color: #363636;
+  font-weight: 700;
+  text-align: center;
+  border-right: 1px solid black;
+  padding: 10px;
+}
+
+/* Event Description (hover effect on description) */
+.eventDescription {
+  color: #000000;
+  text-align: left;
+  padding: 10px;
+}
+
+/* Event Highlighting */
+.highlightedEvent {
+  border-left: 8px solid red !important;
+}
+
+/* Gray Styling for Multi-day Events After the First Day */
+.calendarContainer :global(.fc .fc-daygrid-event-multi-day) {
+  background-color: #d3d3d3;
+  /* Light gray color */
   color: #555;
+  /* Darker gray text for better visibility */
+  border-left: 8px solid #d3d3d3;
+  /* Border color matches the gray */
+}
+
+/* Border Color for Events on the First Day of Multi-Day Events */
+.calendarContainer :global(.fc .fc-daygrid-event:first-of-type) {
+  border-left: 8px solid var(--fc-event-border-color);
+  /* Keep original border for the first day */
+}
+
+.noEventsMessage {
+  background-color: #f3f4f6;
+  padding: 20px;
+  text-align: center;
+  border-radius: 5px;
+  color: #3f3f3f;
+  ;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 25px;
+
+}
+
+.selectTripMessage {
+  background-color: #f3f4f6;
+  padding: 20px;
+  text-align: center;
+  border-radius: 5px;
+  color: #838383;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 25px;
+  font-style: italic;
 }

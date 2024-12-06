@@ -24,32 +24,20 @@ const getUserById = async (req, res) => {
   }
 };
 
-// Get user ID by username
+// Fetch user by username
 const getUserByUsername = async (req, res) => {
-  const { username } = req.query;  
+  const { username } = req.params;
   try {
-    const users = await db.User.findAll({
-      where: {
-        username: {
-          [db.Sequelize.Op.like]: `%${username}%`
-        }
-      }
-    });
-
-    // Convert Sequelize instances to plain objects
-    const usersPlain = users.map(user => user.toJSON());
-
-    if (usersPlain.length === 0) {
-      return res.status(404).json({ message: 'No users found' });
+    const user = await db.User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-
-    // Respond with user ids and usernames
-    res.json(usersPlain.map(user => ({ id: user.id, username: user.username })));  
+    res.json({ id: user.id });
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ message: 'Error fetching users' });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 // Create a new user
 const createUser = async (req, res) => {

@@ -1,0 +1,188 @@
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);  /* Semi-transparent backdrop */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 550px;
+    max-width: 90%;
+    border: 2px solid black;  /* Adding the black border */
+  }
+
+  .formGroup {
+    margin-bottom: 15px;
+  }
+
+  .formGroup label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .formGroup input,
+  .formGroup textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .errorText {
+    color: red;
+    font-size: 0.875rem;
+  }
+
+  /* Search Bar */
+  .searchBar {
+    position: relative;
+    display: flex;
+    gap: 10px;
+  }
+
+  .searchBar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  /* Suggestions */
+  .suggestions {
+    position: absolute;
+    top: 100%; /* Below the input field */
+    left: 0;
+    width: 100%; /* Align with input field width */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto; /* Scrollable if many items */
+  }
+
+  .suggestionItem {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .suggestionItem:hover {
+    background-color: #f0f0f0;
+  }
+
+  /* Collaborators List */
+  .AddedCollaboratorsText {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .collaboratorsList {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .collaboratorItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    padding-left:10px;
+    padding-right:10px;
+    margin-bottom: 5px;
+    color: #777777;
+  }
+
+  .removeCollaborator {
+    cursor: pointer;
+    color: red;
+  }
+
+  .noCollaborators {
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Modal Actions */
+
+  .modalActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .modalActions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .modalActions button:nth-child(1) {
+    background: #ddd;
+  }
+
+  .modalActions button:nth-child(2) {
+    background: #007bff;
+    color: white;
+  }
+
+  button[type="button"] {
+    background-color: white;
+    border: 2px solid black;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  button[type="button"]:hover {
+    background-color: #f0f0f0;
+  }
+
+  button[type="button"]:focus {
+    outline: none;
+  }
+  
+  .CreateYourTrip{
+    font-weight: 700;
+    text-transform:uppercase;
+    display: flex;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  /* Add the styles for the new layout */
+.dateContainer {
+  display: flex;
+  gap: 20px;
+}
+
+.dateGroup {
+  width: 50%;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+option {
+  padding: 10px;
+}
