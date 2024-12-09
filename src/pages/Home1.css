@@ -524,6 +524,10 @@ html, body {
 @media (min-width: 2560px) {
   .app {
     background-size: 120%!important
+  }
 
+  .more-about {
+    background-size: 120%!important;
+    background-position: center calc(100% + 70px);
   }
 }
