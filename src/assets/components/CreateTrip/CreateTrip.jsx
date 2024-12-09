@@ -254,3 +254,4 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
 };
 
 export default CreateTrip;
+
