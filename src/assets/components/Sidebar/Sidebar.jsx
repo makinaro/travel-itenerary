@@ -15,7 +15,6 @@ export default function Sidebar({ children }) {
 
   useEffect(() => {
     const userId = getUserId();
-    console.log(userId);
     if (userId) {
       // Fetch user details from the server using the user ID
       fetchUserDetails(userId);
@@ -31,13 +30,6 @@ export default function Sidebar({ children }) {
           'Authorization': `${getToken()}`,
         },
       });
-      // const response = await fetch(`http://localhost:3000/users/token`, {
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `${getToken()}`,
-      //   },
-      // });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -46,7 +38,6 @@ export default function Sidebar({ children }) {
 
       const data = await response.json();
       setUser(data);
-      console.log(data);
     } catch (error) {
       setError(error.message);
     }

@@ -25,7 +25,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt with:', formData);
 
     try {
       const response = await fetch('http://localhost:3000/login', {
@@ -43,7 +42,6 @@ const Login = () => {
       setToken(null);
       setUserId(null);
       const data = await response.json();
-      console.log('Success:', data);
 
       // Store token using the utility function
       setToken(data.token);

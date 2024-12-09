@@ -13,6 +13,7 @@ const ProtectedRoute = ({ element }) => {
     setTimeout(() => {
       if (!token) {
         setIsAuthenticated(false); // If no token, user is not authenticated
+        
       } else {
         setIsAuthenticated(true); // If there's a token, user is authenticated
       }
