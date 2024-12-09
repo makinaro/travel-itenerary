@@ -7,8 +7,6 @@ import Settings from './pages/Settings';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import NewEvent from './pages/NewEvent';
-import EditPlan from './pages/editPlan';
 import ProtectedRoute from './assets/components/Layout/ProtectedRoute'; // Corrected path
 import LoadingPage from './assets/components/Layout/LoadingPage';
 
@@ -25,8 +23,6 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/calendar" element={<ProtectedRoute element={<Calendar />} />} />
         <Route path="/settings" element={<ProtectedRoute element={<Settings />} />} />
-        <Route path="/newEvent" element={<ProtectedRoute element={<NewEvent />} />} />
-        <Route path="/editPlan" element={<ProtectedRoute element={<EditPlan />} />} />
       </Route>
 
       {/* Routes without Sidebar and no authentication check */}

@@ -1,381 +1,169 @@
-/* General Styles */
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
+/* Base Styles */
 .dashboardContainer {
-  display: flex;
-  justify-content: center;
-  /* Center the content horizontally */
-  align-items: center;
-  /* Center the content vertically */
-  height: 100vh;
-  /* Ensure the container takes full viewport height */
-  margin-left: 77px;
-}
-
-/* Dashboard Layout */
-.dashboard {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 120px;
-  margin: 0 auto;
-  height: auto;
-  flex-shrink: 0;
-  flex-grow: 0;
-}
-
-.dashboard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('../assets/Images/Background1.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  transform: rotate(180deg);
-  z-index: -1;
-}
-
-/* Search Bar */
-.searchBarContainer {
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.searchInput {
-  width: 50%;
-  padding: 12px;
-  border: 2px solid black;
-  border-radius: 10px;
-  font-size: 16px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  outline: none;
-  /* Removes the outline */
-}
-
-/* Header Styles */
-.header {
-  margin-bottom: 0px;
-  border-radius: 10px;
-  height: 15%;
-  border: 2px solid black;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  padding-bottom: 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  background-image: url('../assets/Images/Background2.png');
-  background-size: cover;
-  background-position: center;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  color: #333;
 }
 
-.headerTitle {
-  font-size: 2.6rem;
-  font-weight: bold;
-  color: white;
-  text-decoration: none;
-  /* Removes blue color for links */
+.dashboardTitle {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
-/* Trips Section */
-.tripsSectionContainer {
-  margin-top: 10px;
-}
-
-.tripTitle {
-  font-size: 1.25rem;
-  color: #3d3d3d;
-  text-decoration: none;
-  /* Remove the underline */
-}
-
-.tripDates {
-  font-size: 1.25rem;
-  color: #7c7c7c;
-}
-
-/* Trips Grid Layout */
-.tripsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(461px, 1fr));
-  /* Ensures consistent width */
-  gap: 40px;
-  /* Uniform spacing */
-}
-
-/* For screens ≤ 1920px */
-@media (max-width: 1920px) {
-  .tripsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); /* Adjust minimum width for cards */
-  }
-}
-
-/* For screens ≤ 1780px */
-@media (max-width: 1780px) {
-  .tripsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-  }
-  .headerTitle {
-    font-size: 2.4rem; 
-  }
-}
-
-/* For screens ≤ 1280px */
-@media (max-width: 1446px) {
-  .tripsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-  }
-
-  .headerTitle {
-    font-size: 2.2rem; 
-  }
-}
-
-@media (max-width: 1146px) {
-  .tripsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  }
-
-  .headerTitle {
-    font-size: 2.0rem; 
-  }
-}
-
-@media (max-width: 1086px) {
-  .tripsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  }
-
-  .headerTitle {
-    font-size: 1.8rem;
-  }
-}
-
-@media (max-width: 1027px) {
-  .tripsGrid {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); 
-  }
-  .headerTitle {
-    font-size: 1.6rem;
-  }
-}
-
-
-/* Card Styles */
-.tripCard {
-  background-color: white;
-  border: 2px solid black;
-  box-sizing: border-box;
-  /* Ensure all cards follow the same box model */
+.tripTable {
   width: 100%;
-  /* Same as newTripCard */
-  height: 100%;
-  /* Same as newTripCard */
-  border-radius: 10px;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.newTripCard {
-  background-color: transparent;
-  border: 2px dashed #777;
-  /* Match border width to regular cards */
-  box-sizing: border-box;
-  /* Ensures padding and borders are accounted for */
-  width: 100%;
-  /* Let it scale to the grid cell */
-  height: 100%;
-  /* Match the grid cell height */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #777;
-  font-size: 1.5rem;
+.tripTable th, 
+.tripTable td {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tripTable th {
+  background-color: #f8f9fa;
+  color: #555;
   font-weight: bold;
-  transition: background-color 0.3s ease;
-  /* Optional hover animation */
-  cursor: pointer;
-  /* Make it look clickable */
 }
 
-.newTripCard:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  /* Slight hover effect */
-}
-
-.newTripTitle {
-  text-align: center;
-}
-
-/* Regular Trip Card Image */
-.tripImage {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.tripInfo {
-  padding: 15px;
-  font-weight: 500;
-  font-size: 20px;
-}
-
-.tripsTitle {
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: #4a4a4a;
-  display: flex;
-  align-items: center;
-  margin-bottom: 0px;
-}
-
-.tripDates {
-  font-size: 1rem;
-  color: #7c7c7c;
-}
-
-/* Trips Header Styles */
-.tripsHeader {
-  display: flex;
-  justify-content: space-between;
-  /* Keeps space between items */
-  align-items: flex-end;
-  /* Aligns items to the bottom of the container */
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.pageNavigation {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  /* Aligns items horizontally */
-  gap: 5px;
-  /* Space between pagination buttons and dropdown */
-  flex-wrap: nowrap;
-  /* Prevents items from wrapping to the next line */
-}
-
-/* Page Navigation Styles */
-.pageNavigation button {
-  padding: 10px;
-  font-size: 20px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  outline: none;
-  /* Remove selection outline */
-}
-
-.pageNavigation button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.pageNavigation button:hover:not(:disabled) {
-  color: #3696fc;
-}
-
-/* Filter Dropdown */
-.divWrapper {
-  display: flex;
-  justify-content: space-between;
-  /* Aligns items with space between them */
-  align-items: flex-end;
-  /* Aligns items vertically in the center */
-  gap: 20px;
-  /* Adjust this value for the space between the dropdown and pagination */
-}
-
-.filterDropdown {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* Add space between dropdown and other elements */
-  flex-shrink: 0;
-  /* Prevents the filter dropdown from shrinking */
-}
-
-.filterDropdown select {
-  min-width: 150px;
-  /* Ensure the dropdown has a minimum width */
-  background-color: white;
-  border: 2px solid black;
-  border-radius: 5px;
-  color: #4a4a4a;
-  font-size: 16px;
-  padding: 8px 12px;
-  font-weight: 500;
-  /* Make the text stand out */
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-}
-
-.filterDropdown select:focus {
-  outline: none;
-  /* Remove focus outline */
-}
-
-/* Invisible Card Styles */
-.invisibleTripCard {
-  background-color: transparent;
-  width: 465px;
-  /* Match visible trip card dimensions */
-  height: 288px;
-  /* Match visible trip card dimensions */
-  border: 1px dashed transparent;
-  visibility: hidden;
-  box-sizing: border-box;
-}
-
-/* New Trip Button Action */
-.newTripButton {
-  cursor: pointer;
-  border: none;
-  background-color: #3696fc;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* Remove Focus Outline on Buttons */
-button:focus,
-select:focus {
-  outline: none;
-  /* Removes focus outline */
+.tripRow:hover {
+  background-color: #f1f3f5;
 }
 
 .flagIcon {
-  width: 30px;
-  /* Set the desired width */
-  height: 20px;
-  /* Set the desired height */
-  margin-right: 8px;
-  /* Space between the flag and the title */
-  vertical-align: middle;
-  border: 1px solid black;
-  /* Optional: for debugging purposes, can be removed */
+  width: 32px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
 }
 
-.tripTitleWrapper {
+.status {
+  font-weight: bold;
+}
+
+/* Creator Profile - Layout */
+.creatorColumn {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.creatorInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.creatorProfileImage {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ---------- Responsive Design -------------- */
+
+/* Large Desktops and Laptops (1440px and up) */
+@media screen and (min-width: 1440px) {
+  .dashboardTitle {
+    font-size: 2.5rem;
+  }
+  .tripTable th, 
+  .tripTable td {
+    padding: 16px 20px;
+  }
+  .flagIcon {
+    width: 40px;
+    height: 30px;
+  }
+  .creatorProfileImage {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Medium Screens (Tablets, Small Laptops: 1024px to 1439px) */
+@media screen and (max-width: 1439px) and (min-width: 768px) {
+  .dashboardContainer {
+    padding: 15px;
+  }
+  .dashboardTitle {
+    font-size: 2rem;
+  }
+  .tripTable th, 
+  .tripTable td {
+    padding: 12px 14px;
+  }
+  .flagIcon {
+    width: 28px;
+    height: 20px;
+  }
+  .creatorProfileImage {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Small Screens (Phones: 480px to 767px) */
+@media screen and (max-width: 767px) and (min-width: 480px) {
+  .dashboardContainer {
+    padding: 10px;
+  }
+  .dashboardTitle {
+    font-size: 1.75rem;
+  }
+  .tripTable {
+    display: block;
+    overflow-x: auto; /* Scrollable table */
+  }
+  .tripTable th, 
+  .tripTable td {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+  }
+  .flagIcon {
+    width: 24px;
+    height: 18px;
+  }
+  .creatorProfileImage {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Extra Small Screens (Small Phones, < 480px) */
+@media screen and (max-width: 479px) {
+  .dashboardContainer {
+    padding: 8px;
+  }
+  .dashboardTitle {
+    font-size: 1.5rem;
+  }
+  .tripTable {
+    display: block;
+    overflow-x: auto; /* Scrollable table */
+  }
+  .tripTable th, 
+  .tripTable td {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  .flagIcon {
+    width: 20px;
+    height: 15px;
+  }
+  .creatorProfileImage {
+    width: 24px;
+    height: 24px;
+  }
 }

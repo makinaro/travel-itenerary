@@ -1,151 +1,94 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './Dashboard.module.css';
-import Flag from 'react-world-flags'; // Import the Flag component
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import Flag from 'react-world-flags';
 
-export default function Dashboard() {
-  const trips = [
-    { title: "Philippines", dates: "Dec 16 - Jan 5, 2024", image: "https://via.placeholder.com/300?text=Philippines", countryCode: "PH" },
-    { title: "Singapore", dates: "Feb 6 - Feb 15, 2024", image: "https://via.placeholder.com/300?text=Singapore", countryCode: "SG" },
-    { title: "Japan", dates: "Nov 5 - Nov 10, 2024", image: "https://via.placeholder.com/300?text=Japan", countryCode: "JP" },
-    { title: "Taiwan", dates: "Sept 1 - Sept 10, 2024", image: "https://via.placeholder.com/300?text=Taiwan", countryCode: "TW" },
-    { title: "Indonesia", dates: "Aug 1 - Aug 10, 2026", image: "https://via.placeholder.com/300?text=Indonesia", countryCode: "ID" },
-    { title: "Thailand", dates: "Oct 1 - Oct 10, 2025", image: "https://via.placeholder.com/300?text=Thailand", countryCode: "TH" },
-    { title: "Vietnam", dates: "Jan 10 - Jan 15, 2024", image: "https://via.placeholder.com/300?text=Vietnam", countryCode: "VN" },
-    { title: "Malaysia", dates: "Apr 5 - Apr 20, 2025", image: "https://via.placeholder.com/300?text=Malaysia", countryCode: "MY" },
-    { title: "South Korea", dates: "Mar 10 - Mar 15, 2024", image: "https://via.placeholder.com/300?text=South+Korea", countryCode: "KR" },
-    { title: "China", dates: "Nov 1 - Nov 20, 2024", image: "https://via.placeholder.com/300?text=China", countryCode: "CN" },
-    { title: "India", dates: "Oct 10 - Oct 20, 2024", image: "https://via.placeholder.com/300?text=India", countryCode: "IN" },
-    { title: "Australia", dates: "Dec 1 - Dec 15, 2024", image: "https://via.placeholder.com/300?text=Australia", countryCode: "AU" },
-  ];
-
-  const tripsPerPage = 6;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortOrder, setSortOrder] = useState("chronological");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const totalTrips = trips.length + 1; // Including "+ New" card
-  const totalPages = Math.ceil(totalTrips / tripsPerPage);
-
-  const changePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const handleSortChange = (value) => {
-    setSortOrder(value);
-    setCurrentPage(1); // Reset to first page after sorting
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1); // Go back to page 1 when search query changes
-  };
-
-  // Function to parse and sort dates
-  const parseDate = (dateStr) => {
-    const [start, end] = dateStr.split(" - ");
-    const year = end.split(", ")[1] || start.split(", ")[1];
-    const startDate = new Date(`${start}, ${year}`);
-    const endDate = new Date(`${end}, ${year}`);
-    return { startDate, endDate };
-  };
-
-  const sortedTrips = sortOrder === "chronological"
-    ? trips.sort((a, b) => parseDate(a.dates).startDate - parseDate(b.dates).startDate)
-    : trips.sort((a, b) => parseDate(b.dates).startDate - parseDate(a.dates).startDate);
-
-  const filteredTrips = sortedTrips.filter(trip =>
-    trip.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const allTripsWithNew = [...filteredTrips, { title: "+ New", dates: "", image: "", countryCode: "" }];
-
-  const indexOfLastTrip = currentPage * tripsPerPage;
-  const indexOfFirstTrip = indexOfLastTrip - tripsPerPage;
-
-  const tripsToShow = allTripsWithNew.slice(indexOfFirstTrip, indexOfLastTrip);
-
-  const getInvisibleCards = () => {
-    if (tripsToShow.length < tripsPerPage) {
-      return Array.from({ length: tripsPerPage - tripsToShow.length }).map((_, index) => (
-        <div key={index} className={styles.invisibleTripCard}></div>
-      ));
-    }
-    return [];
-  };
-
-  // Placeholder function that currently does nothing
-  const handleNewTrip = () => {
-    // This function does nothing right now, but can be implemented later
-    console.log("New trip action placeholder");
-  };
+const Dashboard = () => {
+  // Sample trip data
+  const [trips] = useState([
+    {
+      id: 1,
+      title: "Philippines Adventure",
+      country: "Philippines",
+      countryCode: "PH",
+      tripCreator: "Xavier_Paul",
+      tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
+      startDate: "2024-12-16",
+      endDate: "2025-01-05",
+      status: "Planned",
+    },
+    {
+      id: 2,
+      title: "Singapore Getaway",
+      country: "Singapore",
+      countryCode: "SG",
+      tripCreator: "AaronsNipples",
+      tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
+      startDate: "2024-02-06",
+      endDate: "2024-02-15",
+      status: "In Progress",
+    },
+    {
+      id: 3,
+      title: "Japan Escape",
+      country: "Japan",
+      countryCode: "JP",
+      tripCreator: "tiuditto",
+      tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
+      startDate: "2024-11-05",
+      endDate: "2024-11-10",
+      status: "Completed",
+    },
+  ]);
 
   return (
     <div className={styles.dashboardContainer}>
-      <div className={styles.dashboard}>
-        <div className={styles.searchBarContainer}>
-          <input
-            type="text"
-            placeholder="Search here..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </div>
+      <h1 className={styles.dashboardTitle}>Dashboard</h1>
 
-        <div className={styles.header}>
-          <h1 className={styles.headerTitle}>Username's Dashboard</h1>
-        </div>
-
-        <div className={styles.tripsSectionContainer}>
-          <div className={styles.tripsHeader}>
-            <h2 className={styles.tripsTitle}>Your Trips</h2>
-            <div className={styles.divWrapper}>
-              <div className={styles.filterDropdown}>
-                <select value={sortOrder} onChange={(e) => handleSortChange(e.target.value)}>
-                  <option value="chronological">Earliest to Latest</option>
-                  <option value="reverseChronological">Latest to Earliest</option>
-                </select>
-              </div>
-
-              {totalPages > 1 && (
-                <div className={styles.pageNavigation}>
-                  <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>&lt;</button>
-                  <span>{currentPage} / {totalPages}</span>
-                  <button onClick={() => changePage(currentPage + 1)} disabled={currentPage === totalPages}>&gt;</button>
+      <table className={styles.tripTable}>
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>Trip Title</th>
+            <th>Country</th>
+            <th>Trip Creator</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {trips.map((trip, index) => (
+            <tr key={index} className={styles.tripRow}>
+              <td>
+                <Flag 
+                  code={trip.countryCode} 
+                  className={styles.flagIcon} 
+                  fallback={<span>🏳️</span>} 
+                />
+              </td>
+              <td>{trip.title}</td>
+              <td>{trip.country}</td>
+              <td className={styles.creatorColumn}>
+                <div className={styles.creatorInfo}>
+                  <img
+                    src={trip.tripCreatorProfileImage} 
+                    alt={trip.tripCreator}
+                    className={styles.creatorProfileImage}
+                  />
+                  <span>{trip.tripCreator}</span>
                 </div>
-              )}
-            </div>
-          </div>
-
-          <div className={styles.tripsGrid}>
-            {tripsToShow.map((trip, index) => (
-              <Link to="/calendar" key={index} className={`${styles.tripCard} ${trip.title === "+ New" ? styles.newTripCard : ""}`}>
-                {trip.title === "+ New" ? (
-                  <h2 className={styles.newTripTitle}>+ New</h2>
-                ) : (
-                  <>
-                    <img
-                      src={trip.image || "https://via.placeholder.com/300"}
-                      alt={trip.title}
-                      className={styles.tripImage}
-                      loading="lazy"
-                    />
-                    <div className={styles.tripInfo}>
-                      <div className={styles.tripTitleWrapper}>
-                        <Flag code={trip.countryCode} className={styles.flagIcon} />
-                        <h3 className={styles.tripTitle}>{trip.title}</h3>
-                      </div>
-                      <p className={styles.tripDates}>{trip.dates}</p>
-                    </div>
-                  </>
-                )}
-              </Link>
-            ))}
-            {getInvisibleCards()}
-          </div>
-        </div>
-      </div>
+              </td>
+              <td>{trip.startDate}</td>
+              <td>{trip.endDate}</td>
+              <td className={`${styles.status} ${styles[trip.status.toLowerCase()]}`}>
+                {trip.status}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-}
+};
+
+export default Dashboard;
