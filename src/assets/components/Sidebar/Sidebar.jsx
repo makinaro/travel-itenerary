@@ -1,17 +1,60 @@
-import React, { useContext, createContext, useState } from "react";
+import React, { useContext, createContext, useState, useEffect } from "react";
 import { LogOut, ChevronLast, ChevronFirst } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import logo from "../../Images/logo.png";
+import { getToken, removeToken, getUserId, removeUserId } from '../../../services/auth.js';
 
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
-  const [expanded, setExpanded] = useState(true);
 
+  const [expanded, setExpanded] = useState(true);
+  const [user, setUser] = useState({});
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const userId = getUserId();
+    console.log(userId);
+    if (userId) {
+      // Fetch user details from the server using the user ID
+      fetchUserDetails(userId);
+    }
+  }, []);
+
+  const fetchUserDetails = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${getToken()}`,
+        },
+      });
+      // const response = await fetch(`http://localhost:3000/users/token`, {
+      //   method: 'GET',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `${getToken()}`,
+      //   },
+      // });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch user data');
+      }
+
+      const data = await response.json();
+      setUser(data);
+      console.log(data);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
   const handleLogout = () => {
     // Clear user data (e.g., token) from localStorage
-    localStorage.removeItem("token");
+    removeToken();
+    removeUserId();
     console.log("Logged out");
 
     // Redirect or reload the page to reset the app's state
@@ -53,8 +96,8 @@ export default function Sidebar({ children }) {
             className={`${styles.userInfo} ${expanded ? "w-60 ml-3" : "w-0"}`}
           >
             <div className="userDetails">
-              <span className="name">John Doe</span>
-              <h4 className="username">@johndoe123_</h4>
+              <span className="name">{user.username}</span>
+              <h4 className="username">{user.email}</h4>
             </div>
             <button
               onClick={handleLogout}

@@ -1,5 +1,6 @@
 const db = require('../models/index.cjs');
 const bcrypt = require('bcryptjs');
+const { getUserFromToken } = require('../utils/authUtils.cjs');
 
 // Get all users
 const getAllUsers = async (req, res) => {
@@ -38,6 +39,16 @@ const getUserByUsername = async (req, res) => {
   }
 };
 
+const getUserByToken = async (req, res) => {
+  const token = req.headers.authorization.split(' ')[1]; // Assuming the token is sent in the Authorization header
+
+  try {
+    const user = await getUserFromToken(token);
+    res.json(user);
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' });
+  }
+};
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -89,4 +100,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, getUserByUsername, createUser, updateUser, deleteUser };
+module.exports = { getAllUsers, getUserById, getUserByUsername, getUserByToken, createUser, updateUser, deleteUser };

@@ -1,7 +1,7 @@
-// server.cjs
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const authMiddleware = require('./middleware/authMiddleware.cjs'); // Ensure it's implemented correctly
+const { authenticateToken } = require('./utils/authUtils.cjs'); // Import authenticateToken
 
 const app = express();
 
@@ -17,23 +17,22 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 const userRouter = require('./routes/userRouter.cjs');
 const tripRouter = require('./routes/tripRouter.cjs');
+const collaboratorRouter = require('./routes/collaboratorRouter.cjs');
+const tripEventRouter = require('./routes/tripEventRouter.cjs');
 const authController = require('./controllers/authController.cjs');
-const collaboratorRouter = require('./routes/collaboratorRouter.cjs'); // New route for collaborators
-const tripEventRouter = require('./routes/tripEventRouter.cjs'); // New route for trip events
 
-app.use('/users', userRouter);
 app.post('/login', authController.loginUser);
-app.use('/trips', tripRouter);
-app.use('/collaborators', collaboratorRouter); // Add collaborator route
-app.use('/trip-events', tripEventRouter); // Add trip events route
+app.use('/users', userRouter);
+app.use('/users/:id/trips', authenticateToken, tripRouter);
+app.use('/collaborators', authenticateToken, collaboratorRouter);
+app.use('/trip-events', authenticateToken, tripEventRouter);
 
 // Test route
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Grandline' });
 });
 
-const PORT = 3000;
-
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -4,10 +4,11 @@ import logoImage from '../assets/Images/logo.png'; // Ensure the path is correct
 import loginBG from '../assets/Images/loginBG.gif';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Eye, EyeOff } from 'lucide-react'; // Import Lucide icons
+import { setToken, setUserId } from '../services/auth.js'; // Import the utility function
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    identifier: '',
     password: '',
   });
   const [error, setError] = useState('');
@@ -39,12 +40,14 @@ const Login = () => {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Network response was not ok');
       }
-
+      setToken(null);
+      setUserId(null);
       const data = await response.json();
       console.log('Success:', data);
 
-      // Store token in localStorage
-      localStorage.setItem('token', data.token);
+      // Store token using the utility function
+      setToken(data.token);
+      setUserId(data.user_id);
       setError(''); // Clear any previous errors
 
       // Redirect to /dashboard
@@ -90,11 +93,11 @@ const Login = () => {
                   <User className="input-icon" /> {/* User icon from lucide-react */}
                   <input
                     id="username"
-                    name="username"
+                    name="identifier"
                     type="text"
                     required
                     className="form-input"
-                    value={formData.username}
+                    value={formData.identifier}
                     onChange={handleChange}
                   />
                 </div>

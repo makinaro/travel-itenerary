@@ -1,19 +1,19 @@
 const jwt = require('jsonwebtoken');
+const secretKey = process.env.SECRET_KEY || 'raftel';
 
 const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization'];
-
   if (!token) {
-    return res.status(401).json({ message: 'Access denied, token missing!' });
+    return res.status(401).json({ message: 'Access denied' });
   }
 
-  try {
-    const decoded = jwt.verify(token, 'your_jwt_secret');
-    req.user = decoded;
+  jwt.verify(token, secretKey, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token' });
+    }
+    req.user = user;
     next();
-  } catch (error) {
-    res.status(400).json({ message: 'Invalid token' });
-  }
+  });
 };
 
 module.exports = authenticateToken;
