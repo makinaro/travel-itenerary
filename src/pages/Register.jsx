@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Register1.css';
 import logoImage from '../assets/Images/logo.png';
-import loginBG from '../assets/images/loginBG.gif';
+import loginBG from '../assets/Images/loginBG.gif';
 import { Lock, User, Mail } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 

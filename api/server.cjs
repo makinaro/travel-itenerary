@@ -25,7 +25,7 @@ app.post('/login', authController.loginUser);
 app.use('/users', userRouter);
 app.use('/users/:id/trips', authenticateToken, tripRouter);
 app.use('/collaborators', authenticateToken, collaboratorRouter);
-app.use('/trip-events', authenticateToken, tripEventRouter);
+app.use('/users/:id/trips/:tripId/events', authenticateToken, tripEventRouter); // Mount tripEventRouter with /users/:id/trips/:tripId/events prefix
 
 // Test route
 app.get('/', (req, res) => {

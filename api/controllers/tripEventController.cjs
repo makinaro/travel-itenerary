@@ -3,7 +3,8 @@ const db = require('../models/index.cjs');
 
 // Create a new trip event
 const createTripEvent = async (req, res) => {
-  const { title, start_time, end_time, trip_id } = req.body;
+  const { title, start_time, end_time, collaborators } = req.body;
+  const { tripId } = req.params;
 
   try {
     // Create the trip event with the provided data
@@ -11,8 +12,14 @@ const createTripEvent = async (req, res) => {
       title,
       start_time,
       end_time,
-      trip_id,
+      trip_id: tripId, // Ensure trip_id is correctly mapped
     });
+
+    // Handle collaborators if provided
+    if (collaborators && collaborators.length > 0) {
+      // Assuming you have a model and association for collaborators
+      await newTripEvent.setCollaborators(collaborators);
+    }
 
     // Return the created trip event as JSON
     res.status(201).json(newTripEvent);

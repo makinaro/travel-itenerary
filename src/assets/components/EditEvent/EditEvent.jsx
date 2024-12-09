@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./CreateEvent.module.css";
+import styles from "../CreateEvent/CreateEvent.module.css";
 
 const fetchUserIdByUsername = async (username) => {
   try {

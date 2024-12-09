@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CreateEvent.module.css";
+import { createTripEvent } from "../../../../api/utils/tripEventsUtils.cjs";
 
 const fetchUserIdByUsername = async (username) => {
   try {
@@ -22,7 +23,28 @@ const fetchUserIdByUsername = async (username) => {
   }
 };
 
-const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
+const fetchSuggestedUsers = async (searchTerm) => {
+  try {
+    const response = await fetch(`http://localhost:3000/users/search/${searchTerm}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching suggested users: ${response.statusText}`);
+    }
+
+    const users = await response.json();
+    return users;
+  } catch (error) {
+    console.error("Error fetching suggested users:", error);
+    return [];
+  }
+};
+
+const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -43,6 +65,19 @@ const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchTerm) {
+        const users = await fetchSuggestedUsers(searchTerm);
+        setSuggestedUsers(users);
+      } else {
+        setSuggestedUsers([]);
+      }
+    };
+
+    fetchSuggestions();
+  }, [searchTerm]);
 
   const handleConfirm = async () => {
     const errors = {};
@@ -67,31 +102,24 @@ const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
 
     const eventData = {
       title,
-      startTime,
-      endTime,
-      collaborators: collaboratorIds,
+      start_time: startTime,
+      end_time: endTime,
+      collaborators: collaboratorIds.length > 0 ? collaboratorIds : [],
     };
 
     try {
-      const response = await fetch("http://localhost:3000/events", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${yourAuthToken}`,
-        },
-        body: JSON.stringify(eventData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error creating event: ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
+      const responseData = await createTripEvent(tripId, eventData);
       onConfirm(responseData);
       onClose();
     } catch (error) {
       console.error("Error creating event:", error);
     }
+  };
+
+  const handleAddCollaborator = (username) => {
+    setCollaborators([...collaborators, username]);
+    setSearchTerm("");
+    setSuggestedUsers([]);
   };
 
   return (
@@ -130,6 +158,30 @@ const CreateEvent = ({ isOpen, onClose, onConfirm }) => {
               {formErrors.time && <p className={styles.errorText}>{formErrors.time}</p>}
             </div>
           </div>
+        </div>
+        <div className={styles.formGroup}>
+          <label>Collaborators</label>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search for users"
+            className={styles.searchBar}
+          />
+          {suggestedUsers.length > 0 && (
+            <ul className={styles.suggestions}>
+              {suggestedUsers.map((user) => (
+                <li key={user.id} onClick={() => handleAddCollaborator(user.username)}>
+                  {user.username}
+                </li>
+              ))}
+            </ul>
+          )}
+          <ul className={styles.collaborators}>
+            {collaborators.map((collab, index) => (
+              <li key={index}>{collab}</li>
+            ))}
+          </ul>
         </div>
         <div className={styles.modalActions}>
           <button onClick={onClose}>Cancel</button>
