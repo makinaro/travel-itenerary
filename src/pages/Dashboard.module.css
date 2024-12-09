@@ -44,7 +44,9 @@
   height: 24px;
   border-radius: 4px;
   object-fit: cover;
+  border: 1px solid #757575; /* Black border for better visibility */
 }
+
 
 .status {
   font-weight: bold;
