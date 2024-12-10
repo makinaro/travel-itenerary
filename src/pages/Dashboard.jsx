@@ -3,113 +3,86 @@ import styles from './Dashboard.module.css';
 import Flag from 'react-world-flags';
 import { getToken, getUserId } from '../services/auth.js';
 import countryList from 'react-select-country-list';
+import CreateTrip from '../assets/components/CreateTrip/CreateTrip.jsx'; // Import CreateTrip component
 
 const Dashboard = () => {
-  // Sample trip data
-  // const [trips] = useState([
-  //   {
-  //     id: 1,
-  //     title: "Philippines Adventure",
-  //     country: "Philippines",
-  //     countryCode: "PH",
-  //     tripCreator: "Xavier_Paul",
-  //     tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
-  //     startDate: "2024-12-16",
-  //     endDate: "2025-01-05",
-  //     status: "Planned",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Singapore Getaway",
-  //     country: "Singapore",
-  //     countryCode: "SG",
-  //     tripCreator: "AaronsNipples",
-  //     tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
-  //     startDate: "2024-02-06",
-  //     endDate: "2024-02-15",
-  //     status: "In Progress",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Japan Escape",
-  //     country: "Japan",
-  //     countryCode: "JP",
-  //     tripCreator: "tiuditto",
-  //     tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
-  //     startDate: "2024-11-05",
-  //     endDate: "2024-11-10",
-  //     status: "Completed",
-  //   },
-  // ]);
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState('');
-     useEffect(() => {
-    const fetchTrips = async () => {
-      const userId = getUserId();
-      if (!userId) {
-        setError('User ID not found');
-        return;
+  const [tripCreated, setTripCreated] = useState(false); // State variable to track trip creation
+
+  const fetchTrips = async () => {
+    const userId = getUserId();
+    if (!userId) {
+      setError('User ID not found');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${getToken()}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch trips');
       }
 
-      try {
-        const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${getToken()}`,
-          },
-        });
+      const tripsData = await response.json();
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch trips');
-        }
+      // Fetch trip creator details for each trip
+      const tripsWithCreatorDetails = await Promise.all(
+        tripsData.map(async (trip) => {
+          const creatorResponse = await fetch(`http://localhost:3000/users/${trip.owner_id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `${getToken()}`,
+            },
+          });
 
-        const tripsData = await response.json();
+          if (!creatorResponse.ok) {
+            const errorData = await creatorResponse.json();
+            throw new Error(errorData.message || 'Failed to fetch trip creator details');
+          }
+          const creatorData = await creatorResponse.json();
+          const startDate = new Date(trip.start_date).toLocaleDateString();
+          const endDate = new Date(trip.end_date).toLocaleDateString();
+          return {
+            id: trip.trip_id,
+            title: trip.title,
+            country: countryList().getLabel(trip.country),
+            countryCode: trip.country,
+            tripCreator: creatorData.username, // Assuming the username field contains the trip creator's name
+            tripCreatorProfileImage: 'https://via.placeholder.com/32', // Placeholder for profile image
+            startDate: startDate,
+            endDate: endDate,
+            status: trip.status,
+          };
+        })
+      );
+      setTrips(tripsWithCreatorDetails);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
-        // Fetch trip creator details for each trip
-        const tripsWithCreatorDetails = await Promise.all(
-          tripsData.map(async (trip) => {
-            const creatorResponse = await fetch(`http://localhost:3000/users/${trip.owner_id}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${getToken()}`,
-              },
-            });
-
-            if (!creatorResponse.ok) {
-              const errorData = await creatorResponse.json();
-              throw new Error(errorData.message || 'Failed to fetch trip creator details');
-            }
-            const creatorData = await creatorResponse.json();
-            const startDate = new Date(trip.start_date).toLocaleDateString();
-            const endDate = new Date(trip.end_date).toLocaleDateString();
-            return {
-              id: trip.trip_id,
-              title: trip.title,
-              country: countryList().getLabel(trip.country),
-              countryCode: trip.country,
-              tripCreator: creatorData.username, // Assuming the username field contains the trip creator's name
-              tripCreatorProfileImage: 'https://via.placeholder.com/32', // Placeholder for profile image
-              startDate: startDate,
-              endDate: endDate,
-              status: trip.status,
-            };
-          })
-        );
-        setTrips(tripsWithCreatorDetails);
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-
+  useEffect(() => {
     fetchTrips();
-  }, []);
+  }, [tripCreated]); // Re-fetch trips when a new trip is created
+
+  const handleTripCreated = () => {
+    setTripCreated(!tripCreated); // Toggle the state to trigger re-fetch
+  };
 
   return (
     <div className={styles.dashboardContainer}>
       <h1 className={styles.dashboardTitle}>Dashboard</h1>
+
+      <CreateTrip onTripCreated={handleTripCreated} /> {/* Pass the callback function */}
 
       <table className={styles.tripTable}>
         <thead>

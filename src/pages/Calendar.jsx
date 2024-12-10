@@ -1,78 +1,115 @@
 import React, { useEffect, useState } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { getToken, getUserId } from '../services/auth.js';
 import styles from "./Calendar.module.css";
-import { fetchTripEvents, createTripEvent, updateTripEvent, deleteTripEvent } from '../../api/utils/tripEventsUtils.cjs';
-import CreateEventModal from '../assets/components/CreateEvent/CreateEvent.jsx';
-import EditEventModal from '../assets/components/EditEvent/EditEvent.jsx';
+// import CreateEvent from "../assets/components/CreateEvent/CreateEvent"; // Import CreateEvent component
+// import EditEvent from "../assets/components/CreateEvent/EditEvent"; // Import EditEvent component
 
-const Calendar = ({ tripId }) => {
-  const [events, setEvents] = useState([]);
+const Calendar = () => {
+  const [trips, setTrips] = useState([]);
   const [highlightedEvent, setHighlightedEvent] = useState(null);
   const [isCreateEventModalOpen, setCreateEventModalOpen] = useState(false);
-  const [isEditEventModalOpen, setEditEventModalOpen] = useState(false);
-  const [currentEventForEdit, setCurrentEventForEdit] = useState(null);
+  const [isEditEventModalOpen, setEditEventModalOpen] = useState(false); // Track EditEvent modal visibility
+  const [currentEventForEdit, setCurrentEventForEdit] = useState(null); // Track event to edit
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const loadEvents = async () => {
+    const fetchTrips = async () => {
+      const userId = getUserId();
+      if (!userId) {
+        setError('User ID not found');
+        return;
+      }
+
       try {
-        const data = await fetchTripEvents(tripId);
-        setEvents(data);
+        const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${getToken()}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to fetch trips');
+        }
+
+        const tripsData = await response.json();
+
+        // Format trips data for FullCalendar
+        const formattedTrips = tripsData.map(trip => ({
+          id: trip.trip_id,
+          title: trip.title,
+          start: trip.start_date,
+          end: trip.end_date,
+          details: trip.details || [], // Assuming trip details are included in the response
+        }));
+
+        setTrips(formattedTrips);
       } catch (error) {
-        console.error('Error fetching trip events:', error);
+        setError(error.message);
       }
     };
 
-    loadEvents();
-  }, [tripId]);
+    fetchTrips();
+  }, []);
 
-  const handleEventClick = (event) => {
-    setHighlightedEvent(event.id);
-    setCurrentEventForEdit(event);
+  const handleEventClick = (info) => {
+    const eventId = info.event.id;
+    setHighlightedEvent((prev) => (prev === eventId ? null : eventId));
   };
 
-  const handleCreateEvent = async (newEvent) => {
-    try {
-      const createdEvent = await createTripEvent(tripId, newEvent);
-      setEvents((prevEvents) => [...prevEvents, createdEvent]);
-    } catch (error) {
-      console.error('Error creating event:', error);
-    }
+  const highlightedEventDetails = trips.find(
+    (event) => event.id === highlightedEvent
+  );
+
+  const handleOpenCreateEvent = () => {
+    setCreateEventModalOpen(true); 
   };
 
-  const handleEditEvent = async (eventId, updatedEvent) => {
-    try {
-      const updated = await updateTripEvent(tripId, eventId, updatedEvent);
-      setEvents((prevEvents) =>
-        prevEvents.map((event) => (event.id === eventId ? updated : event))
-      );
-    } catch (error) {
-      console.error('Error updating event:', error);
-    }
+  const handleCloseCreateEvent = () => {
+    setCreateEventModalOpen(false); 
   };
 
-  const handleDeleteEvent = async (eventId) => {
-    try {
-      await deleteTripEvent(tripId, eventId);
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
-    } catch (error) {
-      console.error('Error deleting event:', error);
-    }
+  const handleConfirmCreateEvent = (eventData) => {
+    console.log("Event Created:", eventData); 
+    setCreateEventModalOpen(false);
+    setTrips((prevEvents) => [...prevEvents, eventData]); // Add new event to state
+  };
+
+  // Handle opening EditEvent modal with the selected event
+  const handleOpenEditEvent = (eventDetail) => {
+    setCurrentEventForEdit(eventDetail);
+    setEditEventModalOpen(true);
+  };
+
+  // Handle updating event
+  const handleUpdateEvent = (updatedEventData) => {
+    setTrips((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === updatedEventData.id
+          ? { ...event, details: updatedEventData.details }
+          : event
+      )
+    );
+    setEditEventModalOpen(false); // Close the EditEvent modal
   };
 
   return (
     <div className={styles.calendarContainer}>
+      {error && <p className={styles.error}>{error}</p>}
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         headerToolbar={{
           start: "today",
           center: "title",
           end: "prev,next",
         }}
-        events={events}
+        events={trips}
         eventClick={handleEventClick}
         eventContent={(eventInfo) => {
           const startDate = new Date(eventInfo.event.start);
@@ -104,31 +141,31 @@ const Calendar = ({ tripId }) => {
       />
 
       {highlightedEvent ? (
-        currentEventForEdit && currentEventForEdit.details.length > 0 &&
-          currentEventForEdit.details.every(detail => detail.event && detail.date) ? (
+        highlightedEventDetails && highlightedEventDetails.details.length > 0 &&
+          highlightedEventDetails.details.every(detail => detail.event && detail.date) ? (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <div className={styles.modalHeader}>
                 <h3>
-                  {currentEventForEdit.title} (
-                  {new Date(currentEventForEdit.start).toLocaleDateString("en-US", {
+                  {highlightedEventDetails.title} (
+                  {new Date(highlightedEventDetails.start).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                   })}{" "}
                   &nbsp;-&nbsp;
-                  {new Date(currentEventForEdit.end).toLocaleDateString("en-US", {
+                  {new Date(highlightedEventDetails.end).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                   })}
                   )
                 </h3>
-                <button className={styles.addEventButton} onClick={() => setCreateEventModalOpen(true)}>
+                <button className={styles.addEventButton} onClick={handleOpenCreateEvent}>
                   + Add an Event
                 </button>
               </div>
               <div className={styles.eventDetailsContainer}>
                 {Object.entries(
-                  currentEventForEdit.details.reduce((acc, detail) => {
+                  highlightedEventDetails.details.reduce((acc, detail) => {
                     const date = detail.date;
                     if (!acc[date]) acc[date] = [];
                     acc[date].push(detail);
@@ -149,7 +186,7 @@ const Calendar = ({ tripId }) => {
                         <div className={styles.eventDescription}>{detail.event}</div>
                         <div
                           className={styles.eventAction}
-                          onClick={() => setEditEventModalOpen(true)}
+                          onClick={() => handleOpenEditEvent(detail)}
                         >
                           EDIT EVENT
                         </div>
@@ -166,7 +203,7 @@ const Calendar = ({ tripId }) => {
               You have no events planned out for this trip! Click{" "}
               <span
                 className={styles.clickableText}
-                onClick={() => setCreateEventModalOpen(true)}
+                onClick={handleOpenCreateEvent}
               >
                 HERE
               </span>{" "}
@@ -181,17 +218,19 @@ const Calendar = ({ tripId }) => {
       )}
 
       {isCreateEventModalOpen && (
-        <CreateEventModal
-          onClose={() => setCreateEventModalOpen(false)}
-          onCreate={handleCreateEvent}
+        <CreateEvent
+          isOpen={isCreateEventModalOpen}
+          onClose={handleCloseCreateEvent}
+          onConfirm={handleConfirmCreateEvent}
         />
       )}
 
       {isEditEventModalOpen && (
-        <EditEventModal
-          event={currentEventForEdit}
+        <EditEvent
+          isOpen={isEditEventModalOpen}
           onClose={() => setEditEventModalOpen(false)}
-          onEdit={handleEditEvent}
+          onConfirm={handleUpdateEvent}
+          eventData={currentEventForEdit}
         />
       )}
     </div>
