@@ -88,8 +88,8 @@ const Dashboard = () => {
             return {
               id: trip.trip_id,
               title: trip.title,
-              country: trip.country,
-              countryCode: countryList().getValue(trip.country),
+              country: countryList().getLabel(trip.country),
+              countryCode: trip.country,
               tripCreator: creatorData.username, // Assuming the username field contains the trip creator's name
               tripCreatorProfileImage: 'https://via.placeholder.com/32', // Placeholder for profile image
               startDate: startDate,
@@ -98,7 +98,6 @@ const Dashboard = () => {
             };
           })
         );
-
         setTrips(tripsWithCreatorDetails);
       } catch (error) {
         setError(error.message);

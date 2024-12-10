@@ -14,10 +14,10 @@ const getTripsByUserId = async (req, res) => {
 // Create a trip for a user
 const createTripForUser = async (req, res) => {
   const userId = req.params.id;
-  const status = req.params.status;
-  const { title, country, start_date, end_date } = req.body;
+  // const status = req.params.status;
+  const { title, country, startDate, endDate } = req.body;
   try {
-    const trip = await db.Trip.create({ owner_id: userId, title, country, status: status, start_date, end_date});
+    const trip = await db.Trip.create({ owner_id: userId, title, country, status: 'Planned', start_date: startDate, end_date: endDate});
     res.status(201).json(trip);
   } catch (error) {
     res.status(500).json({ message: error.message });

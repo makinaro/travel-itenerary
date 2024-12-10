@@ -3,6 +3,7 @@ import Select from "react-select";
 import CountryList from "react-select-country-list";
 import styles from "./CreateTrip.module.css";
 import { X } from 'lucide-react';
+import { getToken, getUserId } from '../../../services/auth.js';
 
 // REPLACE THIS WITH ACTUAL API FETCH
 const fetchUsernames = (searchTerm) => {
@@ -116,19 +117,18 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   
     const tripData = {
       title,
-      description,
+      // description,                     // currently no description in trip model
       country,
       startDate,
       endDate,
-      collaborators: collaboratorIds,  // Include collaborator IDs in the request
+      // collaborators: collaboratorIds,  // Include collaborator IDs in the request  [process this on a different method]
     };
-  
     try {
-      const response = await fetch("http://localhost:3000/trips", {
+      const response = await fetch(`http://localhost:3000/users/${getUserId()}/trips`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${yourAuthToken}`,  // Use the JWT token from localStorage
+          Authorization: `${getToken()}`,  // Use the JWT token from localStorage
         },
         body: JSON.stringify(tripData),
       });
