@@ -9,10 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    description: {
-      type: DataTypes.STRING(500),
-      allowNull: true
-    },
     country: {
       type: DataTypes.STRING(100),
       allowNull: false
@@ -32,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
         model: 'users',
         key: 'user_id'
       }
+    },
+    status: {
+      type: DataTypes.ENUM('Planned', 'In progress', 'Completed'),
+      allowNull: false,
+      defaultValue: 'Planned'
     },
     createdAt: {
       type: DataTypes.DATE,
