@@ -100,4 +100,21 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, getUserByUsername, getUserByToken, createUser, updateUser, deleteUser };
+const searchUsersByUsername = async (req, res) => {
+  const { searchTerm } = req.params;
+  try {
+    const users = await db.User.findAll({
+      where: {
+        username: {
+          [db.Sequelize.Op.like]: `%${searchTerm}%`
+        }
+      },
+      attributes: ['user_id', 'username', 'email'] // Ensure these columns exist in your model
+    });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getAllUsers, getUserById, getUserByUsername, getUserByToken, createUser, updateUser, deleteUser, searchUsersByUsername };

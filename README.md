@@ -13,8 +13,8 @@ ________________________________________________________________
 
 ### Pages:
 - [ ] Home
-- [ ] Login
-- [ ] Register
+- [X] Login
+- [X] Register
 - [X] Dashboard
 - [ ] Calendar
 - [ ] Settings
@@ -30,12 +30,12 @@ ________________________________________________________________
 
 ### Pages:
 - [ ] Home
-- [ ] Login
-- [ ] Register
-- [ ] Dashboard
+- [X] Login
+- [X] Register
+- [X] Dashboard (collaborated trips is still non-functional)
 - [ ] Calendar
 - [ ] Settings
-- [ ] Create Trip
+- [X] Create Trip (adding collaborators is still non-functional)
 
 ### Reusable and Non-Reusable Components:
 - [ ] Sidebar

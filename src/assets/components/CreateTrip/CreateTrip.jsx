@@ -6,32 +6,26 @@ import { X } from 'lucide-react';
 import { getToken, getUserId } from '../../../services/auth.js';
 
 // REPLACE THIS WITH ACTUAL API FETCH
-const fetchUsernames = (searchTerm) => {
-  const allUsers = ["Xavier_Paul", "AaronsNipples", "tiuditto"];
-  return allUsers.filter(username => username.toLowerCase().includes(searchTerm.toLowerCase()));
-};
-
-// Function to fetch user ID by username
-const fetchUserIdByUsername = async (username) => {
+const fetchUsernames = async (searchTerm) => {
   try {
-    const response = await fetch(`http://localhost:3000/users/username/${username}`, {
-      method: "GET",
+    const token = getToken();
+    const response = await fetch(`http://localhost:3000/users/search/${searchTerm}`, {
       headers: {
-        "Content-Type": "application/json",
-      },
+        Authorization: `${token}`
+      }
     });
-
+    const data = await response.json();
+    console.log("Response text:", data); // Log the response text for debugging
     if (!response.ok) {
-      throw new Error(`User not found: ${username}`);
+      throw new Error('Network response was not ok');
     }
-
-    const userData = await response.json();
-    return userData.id;  // Return the user ID from the response
+    return data;
   } catch (error) {
-    console.error("Error fetching user ID:", error);
-    return null;
+    console.error("Error fetching usernames:", error);
+    return [];
   }
 };
+
 
 const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [title, setTitle] = useState("");
@@ -44,7 +38,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [formErrors, setFormErrors] = useState({});
   const [trips, setTrips] = useState([]);
-
+  const loggedInUserId = getUserId();
   // GETS ALL COUNTRIES USING PACKAGE
   const options = CountryList().getData();
 
@@ -63,15 +57,28 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      if (searchTerm) {
+        const users = await fetchUsernames(searchTerm);
+        const filteredUsers = users.filter(user => 
+          user.user_id !== loggedInUserId && !collaborators.some(collab => collab.user_id === user.user_id)
+        );
+        setSuggestedUsers(filteredUsers);
+      } else {
+        setSuggestedUsers([]);
+      }
+    };
+
+    fetchSuggestions();
+  }, [searchTerm, collaborators, loggedInUserId]);
+
   const handleSearchChange = (e) => {
     const search = e.target.value;
     setSearchTerm(search);
 
     if (search === "") {
       setSuggestedUsers([]);
-    } else {
-      const filteredUsers = fetchUsernames(search).filter((user) => !collaborators.includes(user));
-      setSuggestedUsers(filteredUsers);
     }
   };
 
@@ -92,7 +99,13 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     setTrips([...trips, tripData]);
     console.log("New trip added:", tripData);
   };
-
+  const renderSuggestedUsers = () => {
+    return suggestedUsers.map(user => (
+      <div key={user.user_id} onClick={() => handleAddCollaborator(user)}>
+        {user.username} ({user.email})
+      </div>
+    ));
+  };
   // BACK-END FUNCTIONALITY
   const handleConfirm = async () => {
     const errors = {};
@@ -108,12 +121,12 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       return;
     }
   
-    const collaboratorIds = await Promise.all(
-      collaborators.map(async (collab) => {
-        const userId = await fetchUserIdByUsername(collab);
-        return userId;  // Get user IDs for each collaborator
-      })
-    );
+    // const collaboratorIds = await Promise.all(
+    //   collaborators.map(async (collab) => {
+    //     const userId = await fetchUserIdByUsername(collab);
+    //     return userId;  // Get user IDs for each collaborator
+    //   })
+    // );
   
     const tripData = {
       title,
@@ -215,7 +228,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
             />
             {searchTerm && suggestedUsers.length > 0 && (
               <div className={styles.suggestions}>
-                {suggestedUsers.map((user) => (
+                {/* {suggestedUsers.map((user) => (
                   <div
                     key={user}
                     className={styles.suggestionItem}
@@ -223,7 +236,8 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
                   >
                     @{user}
                   </div>
-                ))}
+                ))} */}
+                {renderSuggestedUsers()}
               </div>
             )}
           </div>
