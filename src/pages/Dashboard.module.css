@@ -144,6 +144,7 @@
   .tripTable th, 
   .tripTable td {
     padding: 16px 20px;
+    text-align: left; /* Aligning the headers to the left */
   }
   .flagIcon {
     width: 40px;
