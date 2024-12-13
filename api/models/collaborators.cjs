@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     access_level: {
-      type: DataTypes.ENUM('view', 'edit'),
+      type: DataTypes.ENUM('View', 'Edit'),
       allowNull: false
     },
     createdAt: {

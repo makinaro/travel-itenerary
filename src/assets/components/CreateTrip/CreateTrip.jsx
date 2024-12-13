@@ -83,8 +83,14 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   };
 
   // HANDLES COLLABORATOR FRONT END
+  // const handleAddCollaborator = (collab) => {
+  //   if (!collaborators.includes(collab)) {
+  //     setCollaborators([...collaborators, collab]);
+  //   }
+  //   setSearchTerm(""); 
+  // };
   const handleAddCollaborator = (collab) => {
-    if (!collaborators.includes(collab)) {
+    if (!collaborators.some(c => c.user_id === collab.user_id)) {
       setCollaborators([...collaborators, collab]);
     }
     setSearchTerm(""); 
@@ -106,6 +112,20 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       </div>
     ));
   };
+  const renderCollaborators = () => {
+    if (collaborators.length === 0) {
+      return <p className={styles.noCollaborators}>You have not added any collaborators</p>;
+    }
+    return collaborators.map((collab, index) => (
+      <div key={collab.user_id} className={styles.collaboratorItem}>
+        @{collab.username} ({collab.email})
+        <X
+          className={styles.removeCollaborator}
+          onClick={() => handleRemoveCollaborator(index)}
+        />
+      </div>
+    ));
+  };  
   // BACK-END FUNCTIONALITY
   const handleConfirm = async () => {
     const errors = {};
@@ -127,14 +147,14 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     //     return userId;  // Get user IDs for each collaborator
     //   })
     // );
-  
+    const collaboratorIds = collaborators.map(collab => collab.user_id);
     const tripData = {
       title,
       // description,                     // currently no description in trip model
       country,
       startDate,
       endDate,
-      // collaborators: collaboratorIds,  // Include collaborator IDs in the request  [process this on a different method]
+      collaborators: collaboratorIds,  // Include collaborator IDs in the request  [process this on a different method]
     };
     try {
       const response = await fetch(`http://localhost:3000/users/${getUserId()}/trips`, {
@@ -244,7 +264,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
         </div>
         <div className={styles.collaboratorsList}>
           <h4 className={styles.AddedCollaboratorsText}>Added Collaborators</h4>
-          {collaborators.length === 0 ? (
+          {/* {collaborators.length === 0 ? (
             <p className={styles.noCollaborators}>You have not added any collaborators</p>
           ) : (
             collaborators.map((collab, index) => (
@@ -256,7 +276,8 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
                 />
               </div>
             ))
-          )}
+          )} */}
+          {renderCollaborators()}
         </div>
         <div className={styles.modalActions}>
           <button onClick={onClose}>Cancel</button>

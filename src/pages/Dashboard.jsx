@@ -66,7 +66,7 @@ const Dashboard = () => {
         }
 
         const tripsData = await response.json();
-
+        
         // Fetch trip creator details for each trip
         const tripsWithCreatorDetails = await Promise.all(
           tripsData.map(async (trip) => {
