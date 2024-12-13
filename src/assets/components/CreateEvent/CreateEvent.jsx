@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CreateEvent.module.css";
 import { createTripEvent } from "../../../../api/utils/tripEventsUtils.cjs";
+import { getToken } from "../../../../src/services/auth.js"; // Import getToken function
 
 const fetchUserIdByUsername = async (username) => {
   try {
@@ -8,6 +9,7 @@ const fetchUserIdByUsername = async (username) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`, // Include the token in the Authorization header
       },
     });
 
@@ -29,6 +31,7 @@ const fetchSuggestedUsers = async (searchTerm) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${getToken()}`, // Include the token in the Authorization header
       },
     });
 
@@ -44,7 +47,7 @@ const fetchSuggestedUsers = async (searchTerm) => {
   }
 };
 
-const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
+const CreateEvent = ({ isOpen, onClose, onConfirm, tripId, userId, token }) => {
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -52,6 +55,7 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
   const [collaborators, setCollaborators] = useState([]);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [formErrors, setFormErrors] = useState({});
+  const [eventData, setEventData] = useState({});
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -107,9 +111,13 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
       collaborators: collaboratorIds.length > 0 ? collaboratorIds : [],
     };
 
+    console.log("tripId:", tripId);
+    console.log("userId:", userId);
+    console.log("eventData:", eventData);
+
     try {
-      const responseData = await createTripEvent(tripId, eventData);
-      onConfirm(responseData);
+      await createTripEvent(userId, tripId, eventData, token); // Pass the token
+      onConfirm();
       onClose();
     } catch (error) {
       console.error("Error creating event:", error);
@@ -121,6 +129,8 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
     setSearchTerm("");
     setSuggestedUsers([]);
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className={styles.modal}>
@@ -141,7 +151,7 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
             <div className={styles.dateGroup}>
               <label>Start Time</label>
               <input
-                type="time"
+                type="datetime-local"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
               />
@@ -150,7 +160,7 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
             <div className={styles.dateGroup}>
               <label>End Time</label>
               <input
-                type="time"
+                type="datetime-local"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
               />

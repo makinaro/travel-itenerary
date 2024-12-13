@@ -4,12 +4,14 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getToken, getUserId } from '../services/auth.js';
 import styles from "./Calendar.module.css";
-// import CreateEvent from "../assets/components/CreateEvent/CreateEvent"; // Import CreateEvent component
-// import EditEvent from "../assets/components/CreateEvent/EditEvent"; // Import EditEvent component
+import CreateEvent from "../assets/components/CreateEvent/CreateEvent.jsx"; // Import CreateEvent component
+import EditEvent from "../assets/components/EditEvent/EditEvent.jsx"; // Import EditEvent component
+import { createTripEvent } from '../../api/utils/tripEventsUtils.cjs'; // Import createTripEvent function
 
 const Calendar = () => {
   const [trips, setTrips] = useState([]);
   const [highlightedEvent, setHighlightedEvent] = useState(null);
+  const [selectedTripId, setSelectedTripId] = useState(null); // State to store the selected trip ID
   const [isCreateEventModalOpen, setCreateEventModalOpen] = useState(false);
   const [isEditEventModalOpen, setEditEventModalOpen] = useState(false); // Track EditEvent modal visibility
   const [currentEventForEdit, setCurrentEventForEdit] = useState(null); // Track event to edit
@@ -41,13 +43,15 @@ const Calendar = () => {
 
         // Format trips data for FullCalendar
         const formattedTrips = tripsData.map(trip => ({
-          id: trip.trip_id,
+          id: String(trip.trip_id),
           title: trip.title,
           start: trip.start_date,
           end: trip.end_date,
           details: trip.details || [], // Assuming trip details are included in the response
         }));
 
+        console.log("Trips:", formattedTrips); // Log the formatted trips
+        console.log("Trips ID", formattedTrips.map(trip => trip.id)); // Log the trip IDs
         setTrips(formattedTrips);
       } catch (error) {
         setError(error.message);
@@ -58,8 +62,17 @@ const Calendar = () => {
   }, []);
 
   const handleEventClick = (info) => {
+
     const eventId = info.event.id;
     setHighlightedEvent((prev) => (prev === eventId ? null : eventId));
+    const selectedTrip = trips.find(trip => trip.id === eventId);
+    
+    if (selectedTrip) {
+      setSelectedTripId(selectedTrip.id);
+      console.log("Selected Trip ID:", selectedTrip.id);
+    } else {
+      console.log("No matching trip found for ID:", eventId);
+    }
   };
 
   const highlightedEventDetails = trips.find(
@@ -67,17 +80,22 @@ const Calendar = () => {
   );
 
   const handleOpenCreateEvent = () => {
-    setCreateEventModalOpen(true); 
+    setCreateEventModalOpen(true);
   };
 
   const handleCloseCreateEvent = () => {
     setCreateEventModalOpen(false); 
   };
 
-  const handleConfirmCreateEvent = (eventData) => {
-    console.log("Event Created:", eventData); 
-    setCreateEventModalOpen(false);
-    setTrips((prevEvents) => [...prevEvents, eventData]); // Add new event to state
+  const handleConfirmCreateEvent = async (eventData) => {
+    try {
+      await createTripEvent(getUserId(), selectedTripId, eventData, getToken());
+      console.log("Event Created:", eventData); 
+      setCreateEventModalOpen(false);
+      setTrips((prevEvents) => [...prevEvents, eventData]); // Add new event to state
+    } catch (error) {
+      console.error('Error creating event:', error);
+    }
   };
 
   // Handle opening EditEvent modal with the selected event
@@ -222,6 +240,9 @@ const Calendar = () => {
           isOpen={isCreateEventModalOpen}
           onClose={handleCloseCreateEvent}
           onConfirm={handleConfirmCreateEvent}
+          tripId={selectedTripId} // Pass the selected tripId to CreateEvent
+          userId={getUserId()} // Pass the userId to CreateEvent
+          token={getToken()} // Pass the token to CreateEvent
         />
       )}
 
