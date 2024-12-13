@@ -6,7 +6,7 @@ import { getToken, getUserId } from '../services/auth.js';
 import styles from "./Calendar.module.css";
 import CreateEvent from "../assets/components/CreateEvent/CreateEvent.jsx"; // Import CreateEvent component
 import EditEvent from "../assets/components/EditEvent/EditEvent.jsx"; // Import EditEvent component
-import { createTripEvent } from '../../api/utils/tripEventsUtils.cjs'; // Import createTripEvent function
+import { createTripEvent, fetchTripEvents } from '../../api/utils/tripEventsUtils.cjs'; // Import createTripEvent and fetchTripEvents functions
 
 const Calendar = () => {
   const [trips, setTrips] = useState([]);
@@ -16,6 +16,7 @@ const Calendar = () => {
   const [isEditEventModalOpen, setEditEventModalOpen] = useState(false); // Track EditEvent modal visibility
   const [currentEventForEdit, setCurrentEventForEdit] = useState(null); // Track event to edit
   const [error, setError] = useState('');
+  const [tripEvents, setTripEvents] = useState([]);
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -61,8 +62,20 @@ const Calendar = () => {
     fetchTrips();
   }, []);
 
-  const handleEventClick = (info) => {
+  console.log(selectedTripId);
 
+  useEffect(() => {
+    if (selectedTripId) {
+      fetchTripEvents(selectedTripId, getUserId())
+        .then(data => setTripEvents(data))
+        .catch(error => {
+          console.error('Error fetching trip events:', error);
+          setError('Error fetching trip events');
+        });
+    }
+  }, [selectedTripId]);
+
+  const handleEventClick = (info) => {
     const eventId = info.event.id;
     setHighlightedEvent((prev) => (prev === eventId ? null : eventId));
     const selectedTrip = trips.find(trip => trip.id === eventId);
@@ -159,8 +172,7 @@ const Calendar = () => {
       />
 
       {highlightedEvent ? (
-        highlightedEventDetails && highlightedEventDetails.details.length > 0 &&
-          highlightedEventDetails.details.every(detail => detail.event && detail.date) ? (
+        tripEvents.length > 0 ? (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <div className={styles.modalHeader}>
@@ -183,8 +195,8 @@ const Calendar = () => {
               </div>
               <div className={styles.eventDetailsContainer}>
                 {Object.entries(
-                  highlightedEventDetails.details.reduce((acc, detail) => {
-                    const date = detail.date;
+                  tripEvents.reduce((acc, detail) => {
+                    const date = detail.start_time.split("T")[0];
                     if (!acc[date]) acc[date] = [];
                     acc[date].push(detail);
                     return acc;
@@ -200,8 +212,8 @@ const Calendar = () => {
                     </div>
                     {details.map((detail, idx) => (
                       <div key={idx} className={styles.eventTimeDescription}>
-                        <div className={styles.eventTime}>{detail.time}</div>
-                        <div className={styles.eventDescription}>{detail.event}</div>
+                        <div className={styles.eventTime}>{new Date(detail.start_time).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })}</div>
+                        <div className={styles.eventDescription}>{detail.title}</div>
                         <div
                           className={styles.eventAction}
                           onClick={() => handleOpenEditEvent(detail)}
