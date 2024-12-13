@@ -66,39 +66,22 @@ const Dashboard = () => {
         }
 
         const tripsData = await response.json();
-        
-        // Fetch trip creator details for each trip
-        const tripsWithCreatorDetails = await Promise.all(
-          tripsData.map(async (trip) => {
-            const creatorResponse = await fetch(`http://localhost:3000/users/${trip.owner_id}`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `${getToken()}`,
-              },
-            });
-
-            if (!creatorResponse.ok) {
-              const errorData = await creatorResponse.json();
-              throw new Error(errorData.message || 'Failed to fetch trip creator details');
-            }
-            const creatorData = await creatorResponse.json();
-            const startDate = new Date(trip.start_date).toLocaleDateString();
-            const endDate = new Date(trip.end_date).toLocaleDateString();
-            return {
-              id: trip.trip_id,
-              title: trip.title,
-              country: countryList().getLabel(trip.country),
-              countryCode: trip.country,
-              tripCreator: creatorData.username, // Assuming the username field contains the trip creator's name
-              tripCreatorProfileImage: 'https://via.placeholder.com/32', // Placeholder for profile image
-              startDate: startDate,
-              endDate: endDate,
-              status: trip.status,
-            };
-          })
-        );
-        setTrips(tripsWithCreatorDetails);
+        const parsedTripsData = tripsData.map(trip => {
+          const startDate = new Date(trip.start_date).toLocaleDateString();
+          const endDate = new Date(trip.end_date).toLocaleDateString();
+          return {
+            id: trip.id,
+            title: trip.title,
+            country: countryList().getLabel(trip.country),
+            countryCode: trip.country,
+            tripCreator: trip.owner.username,
+            tripCreatorProfileImage: 'https://via.placeholder.com/32', // Placeholder for profile image
+            startDate: startDate,
+            endDate: endDate,
+            status: trip.status,
+          };
+        });
+        setTrips(parsedTripsData);
       } catch (error) {
         setError(error.message);
       }

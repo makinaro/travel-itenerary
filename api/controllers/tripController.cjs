@@ -1,4 +1,5 @@
 const db = require('../models/index.cjs');
+const { Op } = require('sequelize');
 // Get trips by user ID
 const getTripsByUserId = async (req, res) => {
   const userId = req.params.id;
@@ -9,27 +10,32 @@ const getTripsByUserId = async (req, res) => {
 
   try {
     // Simpler query first to test
-    const ownerTrips = await db.Trip.findAll({
-      where: { owner_id: userId }
-    });
-
-    // Separate query for collaborator trips - note the lowercase 'collaborators'
-    const collaboratorTrips = await db.Trip.findAll({
-      include: [{
+    const trips = await db.Trip.findAll({
+      where: {
+        [Op.or]: [
+          { owner_id: userId },
+          { '$collaborators.user_id$': userId }
+        ]
+      },
+      include: [
+        {
         model: db.Collaborator,
-        as: 'collaborators',  // Changed from 'Collaborators' to 'collaborators'
-        where: { user_id: userId }
-      }]
+        as: 'collaborators',
+        attributes: []
+        },
+        {
+          model: db.User,
+          as: 'owner',
+          attributes: ['username']
+        }
+      ]
     });
 
-    // Combine results
-    const allTrips = [...ownerTrips, ...collaboratorTrips];
-
-    if (allTrips.length === 0) {
+    if (trips.length === 0) {
       return res.status(404).json({ message: 'No trips found' });
     }
-
-    return res.json(allTrips);
+    
+    return res.json(trips);
 
   } catch (error) {
     console.error('Error details:', {
