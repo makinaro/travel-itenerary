@@ -48,7 +48,7 @@ const App = () => {
         <div className="feature">
           <h3 className="feature-title">Personalized Destinations</h3>
           <p className="feature-description">
-            Discover destinations based on your preferences and travel style.
+            Personalize your own trips based on your style.
           </p>
           <img
             src={personalizedImage}
@@ -70,7 +70,7 @@ const App = () => {
         <div className="feature">
           <h3 className="feature-title">Connect with Travelers</h3>
           <p className="feature-description">
-            Join a community of travel enthusiasts and share your experiences.
+            Collaborate with travel enthusiasts or with your family and friends!
           </p>
           <img
             src={connectImage}
@@ -85,12 +85,12 @@ const App = () => {
         <div className="mission-text">
           <h3 className="mission-title">Our Mission</h3>
           <p className="mission-description">
-            At GRAND LINE, our mission is to provide personalized travel
-            experiences to adventure seekers around the world. We aim to connect
-            travelers, help them track their journeys, and inspire them to explore
-            new destinations. Whether you're looking for an unforgettable vacation
-            or simply want to track your travel progress, we are here to help you
-            every step of the way.
+          At GRAND LINE, our mission is to revolutionize the trip planning experience by making it more convenient, intuitive, and stress-free. 
+          We aim to provide users with an easy-to-use platform that simplifies the process of organizing every detail of their journeys, allowing 
+          them to plan with confidence and ease. Whether it's choosing destinations, booking accommodations, or managing itineraries, we strive 
+          to make travel planning an enjoyable and effortless experience from start to finish.
+
+
           </p>
         </div>
       </section>
@@ -103,7 +103,7 @@ const App = () => {
             GRAND LINE is dedicated to helping travelers plan their dream
             vacations with ease. We provide a platform where you can discover
             personalized travel destinations, track your journey, and connect with
-            fellow explorers. Our goal is to inspire and empower you to embark on
+            your family and friends. Our goal is to inspire and empower you to embark on
             your next adventure and create unforgettable memories. We offer a
             seamless experience for discovering, tracking, and sharing travel
             moments.
@@ -116,26 +116,26 @@ const App = () => {
 
 
        
-       <section className="more-about">
-  <div className="more-about-text">
-    <h3 className="more-about-title">Frequently Asked Questions (FAQs)</h3>
+      <section className="more-about">
+      <div className="more-about-text">
+        <h3 className="more-about-title">Frequently Asked Questions (FAQs)</h3>
 
-    <div className="faq-item">
-      <h4>Is GRAND LINE free to create and use?</h4>
-      <p>
-        GRAND LINE is free to use for everyone! That's right you heard me, it is free to create an account and use! Our Purpose is to make travel planning much easier and convinient to map out travel plans for individuals and friends.
-      </p>
-    </div>
+      <div className="faq-item">
+        <h4>Is GRAND LINE free to create and use?</h4>
+          <p>
+            GRAND LINE is free to use for everyone! That's right you heard me, it is free to create an account and use! Our Purpose is to make travel planning much easier and convinient to map out travel plans for individuals and friends.
+          </p>
+      </div>
 
-    <div className="faq-item">
-      <h4>How do I create an account?</h4>
-      <p>
-        To create an account, just click the sign up button at the top right of the navbar. After clicking it, it will direct you to a sign up form in which you are required to fill in for you to be able to proceed on creating a new account.
-      </p>
-    </div>
+      <div className="faq-item">
+        <h4>How do I create an account?</h4>
+          <p>
+            To create an account, just click the sign up button at the top right of the navbar. After clicking it, it will direct you to a sign up form in which you are required to fill in for you to be able to proceed on creating a new account.
+          </p>
+      </div>
 
-    <div className="faq-item">
-      <h4>Do I need a specific device to use this (GRAND LINE)?</h4>
+      <div className="faq-item">
+        <h4>Do I need a specific device to use this (GRAND LINE)?</h4>
       <p>
         You can log in on any platform or device that you have for GRAND LINE is available to use on computers to mobile device!
       </p>
@@ -202,11 +202,9 @@ const App = () => {
     </div>
 
     
-  </div>
-</section>
+    </div>
+  </section>
 
-
-      
       <footer className="footer">
         <div className="footer-links">
           <Link to="/home">@grandline2024</Link>
