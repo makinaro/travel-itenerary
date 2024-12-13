@@ -1,11 +1,22 @@
 const API_BASE_URL = 'http://localhost:3000';
 
 export const fetchTripEvents = async (tripId) => {
-  const response = await fetch(`${API_BASE_URL}/trips/${tripId}/events`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch trip events');
+  console.log('Fetching trip events for tripId:', tripId); // Log tripId
+  if (!tripId) {
+    throw new Error('tripId is undefined');
   }
-  return response.json();
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/trips/${tripId}/events`);
+    if (!response.ok) {
+      console.error('Failed to fetch trip events:', response.status, response.statusText);
+      throw new Error('Failed to fetch trip events');
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching trip events:', error);
+    throw error;
+  }
 };
 
 export const createTripEvent = async (tripId, event) => {
