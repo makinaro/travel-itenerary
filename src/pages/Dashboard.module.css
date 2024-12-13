@@ -73,6 +73,67 @@
   object-fit: cover;
 }
 
+/* Pagination Controls Container */
+.paginationControls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+/* Previous Button */
+.previousButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.previousButton:hover {
+  background-color: #0056b3;
+}
+
+.previousButton:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+/* Next Button */
+.nextButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nextButton:hover {
+  background-color: #0056b3;
+}
+
+.nextButton:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+/* Page Text */
+.pageText {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+}
+
 /* ---------- Responsive Design -------------- */
 
 /* Large Desktops and Laptops (1440px and up) */

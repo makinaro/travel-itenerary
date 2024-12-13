@@ -4,46 +4,14 @@ import Flag from 'react-world-flags';
 import { getToken, getUserId } from '../services/auth.js';
 import countryList from 'react-select-country-list';
 
+const ITEMS_PER_PAGE = 10;
+
 const Dashboard = () => {
-  // Sample trip data
-  // const [trips] = useState([
-  //   {
-  //     id: 1,
-  //     title: "Philippines Adventure",
-  //     country: "Philippines",
-  //     countryCode: "PH",
-  //     tripCreator: "Xavier_Paul",
-  //     tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
-  //     startDate: "2024-12-16",
-  //     endDate: "2025-01-05",
-  //     status: "Planned",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Singapore Getaway",
-  //     country: "Singapore",
-  //     countryCode: "SG",
-  //     tripCreator: "AaronsNipples",
-  //     tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
-  //     startDate: "2024-02-06",
-  //     endDate: "2024-02-15",
-  //     status: "In Progress",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Japan Escape",
-  //     country: "Japan",
-  //     countryCode: "JP",
-  //     tripCreator: "tiuditto",
-  //     tripCreatorProfileImage: "https://via.placeholder.com/32", // Placeholder for profile image
-  //     startDate: "2024-11-05",
-  //     endDate: "2024-11-10",
-  //     status: "Completed",
-  //   },
-  // ]);
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState('');
-     useEffect(() => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
     const fetchTrips = async () => {
       const userId = getUserId();
       if (!userId) {
@@ -90,9 +58,28 @@ const Dashboard = () => {
     fetchTrips();
   }, []);
 
+  const indexOfLastTrip = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstTrip = indexOfLastTrip - ITEMS_PER_PAGE;
+  const currentTrips = trips.slice(indexOfFirstTrip, indexOfLastTrip);
+  const totalPages = Math.ceil(trips.length / ITEMS_PER_PAGE);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
+
   return (
     <div className={styles.dashboardContainer}>
       <h1 className={styles.dashboardTitle}>Dashboard</h1>
+
+      {error && <p className={styles.error}>{error}</p>}
 
       <table className={styles.tripTable}>
         <thead>
@@ -107,13 +94,13 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {trips.map((trip, index) => (
+          {currentTrips.map((trip, index) => (
             <tr key={index} className={styles.tripRow}>
               <td>
-                <Flag 
-                  code={trip.countryCode} 
-                  className={styles.flagIcon} 
-                  fallback={<span>🏳️</span>} 
+                <Flag
+                  code={trip.countryCode}
+                  className={styles.flagIcon}
+                  fallback={<span>🏳️</span>}
                 />
               </td>
               <td>{trip.title}</td>
@@ -121,7 +108,7 @@ const Dashboard = () => {
               <td className={styles.creatorColumn}>
                 <div className={styles.creatorInfo}>
                   <img
-                    src={trip.tripCreatorProfileImage} 
+                    src={trip.tripCreatorProfileImage}
                     alt={trip.tripCreator}
                     className={styles.creatorProfileImage}
                   />
@@ -137,6 +124,27 @@ const Dashboard = () => {
           ))}
         </tbody>
       </table>
+
+      <div className={styles.paginationControls}>
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={styles.previousButton}
+        >
+          Previous
+        </button>
+
+        <span className={styles.pageText}>Page {currentPage} of {totalPages}</span>
+
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={styles.nextButton}
+        >
+          Next
+        </button>
+      </div>
+
     </div>
   );
 };
