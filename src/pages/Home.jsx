@@ -15,7 +15,6 @@ import JamesImage from '../assets/Images/James.jpg';
 const App = () => {
   return (
     <div className="app">
-      {/* Navbar */}
       <nav className="navbar">
         <div className="logo">
           <img src={logoImage} alt="Logo" className="logo-icon" />
@@ -31,7 +30,7 @@ const App = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      
       <header className="hero">
         <div className="hero-text">
           <h1 className="hero-title">Got Travel plans?</h1>
@@ -44,7 +43,7 @@ const App = () => {
         </div>
       </header>
 
-      {/* Feature Section */}
+      
       <section className="features">
         <div className="feature">
           <h3 className="feature-title">Personalized Destinations</h3>
@@ -81,7 +80,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* Mission Section */}
+      
       <section className="mission">
         <div className="mission-text">
           <h3 className="mission-title">Our Mission</h3>
@@ -96,7 +95,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* About Us Section */}
+      
       <section className="about">
         <div className="about-text">
           <h3 className="about-title">About Us</h3>
@@ -116,7 +115,7 @@ const App = () => {
       </section>
 
 
-       {/* FAQ Section */}
+       
        <section className="more-about">
   <div className="more-about-text">
     <h3 className="more-about-title">Frequently Asked Questions (FAQs)</h3>
@@ -152,7 +151,7 @@ const App = () => {
     </div>
   </section>
 
-  {/* Additional Information Section */}
+  
   <section className="additional-info">
   <div className="profile-grid">
     <div className="profile-card">
@@ -207,7 +206,7 @@ const App = () => {
 </section>
 
 
-      {/* Footer */}
+      
       <footer className="footer">
         <div className="footer-links">
           <Link to="/home">@grandline2024</Link>
