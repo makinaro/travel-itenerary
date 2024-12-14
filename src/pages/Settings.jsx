@@ -11,12 +11,11 @@ function ProfileSettings() {
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
-    alert("Profile information saved!");
+    // Profile saved logic here
   };
 
   const handleSavePassword = (e) => {
-    e.preventDefault();
-    alert("Password updated successfully!");
+    // Password saved logic here
   };
 
   const handleDeleteAccount = () => {
@@ -25,7 +24,7 @@ function ProfileSettings() {
         "Are you sure you want to delete your account? This action cannot be undone."
       )
     ) {
-      alert("Account deleted successfully.");
+      // Account deleted logic here
     }
   };
 
