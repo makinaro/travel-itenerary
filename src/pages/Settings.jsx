@@ -11,11 +11,11 @@ function ProfileSettings() {
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
-    // Profile saved logic here
+    
   };
 
   const handleSavePassword = (e) => {
-    // Password saved logic here
+    
   };
 
   const handleDeleteAccount = () => {
@@ -24,7 +24,7 @@ function ProfileSettings() {
         "Are you sure you want to delete your account? This action cannot be undone."
       )
     ) {
-      // Account deleted logic here
+      
     }
   };
 
