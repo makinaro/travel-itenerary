@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import Flag from 'react-world-flags';
 import { getToken, getUserId } from '../services/auth.js';
@@ -10,7 +10,7 @@ import EditTrip from '../assets/components/CreateTrip/EditTrip.jsx';
 const ITEMS_PER_PAGE = 10;
 
 const Dashboard = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,7 +44,7 @@ const Dashboard = () => {
           const startDate = new Date(trip.start_date).toLocaleDateString();
           const endDate = new Date(trip.end_date).toLocaleDateString();
           return {
-            id: trip.id,
+            id: trip.trip_id,
             title: trip.title,
             country: countryList().getLabel(trip.country),
             countryCode: trip.country,
@@ -88,39 +88,45 @@ const Dashboard = () => {
   // };       ***Supposed to route to Calendar with respective month***
 
   const handleEditClick = (tripId) => {
-  // to do logic
+    // to do logic
   };
 
-const handleDeleteClick = (tripId) => {
-  const deleteTrip = async () => {
-    const userId = getUserId();
-
-    try {
-      const response = await fetch(`http://localhost:3000/users/${userId}/trips/${tripId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${getToken()}`, // Pass the authorization token
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete trip');
-      }
-
-      // Remove the deleted trip from the state
-      setTrips((prevTrips) => prevTrips.filter((trip) => trip.id !== tripId));
-    } catch (error) {
-      setError(error.message); // Handle the error
-    }
-  };
-
-  if (window.confirm('Are you sure you want to delete this trip?')) {
-    deleteTrip();
-  }
-};
-
+  //Returns correct trip_ID but 403 (Forbidden) ERROR
+  const handleDeleteClick = (tripId) => {
+    console.log('Trip ID received:', tripId, typeof tripId);
   
+    if (!tripId) {
+      setError('Invalid trip ID');
+      return;
+    }
+    
+    const deleteTrip = async () => {
+      const userId = getUserId();
+  
+      try {
+        const response = await fetch(`http://localhost:3000/users/${userId}/trips/${tripId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${getToken()}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to delete trip');
+        }
+  
+        // Remove the deleted trip from the state
+        setTrips((prevTrips) => prevTrips.filter((trip) => trip.id !== tripId));
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    deleteTrip();
+  };
+
+
   if (trips.length === 0 && !error) {
     return <div>Loading trips...</div>;
   }
@@ -138,21 +144,19 @@ const handleDeleteClick = (tripId) => {
           <table className={styles.tripTable}>
             <thead>
               <tr>
-                <th>Flag</th>
-                <th>Trip Title</th>
-                <th>Country</th>
-                <th>Trip Creator</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-                <th>Actions</th> {/* New column for actions */}
+                <td>Flag</td>
+                <td>Trip Title</td>
+                <td>Country</td>
+                <td>Trip Creator</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+                <td>Status</td>
+                <td>Actions</td>
               </tr>
             </thead>
             <tbody>
               {currentTrips.map((trip) => (
-                <tr 
-                  key={trip.id} 
-                  className={styles.tripRow} 
+                <tr key={trip.trip_id ?? Math.random()}
                   // onClick={() => handleTripClick(trip)} 
                   style={{ cursor: 'pointer' }}
                 >
@@ -181,13 +185,13 @@ const handleDeleteClick = (tripId) => {
                     {trip.status}
                   </td>
                   <td className={styles.actionsColumn}>
-                    <FaEdit 
-                      className={styles.actionIcon} 
-                      onClick={() => handleEditClick(trip.id)} 
+                    <FaEdit
+                      className={styles.actionIcon}
+                      onClick={() => handleEditClick(trip.trip_id)}
                     />
-                    <FaTrashAlt 
-                      className={styles.actionIcon} 
-                      onClick={() => handleDeleteClick(trip.id)} 
+                    <FaTrashAlt
+                      className={styles.actionIcon}
+                      onClick={() => handleDeleteClick(trip.id)}
                     />
                   </td>
                 </tr>
