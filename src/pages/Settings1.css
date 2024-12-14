@@ -7,12 +7,11 @@ body {
   background-attachment: fixed;
 }
 
-
 .form-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: auto; 
+  height: auto;
   width: 80%;
   max-width: 1000px;
   padding: 40px;
@@ -21,12 +20,11 @@ body {
   border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   outline: 1px solid #000000;
-  margin: 0 auto; 
+  margin: 0 auto;
   margin-top: 30px;
   margin-bottom: 30px;
-  overflow: auto; 
+  overflow: auto;
 }
-
 
 .container {
   position: relative;
@@ -38,11 +36,11 @@ body {
   margin-right: 0px !important;
 }
 
-
 .main-heading {
   font-size: 32px;
   font-weight: bold;
   margin-bottom: 20px;
+  color: #000000;
 }
 
 .subheading {
@@ -56,76 +54,32 @@ body {
   font-weight: bold;
   margin-top: 40px;
   margin-bottom: 20px;
+  color: #000;
 }
-
-
-.profile-section {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.profile-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 30px;
-}
-
-.upload-section {
-  flex: 1;
-}
-
-.upload-section input {
-  margin-bottom: 10px;
-}
-
-.upload-text {
-  font-size: 14px;
-  color: #666;
-  margin-top: 10px;
-}
-
 
 .input-group {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  width: 100%;
+  gap: 5px;
 }
 
 .input-group label {
-  flex: 0 0 220px;
+  flex: 0 0 100px;
   font-size: 16px;
-  margin-right: 10px;
+  margin-right: 5px;
+  color: #000;
 }
 
 .input {
   flex: 1;
-  padding: 12px;
+  padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
 }
-
-
-.input-with-icon {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.lock-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #666;
-  width: 18px;
-  height: 18px;
-}
-
 
 .button-group {
   display: flex;
@@ -141,17 +95,12 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease; 
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .save-button:hover {
-  background-color: #444; 
-  transform: scale(1.05); 
-}
-
-
-.delete-button-group {
-  margin-top: 30px;
+  background-color: #444;
+  transform: scale(1.05);
 }
 
 .delete-button {
@@ -161,14 +110,13 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease; 
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .delete-button:hover {
-  background-color: #d30303; 
-  transform: scale(1.05); 
+  background-color: #d30303;
+  transform: scale(1.05);
 }
-
 
 @media screen and (max-width: 768px) {
   .container {
@@ -185,25 +133,20 @@ body {
     text-align: center;
   }
 
-  .profile-section {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profile-image {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 20px;
-    margin-right: 0;
-  }
-
   .input-group {
     flex-direction: column;
     align-items: flex-start;
+    gap: 2px; 
   }
 
   .input-group label {
-    margin-bottom: 5px;
+    margin-bottom: 2px;
+    width: 100%;
+  }
+
+  .input {
+    width: 100%; 
+    margin-bottom: 5px; 
   }
 
   .button-group {
@@ -228,6 +171,7 @@ body {
 
   .input {
     font-size: 14px;
+    padding: 8px;
   }
 
   .save-button {
