@@ -127,6 +127,36 @@
   cursor: not-allowed;
 }
 
+/* Actions Column */
+.actionsColumn {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.actionIcon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.actionIcon:hover {
+  color: #0056b3;
+}
+
+/* Adjust the Country Column */
+.tripTable th:nth-child(3), 
+.tripTable td:nth-child(3) {
+  padding-left: 10px; /* Adjust left padding to create space for icons */
+}
+
+.tripTable th:nth-child(8), 
+.tripTable td:nth-child(8) {
+  width: 100px; /* Set a fixed width for the actions column */
+}
+
+
 /* Page Text */
 .pageText {
   font-size: 16px;

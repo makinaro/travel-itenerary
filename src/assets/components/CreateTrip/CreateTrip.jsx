@@ -174,6 +174,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       addTrip(responseData);  // Add the trip to your frontend state if necessary
       onConfirm(responseData); // Call the callback passed to close modal or do other things
       onClose();               // Close the modal
+      window.location.reload();
     } catch (error) {
       console.error("Error creating trip:", error);
     }
