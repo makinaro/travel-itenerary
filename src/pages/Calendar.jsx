@@ -12,11 +12,13 @@ const Calendar = () => {
   const [trips, setTrips] = useState([]);
   const [highlightedEvent, setHighlightedEvent] = useState(null);
   const [selectedTripId, setSelectedTripId] = useState(null); // State to store the selected trip ID
-  const [isCreateEventModalOpen, setCreateEventModalOpen] = useState(false);
+  const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
   const [isEditEventModalOpen, setEditEventModalOpen] = useState(false); // Track EditEvent modal visibility
   const [currentEventForEdit, setCurrentEventForEdit] = useState(null); // Track event to edit
   const [error, setError] = useState('');
   const [tripEvents, setTripEvents] = useState([]);
+  const [selectedTripStartDate, setSelectedTripStartDate] = useState("");
+  const [selectedTripEndDate, setSelectedTripEndDate] = useState("");
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -82,6 +84,26 @@ const Calendar = () => {
     
     if (selectedTrip) {
       setSelectedTripId(selectedTrip.id);
+      
+      // Log the exact values before setting state
+      console.log("Raw Start Date:", selectedTrip.start);
+      console.log("Raw End Date:", selectedTrip.end);
+      
+      // Ensure proper date parsing
+      const startDate = new Date(selectedTrip.start);
+      const endDate = new Date(selectedTrip.end);
+      
+      console.log("Parsed Start Date:", startDate);
+      console.log("Parsed End Date:", endDate);
+      
+      // Only set if the dates are valid
+      if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+        setSelectedTripStartDate(startDate.toISOString().split('T')[0]);
+        setSelectedTripEndDate(endDate.toISOString().split('T')[0]);
+      } else {
+        console.error("Invalid date parsing:", selectedTrip.start, selectedTrip.end);
+      }
+      
       console.log("Selected Trip ID:", selectedTrip.id);
     } else {
       console.log("No matching trip found for ID:", eventId);
@@ -92,22 +114,31 @@ const Calendar = () => {
     (event) => event.id === highlightedEvent
   );
 
-  const handleOpenCreateEvent = () => {
-    setCreateEventModalOpen(true);
+  const handleOpenCreateEvent = (tripId, tripStartDate, tripEndDate) => {
+    setSelectedTripId(tripId);
+    setSelectedTripStartDate(tripStartDate);
+    setSelectedTripEndDate(tripEndDate);
+    setIsCreateEventModalOpen(true);
   };
 
   const handleCloseCreateEvent = () => {
-    setCreateEventModalOpen(false); 
+    setIsCreateEventModalOpen(false); 
   };
 
   const handleConfirmCreateEvent = async (eventData) => {
     try {
-      await createTripEvent(getUserId(), selectedTripId, eventData, getToken());
-      console.log("Event Created:", eventData); 
-      setCreateEventModalOpen(false);
-      setTrips((prevEvents) => [...prevEvents, eventData]); // Add new event to state
+      const newEvent = await createTripEvent(
+        getUserId(),
+        selectedTripId,
+        eventData,
+        getToken()
+      );
+
+      setIsCreateEventModalOpen(false);
+      setTripEvents((prevEvents) => [...prevEvents, newEvent]);
     } catch (error) {
-      console.error('Error creating event:', error);
+      console.error("Error creating event:", error);
+      setError("Failed to create event");
     }
   };
 
@@ -189,7 +220,7 @@ const Calendar = () => {
                   })}
                   )
                 </h3>
-                <button className={styles.addEventButton} onClick={handleOpenCreateEvent}>
+                <button className={styles.addEventButton} onClick={() => handleOpenCreateEvent(selectedTripId, selectedTripStartDate, selectedTripEndDate)}>
                   + Add an Event
                 </button>
               </div>
@@ -233,7 +264,7 @@ const Calendar = () => {
               You have no events planned out for this trip! Click{" "}
               <span
                 className={styles.clickableText}
-                onClick={handleOpenCreateEvent}
+                onClick={() => handleOpenCreateEvent(selectedTripId, selectedTripStartDate, selectedTripEndDate)}
               >
                 HERE
               </span>{" "}
@@ -255,6 +286,8 @@ const Calendar = () => {
           tripId={selectedTripId} // Pass the selected tripId to CreateEvent
           userId={getUserId()} // Pass the userId to CreateEvent
           token={getToken()} // Pass the token to CreateEvent
+          tripStartDate={selectedTripStartDate} // Pass the trip start date to CreateEvent
+          tripEndDate={selectedTripEndDate} // Pass the trip end date to CreateEvent
         />
       )}
 

@@ -6,6 +6,13 @@ const createTripEvent = async (req, res) => {
   const { title, start_time, end_time, collaborators } = req.body;
   const { tripId } = req.params;
 
+  console.log("Request body:", req.body); // Log the request body
+
+  if (!title || !start_time || !end_time) {
+    console.error("Missing required fields:", { title, start_time, end_time });
+    return res.status(400).json({ message: 'Title, start time, and end time are required' });
+  }
+
   try {
     // Create the trip event with the provided data
     const newTripEvent = await db.TripEvent.create({

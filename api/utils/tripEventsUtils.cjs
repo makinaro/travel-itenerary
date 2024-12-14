@@ -31,6 +31,21 @@ export const createTripEvent = async (userId, tripId, event, token) => {
   console.log("Creating trip event with data:", { userId, tripId, event });
   console.log("Using token:", token);
 
+  const eventStartTime = new Date(event.start_time);
+  const eventEndTime = new Date(event.end_time);
+  const tripStartDate = new Date(tripId.start_date);
+  const tripEndDate = new Date(tripId.end_date);
+
+  console.log("Event start time:", eventStartTime);
+  console.log("Event end time:", eventEndTime);
+  console.log("Trip start date:", tripStartDate);
+  console.log("Trip end date:", tripEndDate);
+
+  // Validate that event times are within trip dates
+  if (eventStartTime < tripStartDate || eventEndTime > tripEndDate) {
+    throw new Error('Event dates must be within the trip dates');
+  }
+
   const response = await fetch(`${API_BASE_URL}/users/${userId}/trips/${tripId}/events`, {
     method: 'POST',
     headers: {
