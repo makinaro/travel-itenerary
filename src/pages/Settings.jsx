@@ -8,14 +8,28 @@ function ProfileSettings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSaveProfile = (e) => {
     e.preventDefault();
-    
+    if (!username || !email) {
+      setErrorMessage("Username and email are required.");
+      return;
+    }
+    setErrorMessage("");
   };
 
   const handleSavePassword = (e) => {
-    
+    e.preventDefault();
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setErrorMessage("All password fields are required.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("New password and confirm password must match.");
+      return;
+    }
+    setErrorMessage("");
   };
 
   const handleDeleteAccount = () => {
@@ -24,7 +38,6 @@ function ProfileSettings() {
         "Are you sure you want to delete your account? This action cannot be undone."
       )
     ) {
-      
     }
   };
 
@@ -35,6 +48,8 @@ function ProfileSettings() {
         <p className="subheading">
           Update your account's profile information and email address
         </p>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <div className="input-group">
           <label>Name</label>
