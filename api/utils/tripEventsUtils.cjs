@@ -2,14 +2,20 @@ import { getToken } from "../../src/services/auth";
 
 const API_BASE_URL = 'http://localhost:3000';
 
-export const fetchTripEvents = async (tripId) => {
+export const fetchTripEvents = async (tripId, userId) => {
   console.log('Fetching trip events for tripId:', tripId); // Log tripId
   if (!tripId) {
     throw new Error('tripId is undefined');
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/trips/${tripId}/events`);
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/trips/${tripId}/events`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${getToken()}`,
+      },
+    });
     if (!response.ok) {
       console.error('Failed to fetch trip events:', response.status, response.statusText);
       throw new Error('Failed to fetch trip events');
