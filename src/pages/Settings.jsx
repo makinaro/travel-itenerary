@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./Settings1.css";
-import { Lock } from "lucide-react"; // Importing the Lock icon
 
 function ProfileSettings() {
   const [file, setFile] = useState(null);
@@ -9,58 +8,51 @@ function ProfileSettings() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleSaveProfile = (e) => {
+    e.preventDefault();
+    if (!username || !email) {
+      setErrorMessage("Username and email are required.");
+      return;
+    }
+    setErrorMessage("");
   };
 
-  const handleSave = (e) => {
+  const handleSavePassword = (e) => {
     e.preventDefault();
-    alert("Profile settings saved!");
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setErrorMessage("All password fields are required.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setErrorMessage("New password and confirm password must match.");
+      return;
+    }
+    setErrorMessage("");
   };
 
   const handleDeleteAccount = () => {
-    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
-      alert("Account deleted successfully.");
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
     }
   };
 
   return (
     <div className="form-container">
       <div className="container">
-        <h1 className="main-heading">Profile Settings</h1>
-        <p className="subheading">Edit your profile details</p>
+        <h1 className="main-heading">PROFILE INFORMATION</h1>
+        <p className="subheading">
+          Update your account's profile information and email address
+        </p>
 
-        <div className="profile-section">
-          <img
-            src={file ? URL.createObjectURL(file) : "https://via.placeholder.com/150"}
-            alt="Profile"
-            className="profile-image"
-          />
-          <div className="upload-section">
-            <input type="file" onChange={handleFileChange} />
-            <p className="upload-text">
-              Uploaded images will be resized and square cropped from the top. In most places, your image will be displayed in a circle, like the example. (180x180 - 2048x2048 pixels)
-            </p>
-          </div>
-        </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-        <h2 className="section-heading">About You</h2>
         <div className="input-group">
-          <label>Email</label>
-          <div className="input-with-icon">
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-              readOnly
-            />
-            <Lock className="lock-icon" />
-          </div>
-        </div>
-        <div className="input-group">
-          <label>Username</label>
+          <label>Name</label>
           <input
             type="text"
             value={username}
@@ -69,7 +61,27 @@ function ProfileSettings() {
           />
         </div>
 
-        <h2 className="section-heading">Change Password</h2>
+        <div className="input-group">
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input"
+          />
+        </div>
+
+        <div className="button-group">
+          <button onClick={handleSaveProfile} className="save-button">
+            Save
+          </button>
+        </div>
+
+        <h2 className="section-heading">Update Password</h2>
+        <p className="subheading">
+          Ensure your account is using a long, random password to stay secure.
+        </p>
+
         <div className="input-group">
           <label>Current Password</label>
           <input
@@ -89,7 +101,7 @@ function ProfileSettings() {
           />
         </div>
         <div className="input-group">
-          <label>Confirm New Password</label>
+          <label>Confirm Password</label>
           <input
             type="password"
             value={confirmPassword}
@@ -99,18 +111,21 @@ function ProfileSettings() {
         </div>
 
         <div className="button-group">
-          <button type="submit" onClick={handleSave} className="save-button">
+          <button onClick={handleSavePassword} className="save-button">
             Save
           </button>
         </div>
 
         <h2 className="section-heading">Delete Account</h2>
         <p className="delete-text">
-          Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+          Once your account is deleted all of its resources and data will be
+          permanently deleted.
         </p>
-        <div style={{ marginBottom: "1rem" }}></div>
-        <div className="delete-button-group">
-          <button type="button" onClick={handleDeleteAccount} className="delete-button" style={{ backgroundColor: "#FF0404", color: "white" }}>
+        <div className="button-group">
+          <button
+            onClick={handleDeleteAccount}
+            className="delete-button"
+          >
             Delete Account
           </button>
         </div>
