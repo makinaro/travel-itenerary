@@ -63,7 +63,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <h1 className={styles.dashboardTitle}>Dashboard</h1>
+      <h1 className={styles.dashboardTitle}>DASHBOARD</h1>
 
       <CreateTrip onTripCreated={handleTripCreated} /> {/* Pass the callback function */}
 
