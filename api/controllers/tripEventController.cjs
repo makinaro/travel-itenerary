@@ -32,7 +32,6 @@ const createTripEvent = async (req, res) => {
 // Get all events for a specific trip
 const getTripEvents = async (req, res) => {
   const { tripId } = req.params;
-
   try {
     const tripEvents = await db.TripEvent.findAll({
       where: { trip_id: tripId },
