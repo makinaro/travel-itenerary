@@ -4,7 +4,7 @@ import styles from './Dashboard.module.css';
 import Flag from 'react-world-flags';
 import { getToken, getUserId } from '../services/auth.js';
 import countryList from 'react-select-country-list';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa'; // Import the icons
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import EditTrip from '../assets/components/CreateTrip/EditTrip.jsx';
 
 const ITEMS_PER_PAGE = 10;
@@ -14,8 +14,8 @@ const Dashboard = () => {
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedTrip, setSelectedTrip] = useState(null); // State for the selected trip
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // State to manage modal visibility
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -49,10 +49,10 @@ const Dashboard = () => {
             country: countryList().getLabel(trip.country),
             countryCode: trip.country,
             tripCreator: trip.owner.username,
-            tripCreatorProfileImage: 'https://via.placeholder.com/32',
             startDate: startDate,
             endDate: endDate,
             status: trip.status,
+            fullTripData: trip
           };
         });
         setTrips(parsedTripsData);
@@ -69,6 +69,12 @@ const Dashboard = () => {
   const currentTrips = trips.slice(indexOfFirstTrip, indexOfLastTrip);
   const totalPages = Math.ceil(trips.length / ITEMS_PER_PAGE);
 
+  // const handleTripClick = (trip) => {
+  //   navigate(`/calendar/${trip.id}`, { 
+  //     state: { initialDate: trip.startDate } 
+  //   });
+  // };       ***Supposed to route to Calendar with respective month***
+
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prevPage => prevPage + 1);
@@ -81,28 +87,23 @@ const Dashboard = () => {
     }
   };
 
-  // const handleTripClick = (trip) => {
-  //   navigate(`/calendar/${trip.id}`, { 
-  //     state: { initialDate: trip.startDate } 
-  //   });
-  // };       ***Supposed to route to Calendar with respective month***
-
-  const handleEditClick = (tripId) => {
-    // to do logic
+  const handleEditClick = (trip) => {
+    setSelectedTrip(trip.fullTripData || trip);
+    setIsEditModalOpen(true);
   };
 
-  //Returns correct trip_ID but 403 (Forbidden) ERROR
+//Returns correct trip_ID but 403 (Forbidden) ERROR
   const handleDeleteClick = (tripId) => {
     console.log('Trip ID received:', tripId, typeof tripId);
-  
+
     if (!tripId) {
       setError('Invalid trip ID');
       return;
     }
-    
+
     const deleteTrip = async () => {
       const userId = getUserId();
-  
+
       try {
         const response = await fetch(`http://localhost:3000/users/${userId}/trips/${tripId}`, {
           method: 'DELETE',
@@ -111,11 +112,11 @@ const Dashboard = () => {
             'Authorization': `Bearer ${getToken()}`,
           },
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to delete trip');
         }
-  
+
         // Remove the deleted trip from the state
         setTrips((prevTrips) => prevTrips.filter((trip) => trip.id !== tripId));
       } catch (error) {
@@ -126,6 +127,23 @@ const Dashboard = () => {
     deleteTrip();
   };
 
+  const handleUpdateTrip = (updatedTrip) => {
+    setTrips(prevTrips =>
+      prevTrips.map(trip =>
+        trip.trip_id === updatedTrip.trip_id
+          ? {
+            ...trip,
+            title: updatedTrip.title,
+            country: countryList().getLabel(updatedTrip.country),
+            countryCode: updatedTrip.country,
+            startDate: new Date(updatedTrip.start_date).toLocaleDateString(),
+            endDate: new Date(updatedTrip.end_date).toLocaleDateString(),
+            fullTripData: updatedTrip
+          }
+          : trip
+      )
+    );
+  };
 
   if (trips.length === 0 && !error) {
     return <div>Loading trips...</div>;
@@ -157,7 +175,7 @@ const Dashboard = () => {
             <tbody>
               {currentTrips.map((trip) => (
                 <tr key={trip.trip_id ?? Math.random()}
-                  // onClick={() => handleTripClick(trip)} 
+                // onClick={() => handleTripClick(trip)} 
                   style={{ cursor: 'pointer' }}
                 >
                   <td>
@@ -169,16 +187,7 @@ const Dashboard = () => {
                   </td>
                   <td>{trip.title}</td>
                   <td>{trip.country}</td>
-                  <td className={styles.creatorColumn}>
-                    <div className={styles.creatorInfo}>
-                      <img
-                        src={trip.tripCreatorProfileImage}
-                        alt={trip.tripCreator}
-                        className={styles.creatorProfileImage}
-                      />
-                      <span>{trip.tripCreator}</span>
-                    </div>
-                  </td>
+                  <td>{trip.tripCreator}</td>
                   <td>{trip.startDate}</td>
                   <td>{trip.endDate}</td>
                   <td className={`${styles.status} ${styles[trip.status.toLowerCase()]}`}>
@@ -187,7 +196,7 @@ const Dashboard = () => {
                   <td className={styles.actionsColumn}>
                     <FaEdit
                       className={styles.actionIcon}
-                      onClick={() => handleEditClick(trip.trip_id)}
+                      onClick={() => handleEditClick(trip)}
                     />
                     <FaTrashAlt
                       className={styles.actionIcon}
@@ -219,9 +228,13 @@ const Dashboard = () => {
             </button>
           </div>
         </>
-      )}
-      {isEditModalOpen && selectedTrip && (
-        <EditTrip trip={selectedTrip} setIsEditModalOpen={setIsEditModalOpen} />
+      )}{isEditModalOpen && (
+        <EditTrip
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          trip={selectedTrip}
+          onUpdateTrip={handleUpdateTrip}
+        />
       )}
     </div>
   );

@@ -52,26 +52,6 @@
   font-weight: bold;
 }
 
-/* Creator Profile - Layout */
-.creatorColumn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.creatorInfo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.creatorProfileImage {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
 
 /* Pagination Controls Container */
 .paginationControls {
