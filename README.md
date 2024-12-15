@@ -29,7 +29,7 @@ ________________________________________________________________
 ________________________________________________________________
 
 ### Pages:
-- [ ] Home
+- [X] Home
 - [X] Login
 - [X] Register
 - [X] Dashboard (collaborated trips is still non-functional)
