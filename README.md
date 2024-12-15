@@ -12,12 +12,12 @@ ________________________________________________________________
 - [ ] Responsiveness to mobile resolutions
 
 ### Pages:
-- [ ] Home
+- [X] Home
 - [X] Login
 - [X] Register
 - [X] Dashboard
 - [ ] Calendar
-- [ ] Settings
+- [X] Settings
 - [ ] Create Trip
 
 ### Reusable and Non-Reusable Components:
