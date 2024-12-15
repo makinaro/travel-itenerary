@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import CountryList from "react-select-country-list";
 import styles from "./CreateTrip.module.css";
-import { X } from 'lucide-react';
 import { getToken, getUserId } from '../../../services/auth.js';
 
 // REPLACE THIS WITH ACTUAL API FETCH
@@ -25,7 +24,6 @@ const fetchUsernames = async (searchTerm) => {
     return [];
   }
 };
-
 
 const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const [title, setTitle] = useState("");
@@ -97,8 +95,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   };
 
   const handleRemoveCollaborator = (index) => {
-    const updatedCollaborators = collaborators.filter((_, i) => i !== index);
-    setCollaborators(updatedCollaborators);
+    setCollaborators(collaborators.filter((_, i) => i !== index));
   };
 
   const addTrip = (tripData) => {
@@ -174,6 +171,11 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       addTrip(responseData);  // Add the trip to your frontend state if necessary
       onConfirm(responseData); // Call the callback passed to close modal or do other things
       onClose();               // Close the modal
+
+      // Call the onTripCreated callback function
+      if (onTripCreated) {
+        onTripCreated();
+      }
       window.location.reload();
     } catch (error) {
       console.error("Error creating trip:", error);
@@ -271,10 +273,12 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
             collaborators.map((collab, index) => (
               <div key={index} className={styles.collaboratorItem}>
                 @{collab}
-                <X
+                <button
                   className={styles.removeCollaborator}
                   onClick={() => handleRemoveCollaborator(index)}
-                />
+                >
+                  Remove
+                </button>
               </div>
             ))
           )} */}

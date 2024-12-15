@@ -1,78 +1,177 @@
 import React, { useEffect, useState } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { getToken, getUserId } from '../services/auth.js';
 import styles from "./Calendar.module.css";
-import { fetchTripEvents, createTripEvent, updateTripEvent, deleteTripEvent } from '../../api/utils/tripEventsUtils.cjs';
-import CreateEventModal from '../assets/components/CreateEvent/CreateEvent.jsx';
-import EditEventModal from '../assets/components/EditEvent/EditEvent.jsx';
+import CreateEvent from "../assets/components/CreateEvent/CreateEvent.jsx"; // Import CreateEvent component
+import EditEvent from "../assets/components/EditEvent/EditEvent.jsx"; // Import EditEvent component
+import { createTripEvent, fetchTripEvents } from '../../api/utils/tripEventsUtils.cjs'; // Import createTripEvent and fetchTripEvents functions
 
-const Calendar = ({ tripId }) => {
-  const [events, setEvents] = useState([]);
+const Calendar = () => {
+  const [trips, setTrips] = useState([]);
   const [highlightedEvent, setHighlightedEvent] = useState(null);
-  const [isCreateEventModalOpen, setCreateEventModalOpen] = useState(false);
-  const [isEditEventModalOpen, setEditEventModalOpen] = useState(false);
-  const [currentEventForEdit, setCurrentEventForEdit] = useState(null);
+  const [selectedTripId, setSelectedTripId] = useState(null); // State to store the selected trip ID
+  const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
+  const [isEditEventModalOpen, setEditEventModalOpen] = useState(false); // Track EditEvent modal visibility
+  const [currentEventForEdit, setCurrentEventForEdit] = useState(null); // Track event to edit
+  const [error, setError] = useState('');
+  const [tripEvents, setTripEvents] = useState([]);
+  const [selectedTripStartDate, setSelectedTripStartDate] = useState("");
+  const [selectedTripEndDate, setSelectedTripEndDate] = useState("");
 
   useEffect(() => {
-    const loadEvents = async () => {
+    const fetchTrips = async () => {
+      const userId = getUserId();
+      if (!userId) {
+        setError('User ID not found');
+        return;
+      }
+
       try {
-        const data = await fetchTripEvents(tripId);
-        setEvents(data);
+        const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${getToken()}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to fetch trips');
+        }
+
+        const tripsData = await response.json();
+
+        // Format trips data for FullCalendar
+        const formattedTrips = tripsData.map(trip => ({
+          id: String(trip.trip_id),
+          title: trip.title,
+          start: trip.start_date,
+          end: trip.end_date,
+          details: trip.details || [], // Assuming trip details are included in the response
+        }));
+
+        console.log("Trips:", formattedTrips); // Log the formatted trips
+        console.log("Trips ID", formattedTrips.map(trip => trip.id)); // Log the trip IDs
+        setTrips(formattedTrips);
       } catch (error) {
-        console.error('Error fetching trip events:', error);
+        setError(error.message);
       }
     };
 
-    loadEvents();
-  }, [tripId]);
+    fetchTrips();
+  }, []);
 
-  const handleEventClick = (event) => {
-    setHighlightedEvent(event.id);
-    setCurrentEventForEdit(event);
-  };
+  console.log(selectedTripId);
 
-  const handleCreateEvent = async (newEvent) => {
-    try {
-      const createdEvent = await createTripEvent(tripId, newEvent);
-      setEvents((prevEvents) => [...prevEvents, createdEvent]);
-    } catch (error) {
-      console.error('Error creating event:', error);
+  useEffect(() => {
+    if (selectedTripId) {
+      fetchTripEvents(selectedTripId, getUserId())
+        .then(data => setTripEvents(data))
+        .catch(error => {
+          console.error('Error fetching trip events:', error);
+          setError('Error fetching trip events');
+        });
+    }
+  }, [selectedTripId]);
+
+  const handleEventClick = (info) => {
+    const eventId = info.event.id;
+    setHighlightedEvent((prev) => (prev === eventId ? null : eventId));
+    const selectedTrip = trips.find(trip => trip.id === eventId);
+    
+    if (selectedTrip) {
+      setSelectedTripId(selectedTrip.id);
+      
+      // Log the exact values before setting state
+      console.log("Raw Start Date:", selectedTrip.start);
+      console.log("Raw End Date:", selectedTrip.end);
+      
+      // Ensure proper date parsing
+      const startDate = new Date(selectedTrip.start);
+      const endDate = new Date(selectedTrip.end);
+      
+      console.log("Parsed Start Date:", startDate);
+      console.log("Parsed End Date:", endDate);
+      
+      // Only set if the dates are valid
+      if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+        setSelectedTripStartDate(startDate.toISOString().split('T')[0]);
+        setSelectedTripEndDate(endDate.toISOString().split('T')[0]);
+      } else {
+        console.error("Invalid date parsing:", selectedTrip.start, selectedTrip.end);
+      }
+      
+      console.log("Selected Trip ID:", selectedTrip.id);
+    } else {
+      console.log("No matching trip found for ID:", eventId);
     }
   };
 
-  const handleEditEvent = async (eventId, updatedEvent) => {
+  const highlightedEventDetails = trips.find(
+    (event) => event.id === highlightedEvent
+  );
+
+  const handleOpenCreateEvent = (tripId, tripStartDate, tripEndDate) => {
+    setSelectedTripId(tripId);
+    setSelectedTripStartDate(tripStartDate);
+    setSelectedTripEndDate(tripEndDate);
+    setIsCreateEventModalOpen(true);
+  };
+
+  const handleCloseCreateEvent = () => {
+    setIsCreateEventModalOpen(false); 
+  };
+
+  const handleConfirmCreateEvent = async (eventData) => {
     try {
-      const updated = await updateTripEvent(tripId, eventId, updatedEvent);
-      setEvents((prevEvents) =>
-        prevEvents.map((event) => (event.id === eventId ? updated : event))
+      const newEvent = await createTripEvent(
+        getUserId(),
+        selectedTripId,
+        eventData,
+        getToken()
       );
+
+      setIsCreateEventModalOpen(false);
+      setTripEvents((prevEvents) => [...prevEvents, newEvent]);
     } catch (error) {
-      console.error('Error updating event:', error);
+      console.error("Error creating event:", error);
+      setError("Failed to create event");
     }
   };
 
-  const handleDeleteEvent = async (eventId) => {
-    try {
-      await deleteTripEvent(tripId, eventId);
-      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
-    } catch (error) {
-      console.error('Error deleting event:', error);
-    }
+  // Handle opening EditEvent modal with the selected event
+  const handleOpenEditEvent = (eventDetail) => {
+    setCurrentEventForEdit(eventDetail);
+    setEditEventModalOpen(true);
+  };
+
+  // Handle updating event
+  const handleUpdateEvent = (updatedEventData) => {
+    setTrips((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === updatedEventData.id
+          ? { ...event, details: updatedEventData.details }
+          : event
+      )
+    );
+    setEditEventModalOpen(false); // Close the EditEvent modal
   };
 
   return (
     <div className={styles.calendarContainer}>
+      {error && <p className={styles.error}>{error}</p>}
       <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         headerToolbar={{
           start: "today",
           center: "title",
           end: "prev,next",
         }}
-        events={events}
+        events={trips}
         eventClick={handleEventClick}
         eventContent={(eventInfo) => {
           const startDate = new Date(eventInfo.event.start);
@@ -104,32 +203,31 @@ const Calendar = ({ tripId }) => {
       />
 
       {highlightedEvent ? (
-        currentEventForEdit && currentEventForEdit.details.length > 0 &&
-          currentEventForEdit.details.every(detail => detail.event && detail.date) ? (
+        tripEvents.length > 0 ? (
           <div className={styles.modal}>
             <div className={styles.modalContent}>
               <div className={styles.modalHeader}>
                 <h3>
-                  {currentEventForEdit.title} (
-                  {new Date(currentEventForEdit.start).toLocaleDateString("en-US", {
+                  {highlightedEventDetails.title} (
+                  {new Date(highlightedEventDetails.start).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                   })}{" "}
                   &nbsp;-&nbsp;
-                  {new Date(currentEventForEdit.end).toLocaleDateString("en-US", {
+                  {new Date(highlightedEventDetails.end).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                   })}
                   )
                 </h3>
-                <button className={styles.addEventButton} onClick={() => setCreateEventModalOpen(true)}>
+                <button className={styles.addEventButton} onClick={() => handleOpenCreateEvent(selectedTripId, selectedTripStartDate, selectedTripEndDate)}>
                   + Add an Event
                 </button>
               </div>
               <div className={styles.eventDetailsContainer}>
                 {Object.entries(
-                  currentEventForEdit.details.reduce((acc, detail) => {
-                    const date = detail.date;
+                  tripEvents.reduce((acc, detail) => {
+                    const date = detail.start_time.split("T")[0];
                     if (!acc[date]) acc[date] = [];
                     acc[date].push(detail);
                     return acc;
@@ -145,11 +243,11 @@ const Calendar = ({ tripId }) => {
                     </div>
                     {details.map((detail, idx) => (
                       <div key={idx} className={styles.eventTimeDescription}>
-                        <div className={styles.eventTime}>{detail.time}</div>
-                        <div className={styles.eventDescription}>{detail.event}</div>
+                        <div className={styles.eventTime}>{new Date(detail.start_time).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })}</div>
+                        <div className={styles.eventDescription}>{detail.title}</div>
                         <div
                           className={styles.eventAction}
-                          onClick={() => setEditEventModalOpen(true)}
+                          onClick={() => handleOpenEditEvent(detail)}
                         >
                           EDIT EVENT
                         </div>
@@ -166,7 +264,7 @@ const Calendar = ({ tripId }) => {
               You have no events planned out for this trip! Click{" "}
               <span
                 className={styles.clickableText}
-                onClick={() => setCreateEventModalOpen(true)}
+                onClick={() => handleOpenCreateEvent(selectedTripId, selectedTripStartDate, selectedTripEndDate)}
               >
                 HERE
               </span>{" "}
@@ -181,17 +279,24 @@ const Calendar = ({ tripId }) => {
       )}
 
       {isCreateEventModalOpen && (
-        <CreateEventModal
-          onClose={() => setCreateEventModalOpen(false)}
-          onCreate={handleCreateEvent}
+        <CreateEvent
+          isOpen={isCreateEventModalOpen}
+          onClose={handleCloseCreateEvent}
+          onConfirm={handleConfirmCreateEvent}
+          tripId={selectedTripId} // Pass the selected tripId to CreateEvent
+          userId={getUserId()} // Pass the userId to CreateEvent
+          token={getToken()} // Pass the token to CreateEvent
+          tripStartDate={selectedTripStartDate} // Pass the trip start date to CreateEvent
+          tripEndDate={selectedTripEndDate} // Pass the trip end date to CreateEvent
         />
       )}
 
       {isEditEventModalOpen && (
-        <EditEventModal
-          event={currentEventForEdit}
+        <EditEvent
+          isOpen={isEditEventModalOpen}
           onClose={() => setEditEventModalOpen(false)}
-          onEdit={handleEditEvent}
+          onConfirm={handleUpdateEvent}
+          eventData={currentEventForEdit}
         />
       )}
     </div>

@@ -6,11 +6,13 @@ const { authenticateToken } = require('./utils/authUtils.cjs'); // Import authen
 const app = express();
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173'] // Add more origins if necessary
+  origin: ['http://localhost:3000', 'http://localhost:5173'], // Add more origins if necessary
+  optionsSuccessStatus: 200,
 };
 
 // Middleware
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Enable preflight requests for all routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
