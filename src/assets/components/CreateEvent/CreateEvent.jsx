@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./CreateEvent.module.css";
-import { getToken } from "../../../services/auth";
+import { createTripEvent } from "../../../../api/utils/tripEventsUtils.cjs";
 
 const fetchUserIdByUsername = async (username) => {
   try {
@@ -8,7 +8,6 @@ const fetchUserIdByUsername = async (username) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `${getToken()}`, // Include the token in the Authorization header
       },
     });
 
@@ -30,7 +29,6 @@ const fetchSuggestedUsers = async (searchTerm) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `${getToken()}`, // Include the token in the Authorization header
       },
     });
 
@@ -46,7 +44,7 @@ const fetchSuggestedUsers = async (searchTerm) => {
   }
 };
 
-const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate }) => {
+const CreateEvent = ({ isOpen, onClose, onConfirm, tripId }) => {
   const [title, setTitle] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -69,32 +67,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
   }, []);
 
   useEffect(() => {
-    console.log("Trip Start Date (raw):", tripStartDate);
-    console.log("Trip End Date (raw):", tripEndDate);
-    
-    // Validate and format dates
-    const formattedStart = tripStartDate ? 
-      new Date(tripStartDate).toISOString().split('T')[0] : 
-      null;
-    const formattedEnd = tripEndDate ? 
-      new Date(tripEndDate).toISOString().split('T')[0] : 
-      null;
-    
-    console.log("Formatted Start Date:", formattedStart);
-    console.log("Formatted End Date:", formattedEnd);
-  }, [tripStartDate, tripEndDate]);
-
-  const formatDateForInput = (date) => {
-    if (!date) return '';
-    const formattedDate = new Date(date);
-    // Format to YYYY-MM-DDTHH:MM
-    return formattedDate.toISOString().slice(0, 16);
-  };
-
-  const formattedTripStartDate = formatDateForInput(tripStartDate);
-  const formattedTripEndDate = formatDateForInput(tripEndDate);
-
-  useEffect(() => {
     const fetchSuggestions = async () => {
       if (searchTerm) {
         const users = await fetchSuggestedUsers(searchTerm);
@@ -108,8 +80,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
   }, [searchTerm]);
 
   const handleConfirm = async () => {
-    console.log("handleConfirm called"); // Log when handleConfirm is called
-
     const errors = {};
     if (!title) errors.title = "Title is required";
     if (!startTime) errors.startTime = "Start Time is required";
@@ -118,37 +88,10 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
       errors.time = "End Time cannot be before Start Time";
     }
 
-    const startDateTime = new Date(startTime);
-    const endDateTime = new Date(endTime);
-    const tripStart = new Date(tripStartDate);
-    const tripEnd = new Date(tripEndDate);
-
-    // Validate start time
-  if (startDateTime < tripStart) {
-    errors.startTime = `Start time cannot be before trip start (${tripStart.toLocaleString()})`;
-  }
-  if (startDateTime > tripEnd) {
-    errors.startTime = `Start time cannot be after trip end (${tripEnd.toLocaleString()})`;
-  }
-
-  // Validate end time
-  if (endDateTime < tripStart) {
-    errors.endTime = `End time cannot be before trip start (${tripStart.toLocaleString()})`;
-  }
-  if (endDateTime > tripEnd) {
-    errors.endTime = `End time cannot be after trip end (${tripEnd.toLocaleString()})`;
-  }
-
-  // Validate end time is after start time
-  if (endDateTime < startDateTime) {
-    errors.time = "End time must be after start time";
-  }
-
-  // If there are any errors, display them and prevent submission
-  if (Object.keys(errors).length > 0) {
-    setFormErrors(errors);
-    return;
-  }
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
 
     const collaboratorIds = await Promise.all(
       collaborators.map(async (collab) => {
@@ -164,10 +107,13 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
       collaborators: collaboratorIds.length > 0 ? collaboratorIds : [],
     };
 
-    console.log("eventData:", eventData); // Log the event data
-
-    onConfirm(eventData); // Pass the event data to the parent component
-    onClose();
+    try {
+      const responseData = await createTripEvent(tripId, eventData);
+      onConfirm(responseData);
+      onClose();
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
   };
 
   const handleAddCollaborator = (username) => {
@@ -175,8 +121,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
     setSearchTerm("");
     setSuggestedUsers([]);
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className={styles.modal}>
@@ -197,32 +141,18 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
             <div className={styles.dateGroup}>
               <label>Start Time</label>
               <input
-                type="datetime-local"
+                type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className={styles.datetimeInput}
-                min={tripStartDate ? 
-                  new Date(tripStartDate).toISOString().split('T')[0] + 'T00:00' : 
-                  ''}
-                max={tripEndDate ? 
-                  new Date(tripEndDate).toISOString().split('T')[0] + 'T23:59' : 
-                  ''}
               />
               {formErrors.startTime && <p className={styles.errorText}>{formErrors.startTime}</p>}
             </div>
             <div className={styles.dateGroup}>
               <label>End Time</label>
               <input
-                type="datetime-local"
+                type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className={styles.datetimeInput}
-                min={tripStartDate ? 
-                  new Date(tripStartDate).toISOString().split('T')[0] + 'T00:00' : 
-                  ''}
-                max={tripEndDate ? 
-                  new Date(tripEndDate).toISOString().split('T')[0] + 'T23:59' : 
-                  ''}
               />
               {formErrors.endTime && <p className={styles.errorText}>{formErrors.endTime}</p>}
               {formErrors.time && <p className={styles.errorText}>{formErrors.time}</p>}

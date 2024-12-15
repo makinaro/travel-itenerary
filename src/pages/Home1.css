@@ -1,4 +1,4 @@
-
+/* Global Styles */
 html, body {
   margin: 0;
   padding: 0;
@@ -6,15 +6,16 @@ html, body {
   height: 100%;
 }
 
+/* Main App */
 .app {
   background: url('../assets/Images/global.gif') no-repeat center center fixed;
-  background-size: auto; 
+  background-size: auto; /* This makes the background zoomed in */
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* navbar */
+/* Navbar Styles */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -30,7 +31,6 @@ html, body {
 .logo {
   display: flex;
   align-items: center;
-  justify-content: center; 
 }
 
 .logo-icon {
@@ -49,8 +49,9 @@ html, body {
 .nav-buttons {
   display: flex;
   gap: 20px;
-  margin-left: auto; 
+  margin-left: auto; /* Push the buttons to the right */
 }
+
 
 .nav-btn {
   padding: 10px 20px;
@@ -83,65 +84,35 @@ html, body {
 }
 
 
-@media screen and (max-width: 500px) {
-  .navbar {
-    flex-direction: column; 
-    padding: 20px 20px; 
-    height: auto; 
-  }
-
-  .logo {
-    justify-content: center;
-  }
-
-  .nav-buttons {
-    display: flex;
-    justify-content: center; 
-    gap: 20px;
-    width: 100%;
-    margin-top: 50px; 
-  }
-
-  .nav-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 30px;
-    width: 100%; 
-    max-width: 200px; 
-  }
-
-  .logo-text {
-    font-size: 20px;
-  }
-}
 
 
-/* home */
+/* Hero Section */
 .hero {
   display: flex;
-  justify-content: flex-start; 
+  justify-content: flex-start; /* Align content to the left */
   align-items: center;
-  min-height: 100vh; 
-  background-position: center; 
+  min-height: 100vh; /* Ensures it takes up at least the whole screen */
+  /* background-size: 150%; */
+  background-position: center; /* Keeps the background centered */
   color: white;  
-  padding-left: 30px; 
+  padding-left: 30px; /* Adjust for desired spacing */
 }
 
 .hero-text {
   z-index: 2;
-  max-width: 700px; 
+  max-width: 700px; /* Keeps text contained */
   text-align: left;
-  padding-left: 100px;
+  padding-left: 100px; /* Adjust this value for more spacing */
 }
 
 .hero-title {
-  font-size: 100px; 
+  font-size: 100px; /* Make the title larger */
   font-weight: bold;
   color: #002244;
 }
 
 .hero-description {
-  font-size: 28px;
+  font-size: 28px; /* Adjust the description font size */
   margin-top: 15px;
   color: #002244;
 }
@@ -163,6 +134,7 @@ html, body {
   color: #002244;
 }
 
+/* Adjust for smaller screens */
 @media (max-width: 768px) {
   .hero {
     padding: 20px;
@@ -185,16 +157,16 @@ html, body {
   }
 
   .hero-text {
-    max-width: 90%; 
+    max-width: 90%; /* Adjust text container width */
     text-align: center;
-    padding-left: 0; 
+    padding-left: 0; /* Center-align content on smaller screens */
   }
 }
 
 
 
 
-/* web features */
+/* Features Section */
 .features {
   display: flex;
   justify-content: space-around;
@@ -217,7 +189,7 @@ html, body {
   margin-top: 10px;
 }
 
-/* footer */
+/* Footer */
 .footer {
   background-color: #002244;
   color: #ffffff;
@@ -308,12 +280,13 @@ html, body {
   transform: scale(1.1);
 }
 
-/* mission */
+/* Mission Section */
+/* Mission Section */
 .mission {
   padding: 80px 50px;
-  background-image: url('../assets/Images/mission.jpg'); 
-  background-size: cover; 
-  background-position: center 50%; 
+  background-image: url('../assets/Images/mission.jpg'); /* Adding the GIF background */
+  background-size: cover; /* Ensures the GIF covers the entire section */
+  background-position: center 50%; /* Moves the background image further down */
   color: #002244;
   text-align: center;
 }
@@ -333,7 +306,7 @@ html, body {
   color: #555555;
 }
 
-/* about us */
+/* About Us Section */
 .about {
   display: flex;
   justify-content: space-between;
@@ -366,7 +339,7 @@ html, body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-
+/* Adjust layout for small screens */
 @media (max-width: 768px) {
   .about {
     flex-direction: column;
@@ -393,14 +366,15 @@ html, body {
   }
 }
 
+/* More About Us Section */
 .more-about {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 80px 50px;
-  background-color: #e6f7ff; 
+  background-color: #e6f7ff; /* Light blue background to distinguish this section */
   color: #002244;
-  background-image: url('../assets/Images/train.gif'); 
+  background-image: url('../assets/Images/train.gif'); /* Adding the GIF background */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -421,7 +395,7 @@ html, body {
 
 
 
-
+/* Adjust layout for small screens */
 @media (max-width: 768px) {
   .more-about {
     flex-direction: column;
@@ -448,7 +422,7 @@ html, body {
 }
 
 
-/* Frequently Asked Questions */
+/* FAQ Container */
 .more-about-text {
   display: flex;
   flex-direction: column;
@@ -457,37 +431,37 @@ html, body {
   margin: 0 auto;
 }
 
-
+/* FAQ Item */
 .faq-item {
   width: 100%;
-  border: 2px solid #000000; 
-  border-radius: 8px; 
+  border: 2px solid #000000; /* Border around each FAQ */
+  border-radius: 8px; /* Optional: makes the corners rounded */
   padding: 20px;
   background-color: #f9f9f9;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease; /* Smooth background color change */
 }
 
-
+/* FAQ Item Hover Effect */
 .faq-item:hover {
-  background-color: #deecff; 
+  background-color: #deecff; /* Lighten the background on hover */
 }
 
-
+/* FAQ Item Title */
 .faq-item h4 {
   font-size: 18px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 10px; 
+  margin-bottom: 10px; /* Space between title and paragraph */
 }
 
-
+/* FAQ Item Content */
 .faq-item p {
   font-size: 16px;
   color: #555;
 }
 
 
-/* Developers */
+/* About the Developers Section */
 .additional-info {
   text-align: center;
   padding: 20px;
@@ -504,27 +478,17 @@ html, body {
   gap: 20px;
   justify-content: center;
   margin: 0 auto;
-  max-width: 1000px;
-  padding: 0 15px;
+  width: 1000px;
 }
 
 .profile-card {
-  border: 1px solid #ddd;
-  padding: 20px;
+  border: 1px solid #000;
+  padding: 15px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 8px; 
-  background-color: #f9f9f9; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.profile-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
 .profile-photo img {
@@ -545,73 +509,25 @@ html, body {
   color: #555;
 }
 
-
-@media screen and (max-width: 1024px) {
-  .profile-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-}
-
 @media screen and (max-width: 768px) {
   .profile-grid {
-    grid-template-columns: 1fr;
-    width: 90%; 
-  }
-
-  .profile-card {
-    padding: 15px;
-  }
-
-  .profile-name {
-    font-size: 16px;
-  }
-
-  .profile-description {
-    font-size: 13px;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media screen and (max-width: 480px) {
-  .additional-info {
-    padding: 10px;
-  }
-
-  .profile-photo img {
-    width: 80px;
-    height: 80px;
-  }
-
-  .profile-name {
-    font-size: 15px;
-  }
-
-  .profile-description {
-    font-size: 12px;
+  .profile-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-
 @media (min-width: 2560px) {
-  .profile-grid {
-    grid-template-columns: repeat(4, 1fr); 
-    gap: 30px;
+  .app {
+    background-size: 120%!important
   }
 
-  .profile-card {
-    padding: 25px;
-  }
-
-  .profile-photo img {
-    width: 120px;
-    height: 120px;
-  }
-
-  .profile-name {
-    font-size: 20px;
-  }
-
-  .profile-description {
-    font-size: 16px;
+  .more-about {
+    background-size: 120%!important;
+    background-position: center calc(100% + 70px);
   }
 }

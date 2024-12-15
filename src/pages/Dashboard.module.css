@@ -1,11 +1,7 @@
-.body {
-  background-image: url('../assets/Images/background3.jpg');
-}
-
 /* Base Styles */
 .dashboardContainer {
   padding: 20px;
-  
+  background-color: #f4f6f8;
   min-height: 100vh;
   color: #333;
 }
@@ -13,7 +9,7 @@
 .dashboardTitle {
   text-align: center;
   font-size: 2rem;
-  color: #ffffff;
+  color: #333;
   margin-bottom: 20px;
 }
 

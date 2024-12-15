@@ -12,12 +12,12 @@ ________________________________________________________________
 - [ ] Responsiveness to mobile resolutions
 
 ### Pages:
-- [X] Home
+- [ ] Home
 - [X] Login
 - [X] Register
 - [X] Dashboard
 - [ ] Calendar
-- [X] Settings
+- [ ] Settings
 - [ ] Create Trip
 
 ### Reusable and Non-Reusable Components:
@@ -29,7 +29,7 @@ ________________________________________________________________
 ________________________________________________________________
 
 ### Pages:
-- [X] Home
+- [ ] Home
 - [X] Login
 - [X] Register
 - [X] Dashboard (collaborated trips is still non-functional)
