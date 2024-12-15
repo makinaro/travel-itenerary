@@ -25,19 +25,19 @@ const Dashboard = () => {
         return;
       }
 
-      try {
-        const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `${getToken()}`,
-          },
-        });
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${getToken()}`,
+        },
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch trips');
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch trips');
+      }
 
         const tripsData = await response.json();
         const parsedTripsData = tripsData.map(trip => {
@@ -151,7 +151,9 @@ const Dashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <h1 className={styles.dashboardTitle}>Dashboard</h1>
+      <h1 className={styles.dashboardTitle}>DASHBOARD</h1>
+
+      <CreateTrip onTripCreated={handleTripCreated} /> {/* Pass the callback function */}
 
       {error && <p className={styles.error}>{error}</p>}
 
