@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Settings1.css";
+import { getToken, getUserId } from "../services/auth";
 
 function ProfileSettings() {
   const [file, setFile] = useState(null);
@@ -10,16 +11,75 @@ function ProfileSettings() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSaveProfile = (e) => {
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userId = getUserId();
+      const token = getToken();
+      console.log(`Fetching data for user ID: ${userId}`);
+      console.log(`Using token: ${token}`);
+      try {
+        const response = await fetch(`http://localhost:3000/users/${userId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`,
+          },
+        });
+
+        console.log('Response status:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+        console.log('User data:', userData);
+        setEmail(userData.email);
+        setUsername(userData.username);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setErrorMessage(error.message);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleSaveProfile = async (e) => {
     e.preventDefault();
     if (!username || !email) {
       setErrorMessage("Username and email are required.");
       return;
     }
+
     setErrorMessage("");
+
+    const userId = getUserId();
+    const token = getToken();
+
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+        body: JSON.stringify({ username, email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log(errorData.message);
+        throw new Error(errorData.message || 'Failed to update profile');
+      }
+      alert('Profile updated successfully!');
+    } catch (error) {
+      setErrorMessage("Username or email already exists." || error.message);
+    }
   };
 
-  const handleSavePassword = (e) => {
+  const handleSavePassword = async (e) => {
     e.preventDefault();
     if (!currentPassword || !newPassword || !confirmPassword) {
       setErrorMessage("All password fields are required.");
@@ -29,7 +89,32 @@ function ProfileSettings() {
       setErrorMessage("New password and confirm password must match.");
       return;
     }
+
     setErrorMessage("");
+
+    const userId = getUserId();
+    const token = getToken();
+
+    try {
+      const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+        body: JSON.stringify({ password: currentPassword, newPassword }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.log(errorData.message);
+        throw new Error(errorData.message || 'Failed to update password');
+      }
+
+      alert('Password updated successfully!');
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   };
 
   const handleDeleteAccount = () => {
@@ -38,6 +123,28 @@ function ProfileSettings() {
         "Are you sure you want to delete your account? This action cannot be undone."
       )
     ) {
+      const userId = getUserId();
+      const token = getToken();
+
+      fetch(`http://localhost:3000/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            return response.json().then((errorData) => {
+              throw new Error(errorData.message || 'Failed to delete account');
+            });
+          }
+          alert('Account deleted successfully!');
+        })
+        .catch((error) => {
+          setErrorMessage(error.message);
+        });
+      // redirect to login page
     }
   };
 

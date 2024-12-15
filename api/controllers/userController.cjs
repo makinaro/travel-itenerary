@@ -33,20 +33,9 @@ const getUserByUsername = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json({ id: user.id });
+    res.json({ id: user.id , username: user.username, email: user.email });
   } catch (error) {
     res.status(500).json({ message: error.message });
-  }
-};
-
-const getUserByToken = async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1]; // Assuming the token is sent in the Authorization header
-
-  try {
-    const user = await getUserFromToken(token);
-    res.json(user);
-  } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
   }
 };
 
@@ -79,8 +68,44 @@ const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    await user.update(req.body);
-    res.json(user);
+
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    const newPassword = req.body.newPassword;
+
+    // Check if the new username or email is already taken by another user
+    if (username) {
+      const existingUserWithUsername = await db.User.findOne({ where: { username } });
+      if (existingUserWithUsername && existingUserWithUsername.id !== user.id) {
+        return res.status(400).json({ message: 'Username is already taken' });
+      }
+    }
+    if (email) {
+      const existingUserWithEmail = await db.User.findOne({ where: { email } });
+      if (existingUserWithEmail && existingUserWithEmail.id !== user.id) {
+        return res.status(400).json({ message: 'Email is already taken' });
+      }
+    }
+    if (password) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Current password is incorrect' });
+      }
+
+      // If newPassword is provided, hash it and update the user's password
+      if (newPassword) {
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+        await user.update({ password: hashedNewPassword });
+      }
+    }
+    // Update other fields
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+
+    await user.update(updateData);
+    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -117,4 +142,4 @@ const searchUsersByUsername = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, getUserByUsername, getUserByToken, createUser, updateUser, deleteUser, searchUsersByUsername };
+module.exports = { getAllUsers, getUserById, getUserByUsername, createUser, updateUser, deleteUser, searchUsersByUsername };
