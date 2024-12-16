@@ -155,80 +155,89 @@ const Dashboard = () => {
 
       {error && <p className={styles.error}>{error}</p>}
 
-      {trips.length === 0 ? (
-        <p>No trips found.</p>
-      ) : (
-        <>
-          <table className={styles.tripTable}>
-            <thead>
-              <tr>
-                <td>Flag</td>
-                <td>Trip Title</td>
-                <td>Country</td>
-                <td>Trip Creator</td>
-                <td>Start Date</td>
-                <td>End Date</td>
-                <td>Status</td>
-                <td>Actions</td>
+      <table className={styles.tripTable}>
+        <thead>
+          <tr>
+            <td>Flag</td>
+            <td>Trip Title</td>
+            <td>Country</td>
+            <td>Trip Creator</td>
+            <td>Start Date</td>
+            <td>End Date</td>
+            <td>Status</td>
+            <td>Actions</td>
+          </tr>
+        </thead>
+        <tbody>
+          {currentTrips.length > 0 ? (
+            currentTrips.map((trip) => (
+              <tr
+                key={trip.trip_id ?? Math.random()}
+                onClick={() => handleTripClick(trip)}
+                style={{ cursor: 'pointer' }}
+              >
+                <td>
+                  <Flag
+                    code={trip.countryCode}
+                    className={styles.flagIcon}
+                    fallback={<span>🏳️</span>}
+                  />
+                </td>
+                <td>{trip.title}</td>
+                <td>{trip.country}</td>
+                <td>{trip.tripCreator}</td>
+                <td>{trip.startDate}</td>
+                <td>{trip.endDate}</td>
+                <td className={`${styles.status} ${styles[trip.status.toLowerCase()]}`}>
+                  {trip.status}
+                </td>
+                <td className={styles.actionsColumn}>
+                  <FaEdit
+                    className={styles.actionIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditClick(trip);
+                    }}
+                  />
+                  <FaTrashAlt
+                    className={styles.actionIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteClick(trip.id);
+                    }}
+                  />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {currentTrips.map((trip) => (
-                <tr key={trip.trip_id ?? Math.random()}
-                // onClick={() => handleTripClick(trip)} 
-                  style={{ cursor: 'pointer' }}
-                >
-                  <td>
-                    <Flag
-                      code={trip.countryCode}
-                      className={styles.flagIcon}
-                      fallback={<span>🏳️</span>}
-                    />
-                  </td>
-                  <td>{trip.title}</td>
-                  <td>{trip.country}</td>
-                  <td>{trip.tripCreator}</td>
-                  <td>{trip.startDate}</td>
-                  <td>{trip.endDate}</td>
-                  <td className={`${styles.status} ${styles[trip.status.toLowerCase()]}`}>
-                    {trip.status}
-                  </td>
-                  <td className={styles.actionsColumn}>
-                    <FaEdit
-                      className={styles.actionIcon}
-                      onClick={() => handleEditClick(trip)}
-                    />
-                    <FaTrashAlt
-                      className={styles.actionIcon}
-                      onClick={() => handleDeleteClick(trip.id)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={8}></td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-          <div className={styles.paginationControls}>
-            <button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-              className={styles.previousButton}
-            >
-              Previous
-            </button>
+      <div className={styles.paginationControls}>
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={styles.previousButton}
+        >
+          Previous
+        </button>
 
-            <span className={styles.pageText}>Page {currentPage} of {totalPages}</span>
+        <span className={styles.pageText}>Page {currentPage} of {totalPages}</span>
 
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className={styles.nextButton}
-            >
-              Next
-            </button>
-          </div>
-        </>
-      )}{isEditModalOpen && (
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={styles.nextButton}
+        >
+          Next
+        </button>
+      </div>
+
+      {isEditModalOpen && (
         <EditTrip
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
