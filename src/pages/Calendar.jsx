@@ -230,7 +230,9 @@ const Calendar = () => {
                     </div>
                     {details.map((detail, idx) => (
                       <div key={idx} className={styles.eventTimeDescription}>
-                        <div className={styles.eventTime}>{new Date(detail.start_time).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })}</div>
+                        <div className={styles.eventTime}>
+                          {new Date(detail.start_time).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })} - {new Date(detail.end_time).toLocaleTimeString("en-US", { hour: '2-digit', minute: '2-digit' })}
+                        </div>
                         <div className={styles.eventDescription}>{detail.title}</div>
                         <div
                           className={styles.eventAction}
