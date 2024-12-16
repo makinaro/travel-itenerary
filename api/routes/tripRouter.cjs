@@ -13,4 +13,5 @@ router.post('/', tripController.createTripForUser); // Route to create a trip fo
 router.put('/:tripId', tripController.editTripForUser); // Route to edit a trip for a user
 router.delete('/:tripId', tripController.deleteTripForUser); // Route to delete a trip for a user
 router.get('/:tripId/collaborators', collaboratorController.getCollaborators); // Route to get collaborators for a trip
+router.get('/:tripId', tripController.getTripById); // Route to get a single trip by ID
 module.exports = router;

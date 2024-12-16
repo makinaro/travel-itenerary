@@ -53,8 +53,6 @@ const Calendar = () => {
           details: trip.details || [], // Assuming trip details are included in the response
         }));
 
-        console.log("Trips:", formattedTrips); // Log the formatted trips
-        console.log("Trips ID", formattedTrips.map(trip => trip.id)); // Log the trip IDs
         setTrips(formattedTrips);
       } catch (error) {
         setError(error.message);
@@ -63,8 +61,6 @@ const Calendar = () => {
 
     fetchTrips();
   }, []);
-
-  console.log(selectedTripId);
 
   useEffect(() => {
     if (selectedTripId) {
@@ -85,16 +81,9 @@ const Calendar = () => {
     if (selectedTrip) {
       setSelectedTripId(selectedTrip.id);
       
-      // Log the exact values before setting state
-      console.log("Raw Start Date:", selectedTrip.start);
-      console.log("Raw End Date:", selectedTrip.end);
-      
       // Ensure proper date parsing
       const startDate = new Date(selectedTrip.start);
       const endDate = new Date(selectedTrip.end);
-      
-      console.log("Parsed Start Date:", startDate);
-      console.log("Parsed End Date:", endDate);
       
       // Only set if the dates are valid
       if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
@@ -103,10 +92,6 @@ const Calendar = () => {
       } else {
         console.error("Invalid date parsing:", selectedTrip.start, selectedTrip.end);
       }
-      
-      console.log("Selected Trip ID:", selectedTrip.id);
-    } else {
-      console.log("No matching trip found for ID:", eventId);
     }
   };
 
@@ -146,22 +131,6 @@ const Calendar = () => {
   const handleOpenEditEvent = (eventDetail) => {
     setCurrentEventForEdit(eventDetail);
     setEditEventModalOpen(true);
-  };
-
-  // Handle updating event
-  const handleUpdateEvent = async (updatedEventData) => {
-    try {
-      const updatedEvent = await updateTripEvent(updatedEventData, getToken());
-      setTripEvents((prevEvents) =>
-        prevEvents.map((event) =>
-          event.id === updatedEvent.id ? updatedEvent : event
-        )
-      );
-      setEditEventModalOpen(false); // Close the EditEvent modal
-    } catch (error) {
-      console.error("Error updating event:", error);
-      setError("Failed to update event");
-    }
   };
 
   const handleDeleteEvent = async (eventId) => {
@@ -313,7 +282,14 @@ const Calendar = () => {
         <EditEvent
           isOpen={isEditEventModalOpen}
           onClose={() => setEditEventModalOpen(false)}
-          onConfirm={handleUpdateEvent}
+          onConfirm={(updatedEvent) => {
+            setTripEvents((prevEvents) =>
+              prevEvents.map((event) =>
+                event.trip_event_id === updatedEvent.trip_event_id ? updatedEvent : event
+              )
+            );
+            setEditEventModalOpen(false);
+          }}
           onDelete={handleDeleteEvent}
           eventData={currentEventForEdit}
         />

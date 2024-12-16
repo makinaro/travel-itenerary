@@ -3,27 +3,6 @@ import styles from "../CreateEvent/CreateEvent.module.css";
 import { updateTripEvent, deleteTripEvent } from '../../../../api/utils/tripEventsUtils.cjs';
 import { getToken, getUserId } from '../../../services/auth';
 
-const fetchUserIdByUsername = async (username) => {
-  try {
-    const response = await fetch(`http://localhost:3000/users/username/${username}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`User not found: ${username}`);
-    }
-
-    const userData = await response.json();
-    return userData.id;
-  } catch (error) {
-    console.error("Error fetching user ID:", error);
-    return null;
-  }
-};
-
 const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
   const [title, setTitle] = useState(eventData.title || "");
   const [startTime, setStartTime] = useState(eventData.start_time || "");
@@ -74,7 +53,7 @@ const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
     };
 
     try {
-      const updatedEvent = await updateTripEvent(updatedEventData, getToken());
+      const updatedEvent = await updateTripEvent(getUserId(), updatedEventData, getToken());
       onConfirm(updatedEvent);
       onClose();
     } catch (error) {
@@ -84,7 +63,6 @@ const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
 
   const handleDelete = async () => {
     try {
-      console.log("Deleting event:", eventData);
       await deleteTripEvent(getUserId(), eventData.trip_id, eventData.trip_event_id, getToken());
       onDelete(eventData.trip_event_id);
       onClose();
@@ -112,7 +90,7 @@ const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
             <div className={styles.dateGroup}>
               <label>Start Time</label>
               <input
-                type="time"
+                type="datetime-local"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
               />
@@ -121,7 +99,7 @@ const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
             <div className={styles.dateGroup}>
               <label>End Time</label>
               <input
-                type="time"
+                type="datetime-local"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
               />

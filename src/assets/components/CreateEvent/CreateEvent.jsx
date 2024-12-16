@@ -69,9 +69,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
   }, []);
 
   useEffect(() => {
-    console.log("Trip Start Date (raw):", tripStartDate);
-    console.log("Trip End Date (raw):", tripEndDate);
-    
     // Validate and format dates
     const formattedStart = tripStartDate ? 
       new Date(tripStartDate).toISOString().split('T')[0] : 
@@ -79,9 +76,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
     const formattedEnd = tripEndDate ? 
       new Date(tripEndDate).toISOString().split('T')[0] : 
       null;
-    
-    console.log("Formatted Start Date:", formattedStart);
-    console.log("Formatted End Date:", formattedEnd);
   }, [tripStartDate, tripEndDate]);
 
   const formatDateForInput = (date) => {
@@ -108,8 +102,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
   }, [searchTerm]);
 
   const handleConfirm = async () => {
-    console.log("handleConfirm called"); // Log when handleConfirm is called
-
     const errors = {};
     if (!title) errors.title = "Title is required";
     if (!startTime) errors.startTime = "Start Time is required";
@@ -124,31 +116,31 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
     const tripEnd = new Date(tripEndDate);
 
     // Validate start time
-  if (startDateTime < tripStart) {
-    errors.startTime = `Start time cannot be before trip start (${tripStart.toLocaleString()})`;
-  }
-  if (startDateTime > tripEnd) {
-    errors.startTime = `Start time cannot be after trip end (${tripEnd.toLocaleString()})`;
-  }
+    if (startDateTime < tripStart) {
+      errors.startTime = `Start time cannot be before trip start (${tripStart.toLocaleString()})`;
+    }
+    if (startDateTime > tripEnd) {
+      errors.startTime = `Start time cannot be after trip end (${tripEnd.toLocaleString()})`;
+    }
 
-  // Validate end time
-  if (endDateTime < tripStart) {
-    errors.endTime = `End time cannot be before trip start (${tripStart.toLocaleString()})`;
-  }
-  if (endDateTime > tripEnd) {
-    errors.endTime = `End time cannot be after trip end (${tripEnd.toLocaleString()})`;
-  }
+    // Validate end time
+    if (endDateTime < tripStart) {
+      errors.endTime = `End time cannot be before trip start (${tripStart.toLocaleString()})`;
+    }
+    if (endDateTime > tripEnd) {
+      errors.endTime = `End time cannot be after trip end (${tripEnd.toLocaleString()})`;
+    }
 
-  // Validate end time is after start time
-  if (endDateTime < startDateTime) {
-    errors.time = "End time must be after start time";
-  }
+    // Validate end time is after start time
+    if (endDateTime < startDateTime) {
+      errors.time = "End time must be after start time";
+    }
 
-  // If there are any errors, display them and prevent submission
-  if (Object.keys(errors).length > 0) {
-    setFormErrors(errors);
-    return;
-  }
+    // If there are any errors, display them and prevent submission
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
 
     const collaboratorIds = await Promise.all(
       collaborators.map(async (collab) => {
@@ -163,8 +155,6 @@ const CreateEvent = ({ isOpen, onClose, onConfirm, tripStartDate, tripEndDate })
       end_time: endTime,
       collaborators: collaboratorIds.length > 0 ? collaboratorIds : [],
     };
-
-    console.log("eventData:", eventData); // Log the event data
 
     onConfirm(eventData); // Pass the event data to the parent component
     onClose();

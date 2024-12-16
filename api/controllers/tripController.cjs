@@ -147,5 +147,51 @@ const deleteTripForUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Get trip by trip ID
+const getTripById = async (req, res) => {
+  const userId = req.params.id;
+  const tripId = req.params.tripId;
 
-module.exports = { getTripsByUserId, createTripForUser, editTripForUser, deleteTripForUser };
+  if (!userId || !tripId) {
+    return res.status(400).json({ message: 'User ID and Trip ID are required' });
+  }
+
+  try {
+    const trip = await db.Trip.findOne({
+      where: {
+        trip_id: tripId,
+        [Op.or]: [
+          { owner_id: userId },
+          { '$collaborators.user_id$': userId }
+        ]
+      },
+      include: [
+        {
+          model: db.Collaborator,
+          as: 'collaborators',
+          attributes: ['user_id', 'access_level']
+        },
+        {
+          model: db.User,
+          as: 'owner',
+          attributes: ['username']
+        }
+      ]
+    });
+
+    if (!trip) {
+      return res.status(404).json({ message: 'Trip not found' });
+    }
+
+    return res.json(trip);
+  } catch (error) {
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getTripsByUserId, createTripForUser, editTripForUser, deleteTripForUser, getTripById };
