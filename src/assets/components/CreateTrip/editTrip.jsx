@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import CountryList from "react-select-country-list";
 import styles from "./CreateTrip.module.css";
+import { X } from 'lucide-react';
 import { getToken, getUserId } from '../../../services/auth.js';
-import { FaTimes } from 'react-icons/fa'; // Example for react-icons
 
-// REPLACE THIS WITH ACTUAL API FETCH
 const fetchUsernames = async (searchTerm) => {
   try {
     const token = getToken();
@@ -15,7 +14,6 @@ const fetchUsernames = async (searchTerm) => {
       }
     });
     const data = await response.json();
-    console.log("Response text:", data); // Log the response text for debugging
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -26,22 +24,58 @@ const fetchUsernames = async (searchTerm) => {
   }
 };
 
-const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [country, setCountry] = useState("");
+const EditTrip = ({ 
+  isOpen, 
+  onClose, 
+  trip,  // Existing trip data to edit
+  onUpdateTrip  // Callback to update trip in parent component
+}) => {
+  const [title, setTitle] = useState(trip.title || "");
+  const [description, setDescription] = useState(trip.description || "");
+  const [startDate, setStartDate] = useState(
+    trip.start_date ? new Date(trip.start_date).toISOString().split('T')[0] : ""
+  );
+  const [endDate, setEndDate] = useState(
+    trip.end_date ? new Date(trip.end_date).toISOString().split('T')[0] : ""
+  );
+  const [country, setCountry] = useState(trip.country || "");
   const [searchTerm, setSearchTerm] = useState("");
-  const [collaborators, setCollaborators] = useState([]);
+  const [collaborators, setCollaborators] = useState(trip.collaborators || []);
   const [suggestedUsers, setSuggestedUsers] = useState([]);
   const [formErrors, setFormErrors] = useState({});
-  const [trips, setTrips] = useState([]);
+  
   const loggedInUserId = getUserId();
-  // GETS ALL COUNTRIES USING PACKAGE
   const options = CountryList().getData();
 
-  // HANDLES SEARCHING
+  useEffect(() => {
+    const fetchCollaborators = async () => {
+      const userId = getUserId();
+      const token = getToken();
+      try {
+        const response = await fetch(`http://localhost:3000/users/${userId}/trips/${trip.trip_id}/collaborators`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to fetch collaborators');
+        }
+
+        const collaboratorsData = await response.json();
+        setCollaborators(collaboratorsData);
+      } catch (error) {
+        console.error('Error fetching collaborators:', error);
+      }
+    };
+
+    fetchCollaborators();
+  }, [trip.trip_id]);
+
+  // Similar useEffects from CreateTrip
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(`.${styles.searchBar}`)) {
@@ -50,7 +84,6 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     };
 
     document.addEventListener("click", handleClickOutside);
-
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
@@ -61,7 +94,8 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       if (searchTerm) {
         const users = await fetchUsernames(searchTerm);
         const filteredUsers = users.filter(user => 
-          user.user_id !== loggedInUserId && !collaborators.some(collab => collab.user_id === user.user_id)
+          user.user_id !== loggedInUserId && 
+          !collaborators.some(collab => collab.user_id === user.user_id)
         );
         setSuggestedUsers(filteredUsers);
       } else {
@@ -75,19 +109,11 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   const handleSearchChange = (e) => {
     const search = e.target.value;
     setSearchTerm(search);
-
     if (search === "") {
       setSuggestedUsers([]);
     }
   };
 
-  // HANDLES COLLABORATOR FRONT END
-  // const handleAddCollaborator = (collab) => {
-  //   if (!collaborators.includes(collab)) {
-  //     setCollaborators([...collaborators, collab]);
-  //   }
-  //   setSearchTerm(""); 
-  // };
   const handleAddCollaborator = (collab) => {
     if (!collaborators.some(c => c.user_id === collab.user_id)) {
       setCollaborators([...collaborators, collab]);
@@ -96,13 +122,10 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
   };
 
   const handleRemoveCollaborator = (index) => {
-    setCollaborators(collaborators.filter((_, i) => i !== index));
+    const updatedCollaborators = collaborators.filter((_, i) => i !== index);
+    setCollaborators(updatedCollaborators);
   };
 
-  const addTrip = (tripData) => {
-    setTrips([...trips, tripData]);
-    console.log("New trip added:", tripData);
-  };
   const renderSuggestedUsers = () => {
     return suggestedUsers.map(user => (
       <div key={user.user_id} onClick={() => handleAddCollaborator(user)}>
@@ -110,6 +133,7 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
       </div>
     ));
   };
+
   const renderCollaborators = () => {
     if (collaborators.length === 0) {
       return <p className={styles.noCollaborators}>You have not added any collaborators</p>;
@@ -117,77 +141,76 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
     return collaborators.map((collab, index) => (
       <div key={collab.user_id} className={styles.collaboratorItem}>
         @{collab.username} ({collab.email})
-        <FaTimes
+        <X
           className={styles.removeCollaborator}
           onClick={() => handleRemoveCollaborator(index)}
         />
       </div>
     ));
-  };  
-  // BACK-END FUNCTIONALITY
+  };
+
   const handleConfirm = async () => {
+    console.log('Trip Data to Update:', {
+      title,
+      country,
+      start_date: startDate,
+      end_date: endDate,
+      collaborators: collaborators.map(collab => collab.user_id),
+      tripId: trip.trip_id
+    });
+    
     const errors = {};
     if (!title) errors.title = "Title is required";
-    if (!description) errors.description = "Description is required";
     if (!country) errors.country = "Country is required";
     if (!startDate) errors.startDate = "Start Date is required";
     if (!endDate) errors.endDate = "End Date is required";
-    if (new Date(endDate) < new Date(startDate)) errors.date = "End Date cannot be before Start Date";
-  
+    if (new Date(endDate) < new Date(startDate)) {
+      errors.date = "End Date cannot be before Start Date";
+    }
+
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-  
-    // const collaboratorIds = await Promise.all(
-    //   collaborators.map(async (collab) => {
-    //     const userId = await fetchUserIdByUsername(collab);
-    //     return userId;  // Get user IDs for each collaborator
-    //   })
-    // );
+
     const collaboratorIds = collaborators.map(collab => collab.user_id);
     const tripData = {
       title,
-      // description,                     // currently no description in trip model
       country,
-      startDate,
-      endDate,
-      collaborators: collaboratorIds,  // Include collaborator IDs in the request  [process this on a different method]
+      start_date: startDate,
+      end_date: endDate,
+      collaborators: collaboratorIds,
     };
+
     try {
-      const response = await fetch(`http://localhost:3000/users/${getUserId()}/trips`, {
-        method: "POST",
+      const response = await fetch(`http://localhost:3000/users/${getUserId()}/trips/${trip.trip_id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${getToken()}`,  // Use the JWT token from localStorage
+          Authorization: `${getToken()}`,
         },
         body: JSON.stringify(tripData),
       });
-  
+
       if (!response.ok) {
-        throw new Error(`Error creating trip: ${response.statusText}`);
+        throw new Error(`Error updating trip: ${response.statusText}`);
       }
-  
+
       const responseData = await response.json();
-      addTrip(responseData);  // Add the trip to your frontend state if necessary
-      // onConfirm(responseData); // Call the callback passed to close modal or do other things
-      onClose();               // Close the modal
-      window.location.reload();
-      // Call the onTripCreated callback function
-      // if (onTripCreated) {
-      //   onTripCreated();
-      // }
+      onUpdateTrip(responseData);
+      onClose();
     } catch (error) {
-      console.error("Error creating trip:", error);
+      console.error("Error updating trip:", error);
+      setFormErrors({ submit: error.message });
     }
-  };  
+  };
 
   if (!isOpen) return null;
 
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <h2 className={styles.CreateYourTrip}>Create Your Trip</h2>
+        <h2 className={styles.CreateYourTrip}>Edit Your Trip</h2>
         <div className={styles.formGroup}>
           <label>Title</label>
           <input
@@ -197,15 +220,6 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
             placeholder="Enter trip title"
           />
           {formErrors.title && <p className={styles.errorText}>{formErrors.title}</p>}
-        </div>
-        <div className={styles.formGroup}>
-          <label>Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter trip description"
-          ></textarea>
-          {formErrors.description && <p className={styles.errorText}>{formErrors.description}</p>}
         </div>
         <div className={styles.formGroup}>
           <label>Country</label>
@@ -251,15 +265,6 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
             />
             {searchTerm && suggestedUsers.length > 0 && (
               <div className={styles.suggestions}>
-                {/* {suggestedUsers.map((user) => (
-                  <div
-                    key={user}
-                    className={styles.suggestionItem}
-                    onClick={() => handleAddCollaborator(user)}
-                  >
-                    @{user}
-                  </div>
-                ))} */}
                 {renderSuggestedUsers()}
               </div>
             )}
@@ -267,31 +272,15 @@ const CreateTrip = ({ isOpen, onClose, onConfirm }) => {
         </div>
         <div className={styles.collaboratorsList}>
           <h4 className={styles.AddedCollaboratorsText}>Added Collaborators</h4>
-          {/* {collaborators.length === 0 ? (
-            <p className={styles.noCollaborators}>You have not added any collaborators</p>
-          ) : (
-            collaborators.map((collab, index) => (
-              <div key={index} className={styles.collaboratorItem}>
-                @{collab}
-                <button
-                  className={styles.removeCollaborator}
-                  onClick={() => handleRemoveCollaborator(index)}
-                >
-                  Remove
-                </button>
-              </div>
-            ))
-          )} */}
           {renderCollaborators()}
         </div>
         <div className={styles.modalActions}>
           <button onClick={onClose}>Cancel</button>
-          <button onClick={handleConfirm}>Confirm</button>
+          <button onClick={handleConfirm}>Update Trip</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default CreateTrip;
-
+export default EditTrip;

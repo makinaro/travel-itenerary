@@ -1,115 +1,241 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Dashboard.module.css';
 import Flag from 'react-world-flags';
 import { getToken, getUserId } from '../services/auth.js';
 import countryList from 'react-select-country-list';
-import CreateTrip from '../assets/components/CreateTrip/CreateTrip.jsx'; // Import CreateTrip component
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import EditTrip from '../assets/components/CreateTrip/EditTrip.jsx';
+
+const ITEMS_PER_PAGE = 10;
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState('');
-  const [tripCreated, setTripCreated] = useState(false); // State variable to track trip creation
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  async function fetchTrips(userId) {
-    if (!userId) {
-      setError('User ID not found');
+  useEffect(() => {
+    const fetchTrips = async () => {
+      const userId = getUserId();
+      if (!userId) {
+        setError('User ID not found');
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${getToken()}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to fetch trips');
+        }
+
+        const tripsData = await response.json();
+        const parsedTripsData = tripsData.map(trip => {
+          const startDate = new Date(trip.start_date).toLocaleDateString();
+          const endDate = new Date(trip.end_date).toLocaleDateString();
+          return {
+            id: trip.trip_id,
+            title: trip.title,
+            country: countryList().getLabel(trip.country),
+            countryCode: trip.country,
+            tripCreator: trip.owner.username,
+            startDate: startDate,
+            endDate: endDate,
+            status: trip.status,
+            fullTripData: trip
+          };
+        });
+        setTrips(parsedTripsData);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchTrips();
+  }, []);
+
+  const indexOfLastTrip = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstTrip = indexOfLastTrip - ITEMS_PER_PAGE;
+  const currentTrips = trips.slice(indexOfFirstTrip, indexOfLastTrip);
+  const totalPages = Math.ceil(trips.length / ITEMS_PER_PAGE);
+
+  // const handleTripClick = (trip) => {
+  //   navigate(`/calendar/${trip.id}`, { 
+  //     state: { initialDate: trip.startDate } 
+  //   });
+  // };       ***Supposed to route to Calendar with respective month***
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  };
+
+  const handleEditClick = (trip) => {
+    setSelectedTrip(trip.fullTripData || trip);
+    setIsEditModalOpen(true);
+  };
+
+//Returns correct trip_ID but 403 (Forbidden) ERROR
+  const handleDeleteClick = (tripId) => {
+    console.log('Trip ID received:', tripId, typeof tripId);
+
+    if (!tripId) {
+      setError('Invalid trip ID');
       return;
     }
 
-    try {
-      const response = await fetch(`http://localhost:3000/users/${userId}/trips`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${getToken()}`,
-        },
-      });
+    const deleteTrip = async () => {
+      const userId = getUserId();
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch trips');
+      try {
+        const response = await fetch(`http://localhost:3000/users/${userId}/trips/${tripId}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `${getToken()}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to delete trip');
+        }
+
+        // Remove the deleted trip from the state
+        setTrips((prevTrips) => prevTrips.filter((trip) => trip.id !== tripId));
+      } catch (error) {
+        setError(error.message);
       }
+    };
 
-      const tripsData = await response.json();
-      const parsedTripsData = tripsData.map(trip => {
-        const startDate = new Date(trip.start_date).toLocaleDateString();
-        const endDate = new Date(trip.end_date).toLocaleDateString();
-        return {
-          id: trip.id,
-          title: trip.title,
-          country: countryList().getLabel(trip.country),
-          countryCode: trip.country,
-          tripCreator: trip.owner.username,
-          tripCreatorProfileImage: 'https://via.placeholder.com/32', // Placeholder for profile image
-          startDate: startDate,
-          endDate: endDate,
-          status: trip.status,
-        };
-      });
-      setTrips(parsedTripsData);
-    } catch (error) {
-      setError(error.message);
-    }
-  }
-
-  useEffect(() => {
-    const userId = getUserId();
-    fetchTrips(userId);
-  }, [tripCreated]); // Re-fetch trips when a new trip is created
-
-  const handleTripCreated = () => {
-    setTripCreated(!tripCreated); // Toggle the state to trigger re-fetch
+    deleteTrip();
   };
+
+  const handleUpdateTrip = (updatedTrip) => {
+    setTrips(prevTrips =>
+      prevTrips.map(trip =>
+        trip.trip_id === updatedTrip.trip_id
+          ? {
+            ...trip,
+            title: updatedTrip.title,
+            country: countryList().getLabel(updatedTrip.country),
+            countryCode: updatedTrip.country,
+            startDate: new Date(updatedTrip.start_date).toLocaleDateString(),
+            endDate: new Date(updatedTrip.end_date).toLocaleDateString(),
+            fullTripData: updatedTrip
+          }
+          : trip
+      )
+    );
+  };
+
+  // if (trips.length === 0 && !error) {
+  //   return <div>Loading trips...</div>;
+  // }
 
   return (
     <div className={styles.dashboardContainer}>
-      <h1 className={styles.dashboardTitle}>DASHBOARD</h1>
+      <h1 className={styles.dashboardTitle}>Dashboard</h1>
 
-      <CreateTrip onTripCreated={handleTripCreated} /> {/* Pass the callback function */}
+      {/* {error && <p className={styles.error}>{error}</p>} */}
 
-      <table className={styles.tripTable}>
-        <thead>
-          <tr>
-            <th>Flag</th>
-            <th>Trip Title</th>
-            <th>Country</th>
-            <th>Trip Creator</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trips.map((trip, index) => (
-            <tr key={index} className={styles.tripRow}>
-              <td>
-                <Flag 
-                  code={trip.countryCode} 
-                  className={styles.flagIcon} 
-                  fallback={<span>🏳️</span>} 
-                />
-              </td>
-              <td>{trip.title}</td>
-              <td>{trip.country}</td>
-              <td className={styles.creatorColumn}>
-                <div className={styles.creatorInfo}>
-                  <img
-                    src={trip.tripCreatorProfileImage} 
-                    alt={trip.tripCreator}
-                    className={styles.creatorProfileImage}
-                  />
-                  <span>{trip.tripCreator}</span>
-                </div>
-              </td>
-              <td>{trip.startDate}</td>
-              <td>{trip.endDate}</td>
-              <td className={`${styles.status} ${styles[trip.status.toLowerCase()]}`}>
-                {trip.status}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* {trips.length === 0 ? (
+        <p>No trips found.</p>
+      ) : ( */}
+        <>
+          <table className={styles.tripTable}>
+            <thead>
+              <tr>
+                <td>Flag</td>
+                <td>Trip Title</td>
+                <td>Country</td>
+                <td>Trip Creator</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+                <td>Status</td>
+                <td>Actions</td>
+              </tr>
+            </thead>
+            <tbody>
+              {currentTrips.map((trip) => (
+                <tr key={trip.trip_id ?? Math.random()}
+                // onClick={() => handleTripClick(trip)} 
+                  style={{ cursor: 'pointer' }}
+                >
+                  <td>
+                    <Flag
+                      code={trip.countryCode}
+                      className={styles.flagIcon}
+                      fallback={<span>🏳️</span>}
+                    />
+                  </td>
+                  <td>{trip.title}</td>
+                  <td>{trip.country}</td>
+                  <td>{trip.tripCreator}</td>
+                  <td>{trip.startDate}</td>
+                  <td>{trip.endDate}</td>
+                  <td className={`${styles.status} ${styles[trip.status.toLowerCase()]}`}>
+                    {trip.status}
+                  </td>
+                  <td className={styles.actionsColumn}>
+                    <FaEdit
+                      className={styles.actionIcon}
+                      onClick={() => handleEditClick(trip)}
+                    />
+                    <FaTrashAlt
+                      className={styles.actionIcon}
+                      onClick={() => handleDeleteClick(trip.id)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className={styles.paginationControls}>
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className={styles.previousButton}
+            >
+              Previous
+            </button>
+
+            <span className={styles.pageText}>Page {currentPage} of {totalPages}</span>
+
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={styles.nextButton}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      {isEditModalOpen && (
+        <EditTrip
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          trip={selectedTrip}
+          onUpdateTrip={handleUpdateTrip}
+        />
+      )}
     </div>
   );
 };

@@ -5,7 +5,7 @@
 /* Base Styles */
 .dashboardContainer {
   padding: 20px;
-  
+  background-color: #f4f6f8;
   min-height: 100vh;
   color: #333;
 }
@@ -13,7 +13,7 @@
 .dashboardTitle {
   text-align: center;
   font-size: 2rem;
-  color: #ffffff;
+  color: #333;
   margin-bottom: 20px;
 }
 
@@ -56,25 +56,96 @@
   font-weight: bold;
 }
 
-/* Creator Profile - Layout */
-.creatorColumn {
+
+/* Pagination Controls Container */
+.paginationControls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
   display: flex;
+  justify-content: center;
   align-items: center;
+  gap: 10px;
+  z-index: 10;
+}
+
+/* Previous Button */
+.previousButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.previousButton:hover {
+  background-color: #0056b3;
+}
+
+.previousButton:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+/* Next Button */
+.nextButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nextButton:hover {
+  background-color: #0056b3;
+}
+
+.nextButton:disabled {
+  background-color: #d6d6d6;
+  cursor: not-allowed;
+}
+
+/* Actions Column */
+.actionsColumn {
+  display: flex;
   justify-content: center;
   gap: 10px;
 }
 
-.creatorInfo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.actionIcon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #007bff;
+  transition: color 0.3s ease;
 }
 
-.creatorProfileImage {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
+.actionIcon:hover {
+  color: #0056b3;
+}
+
+/* Adjust the Country Column */
+.tripTable th:nth-child(3), 
+.tripTable td:nth-child(3) {
+  padding-left: 10px; /* Adjust left padding to create space for icons */
+}
+
+.tripTable th:nth-child(8), 
+.tripTable td:nth-child(8) {
+  width: 100px; /* Set a fixed width for the actions column */
+}
+
+
+/* Page Text */
+.pageText {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
 }
 
 /* ---------- Responsive Design -------------- */
@@ -87,6 +158,7 @@
   .tripTable th, 
   .tripTable td {
     padding: 16px 20px;
+    text-align: left; /* Aligning the headers to the left */
   }
   .flagIcon {
     width: 40px;
