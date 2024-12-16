@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../CreateEvent/CreateEvent.module.css";
+import { updateTripEvent, deleteTripEvent } from '../../../../api/utils/tripEventsUtils.cjs';
+import { getToken, getUserId } from '../../../services/auth';
 
 const fetchUserIdByUsername = async (username) => {
   try {
@@ -24,8 +26,8 @@ const fetchUserIdByUsername = async (username) => {
 
 const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
   const [title, setTitle] = useState(eventData.title || "");
-  const [startTime, setStartTime] = useState(eventData.startTime || "");
-  const [endTime, setEndTime] = useState(eventData.endTime || "");
+  const [startTime, setStartTime] = useState(eventData.start_time || "");
+  const [endTime, setEndTime] = useState(eventData.end_time || "");
   const [collaborators, setCollaborators] = useState(eventData.collaborators || []);
   const [formErrors, setFormErrors] = useState({});
 
@@ -64,28 +66,16 @@ const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
     );
 
     const updatedEventData = {
+      ...eventData,
       title,
-      startTime,
-      endTime,
+      start_time: startTime,
+      end_time: endTime,
       collaborators: collaboratorIds,
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/events/${eventData.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${yourAuthToken}`,
-        },
-        body: JSON.stringify(updatedEventData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error updating event: ${response.statusText}`);
-      }
-
-      const responseData = await response.json();
-      onConfirm(responseData);
+      const updatedEvent = await updateTripEvent(updatedEventData, getToken());
+      onConfirm(updatedEvent);
       onClose();
     } catch (error) {
       console.error("Error updating event:", error);
@@ -94,19 +84,9 @@ const EditEvent = ({ isOpen, onClose, onConfirm, onDelete, eventData }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/events/${eventData.id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${yourAuthToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error deleting event: ${response.statusText}`);
-      }
-
-      onDelete(eventData.id);
+      console.log("Deleting event:", eventData);
+      await deleteTripEvent(getUserId(), eventData.trip_id, eventData.trip_event_id, getToken());
+      onDelete(eventData.trip_event_id);
       onClose();
     } catch (error) {
       console.error("Error deleting event:", error);

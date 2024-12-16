@@ -96,9 +96,12 @@ export const updateTripEvent = async (event, token) => {
   return responseData;
 };
 
-export const deleteTripEvent = async (tripId, eventId) => {
-  const response = await fetch(`${API_BASE_URL}/trips/${tripId}/events/${eventId}`, {
+export const deleteTripEvent = async (userId, tripId, eventId, token) => {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/trips/${tripId}/events/${eventId}`, {
     method: 'DELETE',
+    headers: {
+      'Authorization': `${token}`,
+    },
   });
   if (!response.ok) {
     throw new Error('Failed to delete trip event');

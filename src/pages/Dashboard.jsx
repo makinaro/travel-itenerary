@@ -5,7 +5,7 @@ import Flag from 'react-world-flags';
 import { getToken, getUserId } from '../services/auth.js';
 import countryList from 'react-select-country-list';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import EditTrip from '../assets/components/CreateTrip/EditTrip.jsx';
+import EditTrip from '../assets/components/CreateTrip/editTrip.jsx';
 
 const ITEMS_PER_PAGE = 10;
 

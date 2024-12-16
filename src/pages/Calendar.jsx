@@ -6,7 +6,7 @@ import { getToken, getUserId } from '../services/auth.js';
 import styles from "./Calendar.module.css";
 import CreateEvent from "../assets/components/CreateEvent/CreateEvent.jsx"; // Import CreateEvent component
 import EditEvent from "../assets/components/EditEvent/EditEvent.jsx"; // Import EditEvent component
-import { createTripEvent, fetchTripEvents } from '../../api/utils/tripEventsUtils.cjs'; // Import createTripEvent and fetchTripEvents functions
+import { createTripEvent, fetchTripEvents, updateTripEvent } from '../../api/utils/tripEventsUtils.cjs'; // Import createTripEvent and fetchTripEvents functions
 
 const Calendar = () => {
   const [trips, setTrips] = useState([]);
@@ -149,15 +149,33 @@ const Calendar = () => {
   };
 
   // Handle updating event
-  const handleUpdateEvent = (updatedEventData) => {
-    setTrips((prevEvents) =>
-      prevEvents.map((event) =>
-        event.id === updatedEventData.id
-          ? { ...event, details: updatedEventData.details }
-          : event
-      )
-    );
-    setEditEventModalOpen(false); // Close the EditEvent modal
+  const handleUpdateEvent = async (updatedEventData) => {
+    try {
+      const updatedEvent = await updateTripEvent(updatedEventData, getToken());
+      setTripEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.id === updatedEvent.id ? updatedEvent : event
+        )
+      );
+      setEditEventModalOpen(false); // Close the EditEvent modal
+    } catch (error) {
+      console.error("Error updating event:", error);
+      setError("Failed to update event");
+    }
+  };
+
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      // Call handleDelete from EditEvent component
+      setCurrentEventForEdit({ trip_id: selectedTripId, trip_event_id: eventId });
+      setEditEventModalOpen(true);
+
+      // Update the state to remove the deleted event
+      setTripEvents((prevEvents) => prevEvents.filter(event => event.trip_event_id !== eventId));
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      setError("Failed to delete event");
+    }
   };
 
   return (
@@ -296,6 +314,7 @@ const Calendar = () => {
           isOpen={isEditEventModalOpen}
           onClose={() => setEditEventModalOpen(false)}
           onConfirm={handleUpdateEvent}
+          onDelete={handleDeleteEvent}
           eventData={currentEventForEdit}
         />
       )}
