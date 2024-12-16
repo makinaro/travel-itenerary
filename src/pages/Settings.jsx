@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Settings1.css";
 import { getToken, getUserId } from "../services/auth";
 
 function ProfileSettings() {
+  const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [email, setEmail] = useState("asdadadsadd@gmail.com");
   const [username, setUsername] = useState("dittousername123");
@@ -139,12 +141,18 @@ function ProfileSettings() {
               throw new Error(errorData.message || 'Failed to delete account');
             });
           }
+
+          // Clear any authentication tokens or user data
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
+
           alert('Account deleted successfully!');
+
+          navigate('/login'); // Use the navigate function here
         })
         .catch((error) => {
           setErrorMessage(error.message);
         });
-      // redirect to login page
     }
   };
 
