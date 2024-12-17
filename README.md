@@ -76,5 +76,5 @@ For questions, confusions, and concerns you may contact one of the members:
 
 
 ##### James Garcia (Frontend)
-  Email: James Garcia |
+  Email: 11700004@usc.edu.ph |
   Github: Jamesheytz23699
