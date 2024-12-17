@@ -9,25 +9,24 @@ ________________________________________________________________
 3. Open up XAMPP control panel.
 4. Turn on Apache and MySQL.
 5. Go to admin on MySQL.
-6. Create a database named “grandline” and do not make any tables, just leave it after you create the database with this specific name.
+6. Create a database named “grandline”. No need to create tables, the next step will setup the database.
 7. Do the command “npm run dev” on the terminal inside the project folder.
 
 ### MUST HAVE:
 1.	XAMPP control panel application
 2.	An (IDE) Integrated Development Environment software application.
-3.	Any Browser will do.
-
+3.	Any Browser will do, preferably Google Chrome.
 
 ________________________________________________________________
 ### FEATURES:
 - [X] Home - Showcases what the web app "Grand Line" is all about.
-- [X] Login - Log in with existing account.
-- [X] Register - Register with a new account.
-- [X] Dashboard - Shows list of existing upcoming trips/travels that the user has created.
-- [X] Calendar - Showcases your trips in calendar form and list of plans.
-- [X] Settings - User settings, update user info (password), and delete (delete account).
-- [X] Create Trip - creates, edits, and deletes trips.
-
+- [X] Login - Log in with an existing account.
+- [X] Register - Register a new account.
+- [X] Dashboard - Shows a list of upcoming trips/travels created by the user.
+- [X] Calendar - Showcases your trips in calendar form and lists planned events for each trip.
+- [X] Settings - User settings, update user info (password) and delete (delete account).
+- [X] Create Trip - creates, edits, deletes trips, and adds collaborators.
+- [X] Create Event - creates, edits, and deletes events within trips.
 ________________________________________________________________
 ### TECH STACK:
 
@@ -58,9 +57,9 @@ For questions, confusions, and concerns you may contact one of the members:
   Github: makinaro
 
 
-##### Ditto Tiu (Frontend & Backend)
+##### Beneditto Alfonso Tiu (Frontend & Backend)
   Email: 22100327@usc.edu.ph |
-  Github: Ditto Tiu
+  Github: dittttt
 
 
 ##### Xavier Paul Cabasan (Frontend)
