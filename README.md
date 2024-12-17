@@ -53,24 +53,24 @@ For questions, confusions, and concerns you may contact one of the members:
 
 ### Under App Dev:
 
-# Aaron James Makinano (Backend)
+##### Aaron James Makinano (Backend)
   Email: 18104022@usc.edu.ph
   Github: makinaro
 
-# Ditto Tiu (Frontend & Backend)
+##### Ditto Tiu (Frontend & Backend)
   Email: 22100327@usc.edu.ph
   Github: Ditto Tiu
 
-# Xavier Paul Cabasan (Frontend)
+##### Xavier Paul Cabasan (Frontend)
   Email: 22104664@usc.edu.ph
   Github: UserXPC22
 
 ### Under Web Dev 2:
 
-# Antonio Jaime Vicen (Backend)
+##### Antonio Jaime Vicen (Backend)
   Email: 19105612@usc.edu.ph
   Github: CenVCN
 
-# James Garcia (Frontend)
+##### James Garcia (Frontend)
   Email: James Garcia
   Github: Jamesheytz23699
