@@ -1,4 +1,4 @@
-## APP DEV FINAL PROJECT - GRAND LINE
+## GRAND LINE (APP DEV FINAL PROJECT)
 A simple travel itinerary web app called Grand Line. Our goal is to make the trip planning experience more convenient, intuitive, and stress-free. We aim to provide users with an easy-to-use platform that simplifies the process of organizing every detail of their journeys, allowing them to plan with confidence and ease.
 
 ________________________________________________________________
@@ -32,12 +32,45 @@ ________________________________________________________________
 ### TECH STACK:
 
 ### Frontend:
-- [X] React - User interface.
-- [X] Vanilla CSS - Stylizes the interface, makes the website responsive.
+- [X] React
+- [X] Vanilla CSS
 
 ### Backend:
-- [X] Express
-- [X] Node.js 
-- [X] MySQL - Database purposes.
+- [X] Express & Node.js
+- [X] MySQL
 
+### Authentication:
+- [X] JWT
 
+### ORM:
+- [X] Sequelize
+
+________________________________________________________________
+### CONTACT US:
+
+For questions, confusions, and concerns you may contact one of the members:
+(App Dev x Web Dev 2 Merged)
+
+### Under App Dev:
+
+- Aaron James Makinano (Backend)
+        - Email: 18104022@usc.edu.ph
+        - Github: makinaro
+
+- Ditto Tiu (Frontend & Backend)
+        - Email: 22100327@usc.edu.ph
+        - Github: Ditto Tiu
+
+- Xavier Paul Cabasan (Frontend)
+        - Email: 22104664@usc.edu.ph
+        - Github: UserXPC22
+
+### Under Web Dev 2:
+
+- Antonio Jaime Vicen (Backend)
+        - Email: 19105612@usc.edu.ph
+        - Github: CenVCN
+
+- James Garcia (Frontend)
+        - Email: James Garcia
+        - Github: Jamesheytz23699
