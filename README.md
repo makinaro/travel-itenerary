@@ -24,7 +24,7 @@ ________________________________________________________________
 - [X] Login
 - [X] Register
 - [X] Dashboard (List of Upcoming Trips)
-- [X] Calendar (Showcases your Trips in calendar form)
+- [X] Calendar (Showcases your Trips in calendar form and list of plans)
 - [X] Settings
 - [X] Create Trip (Create/Edit/Delete)
 
