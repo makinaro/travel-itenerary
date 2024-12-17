@@ -1,5 +1,6 @@
 ## APP DEV FINAL PROJECT -
-A simple travel itinerary web app called Grand-Line. Our goal is to make this web app as simple as possible while adding convenience to it's users.
+A simple travel itinerary web app called Grand-Line. Our goal is to make trip planning experience more convinient, intuitive, and stress-free. We aim to privide users with an easy-to-use platform that simplifies the process of organizing every detail of their journeys,
+allowing them to plan with confidence and ease.
 
 ________________________________________________________________
 ### STEPS ON SETTING UP THE PROJECT:
