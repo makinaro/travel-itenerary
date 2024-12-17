@@ -1,5 +1,5 @@
 ## APP DEV FINAL PROJECT - GRAND LINE
-A simple travel itinerary web app called # Grand Line. Our goal is to make the trip planning experience more convenient, intuitive, and stress-free. We aim to provide users with an easy-to-use platform that simplifies the process of organizing every detail of their journeys, allowing them to plan with confidence and ease.
+A simple travel itinerary web app called Grand Line. Our goal is to make the trip planning experience more convenient, intuitive, and stress-free. We aim to provide users with an easy-to-use platform that simplifies the process of organizing every detail of their journeys, allowing them to plan with confidence and ease.
 
 ________________________________________________________________
 ### STEPS ON SETTING UP THE PROJECT:
@@ -19,13 +19,25 @@ ________________________________________________________________
 
 
 ________________________________________________________________
-### PROJECT FEATURES:
-- [X] Home
-- [X] Login
-- [X] Register
-- [X] Dashboard (List of Upcoming Trips)
-- [X] Calendar (Showcases your Trips in calendar form and list of plans)
-- [X] Settings
-- [X] Create Trip (Create/Edit/Delete)
+### FEATURES:
+- [X] Home - Showcases what the web app "Grand Line" is all about.
+- [X] Login - Log in with existing account.
+- [X] Register - Register with a new account.
+- [X] Dashboard - Shows list of existing upcoming trips/travels that the user has created.
+- [X] Calendar - Showcases your trips in calendar form and list of plans.
+- [X] Settings - User settings, update user info (password), and delete (delete account).
+- [X] Create Trip - creates, edits, and deletes trips.
+
+________________________________________________________________
+### TECH STACK:
+
+### Frontend:
+- [X] React - User interface.
+- [X] Vanilla CSS - Stylizes the interface, makes the website responsive.
+
+### Backend:
+- [X] Express
+- [X] Node.js 
+- [X] MySQL - Database purposes.
 
 
